@@ -11,9 +11,13 @@ venv/
 /tmp
 /out-tsc
 /.angular/cache
+frontend/.angular/
+frontend/dist/
+frontend/node_modules/
 
 #IDEs and Logs
 .vscode/
 *.logs
 .DS_Store
 Thumbs.db
+

@@ -1,0 +1,11 @@
+<div class="container">
+  <h1>{{title}}</h1>
+  
+  <button (click)="sendPing()">Send Ping</button>
+  
+  @if (response) {
+    <div class="response">
+      Backend says: <strong>{{response}}</strong>
+    </div>
+  }
+</div>
