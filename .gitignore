@@ -1,9 +1,19 @@
 # Python
-venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+venv/
+
 
 # Node (Angular)
-node_modules/
-dist/
-.angular/
+/node_modules
+/dist
+/tmp
+/out-tsc
+/.angular/cache
+
+#IDEs and Logs
+.vscode/
+*.logs
+.DS_Store
+Thumbs.db
