@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from './api.service';
+import { ApiService } from './core/api.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
