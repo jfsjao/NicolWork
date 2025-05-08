@@ -1,0 +1,77 @@
+📦 projeto-raiz/
+├── 📁 backend/
+│   ├── app.py
+│   └── requirements.txt
+│
+├── 📁 frontend/
+│   ├── 📁 public/
+│   │   └── favicon.ico
+│   │
+│   ├── 📁 src/
+│   │   ├── 📁 app/
+│   │   │   ├── 📁 components/ 
+│   │   │   │    ├── 📁 footer/ 
+│   │   │   │    │     ├── footer.component.scss
+│   │   │   │    │     ├── footer.component.spec.ts
+│   │   │   │    │     ├── footer.component.ts
+│   │   │   │    │     └── footer.component.html
+│   │   │   │    │
+│   │   │   │    └── 📁 navbar/ 
+│   │   │   │         ├── navbar.component.scss
+│   │   │   │         ├── navbar.component.spec.ts
+│   │   │   │         ├── navbar.component.ts
+│   │   │   │         └── navbar.component.html
+│   │   │   │
+│   │   │   ├── 📁 pages/ 
+│   │   │   │    ├── 📁 home/ 
+│   │   │   │    │     ├── home.component.scss
+│   │   │   │    │     ├── home.component.spec.ts
+│   │   │   │    │     ├── home.component.ts
+│   │   │   │    │     └── home.component.html
+│   │   │   │    │
+│   │   │   │    ├── 📁 services/ 
+│   │   │   │    │     ├── services.component.scss
+│   │   │   │    │     ├── services.component.spec.ts
+│   │   │   │    │     ├── services.component.ts
+│   │   │   │    │     └── services.component.html
+│   │   │   │    │
+│   │   │   │    ├── 📁 about/ 
+│   │   │   │    │     ├── about.component.scss
+│   │   │   │    │     ├── about.component.spec.ts
+│   │   │   │    │     ├── about.component.ts
+│   │   │   │    │     └── about.component.html
+│   │   │   │
+│   │   │   ├── 📁 config/ 
+│   │   │   │    ├── app.config.server.ts
+│   │   │   │    ├── app.config.ts
+│   │   │   │    ├── app.routes.server.ts
+│   │   │   │    └── app.routes.ts
+│   │   │   │
+│   │   │   ├── 📁 core/
+|   │   │   │   ├── 📁 core/
+|   │   │   │   │    ├── clipboard.service.ts
+|   │   │   │   │    └── clipboard.service.spec.ts
+│   │   │   │   ├── api.service.ts
+│   │   │   │   └── api.service.spec
+│   │   │   │
+│   │   │   ├── app.component.scss
+│   │   │   ├── app.component.spec.ts
+│   │   │   ├── app.component.ts
+│   │   │   └── app.component.html
+│   │   │
+│   │   ├── index.html
+│   │   ├── main.server.ts
+│   │   ├── main.ts
+│   │   ├── server.ts
+│   │   └── styles.scss
+│   │
+│   ├── .editorconfig
+│   ├── angular.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   └── tsconfig.spec.json
+│   
+└── .gitignore

@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNavbar" 
+     [class.navbar-hidden]="isNavbarHidden">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand" routerLink="/home">
+      <img src="assets/images/nicowork-logo.png" alt="NicoWork" class="navbar-logo">
+    </a>
+    
+    <!-- Conteúdo da Navbar -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/services" routerLinkActive="active">Planos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about" routerLinkActive="active">Sobre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contato</a>
+        </li>
+      </ul>
+      
+      <div class="auth-section">
+        <a routerLink="/auth" class="auth-link auth-btn">Acessar</a>        
+      </div>
+    </div>
+  </div>
+</nav>

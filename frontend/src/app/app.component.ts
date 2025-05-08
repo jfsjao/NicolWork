@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from './core/api.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, NavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
