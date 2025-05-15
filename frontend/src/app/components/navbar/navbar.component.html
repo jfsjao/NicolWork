@@ -1,30 +1,35 @@
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNavbar" 
-     [class.navbar-hidden]="isNavbarHidden">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNavbar" [class.navbar-hidden]="isNavbarHidden">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+
     <!-- Logo -->
     <a class="navbar-brand" routerLink="/home">
       <img src="assets/images/nicowork-logo.png" alt="NicoWork" class="navbar-logo">
     </a>
-    
+
+    <!-- Botão Toggle (visível em mobile) -->
+    <button class="navbar-toggler" type="button" (click)="isMenuOpen = !isMenuOpen">
+      <i class="bi bi-list"></i>
+    </button>
+
     <!-- Conteúdo da Navbar -->
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <ul class="navbar-nav me-auto">
+    <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="navbarContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+          <a class="nav-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/services" routerLinkActive="active">Planos</a>
+          <a class="nav-link" routerLink="/services" routerLinkActive="active" (click)="closeMobileMenu()">Planos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/about" routerLinkActive="active">Sobre</a>
+          <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="closeMobileMenu()">Sobre</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contato</a>
+          <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()">Contato</a>
         </li>
       </ul>
-      
-      <div class="auth-section">
-        <a routerLink="/auth" class="auth-link auth-btn">Acessar</a>        
+
+      <div class="auth-section d-flex">
+        <a routerLink="/auth" class="auth-link auth-btn" (click)="closeMobileMenu()">Acessar</a>
       </div>
     </div>
   </div>
