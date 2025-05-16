@@ -24,6 +24,13 @@
 │   │   │   │
 │   │   │   ├── 📁 pages/ 
 │   │   │   │    ├── 📁 home/ 
+|   │   │   │    │     ├── 📁 carrosel/
+│   │   │   │    │     │    ├── carrosel-exemplo-1.jpg
+│   │   │   │    │     │    └── carrosel-exemplo-2.jpg
+│   │   │   │    │     │
+|   │   │   │    │     ├── 📁 logos/
+│   │   │   │    │     │    └── nike-exemplo.jpg
+│   │   │   │    │     │
 │   │   │   │    │     ├── home.component.scss
 │   │   │   │    │     ├── home.component.spec.ts
 │   │   │   │    │     ├── home.component.ts
@@ -58,6 +65,17 @@
 │   │   │   ├── app.component.spec.ts
 │   │   │   ├── app.component.ts
 │   │   │   └── app.component.html
+│   │   │
+│   │   ├── 📁 assets/
+│   │   │   └── 📁 images/
+│   │   │       ├── 📁 carrosel/
+│   │   │       │    ├── carrosel-exemplo-1.jpg
+│   │   │       │    └── carrosel-exemplo-2.jpg 
+|   │   │       ├── 📁 logos/
+│   │   │       |    └── nike-exemplo.jpg
+|   │   │       ├── nicowork-logo-dark.png
+|   │   │       ├── nicowork-logo.png
+│   │   │       └── selfie-nico.jpg
 │   │   │
 │   │   ├── index.html
 │   │   ├── main.server.ts

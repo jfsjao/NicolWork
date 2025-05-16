@@ -1,32 +1,43 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [
+    CommonModule,
+    RouterModule 
+  ],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrl: './navbar.component.scss' // Note a mudança para styleUrl (singular)
 })
 export class NavbarComponent implements OnInit {
   isNavbarHidden = false;
   isMobileMenuOpen = false;
-  isMenuOpen = false; // <- Corrigido: usado no HTML para o toggle
+  isMenuOpen = false;
+  isMobileView = false;
 
   private lastScroll = 0;
   private readonly SCROLL_THRESHOLD = 100;
   private readonly SCROLL_DELTA = 5;
+  private isBrowser: boolean;
 
-  isMobileView = false;
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit() {
-    this.checkViewport();
+    if (this.isBrowser) {
+      this.checkViewport();
+    }
   }
 
   @HostListener('window:scroll')
   onScroll() {
-    if (this.isMobileMenuOpen) return;
+    if (!this.isBrowser || this.isMobileMenuOpen) return;
 
     const currentScroll = window.pageYOffset;
 
@@ -34,15 +45,17 @@ export class NavbarComponent implements OnInit {
 
     if (currentScroll > this.lastScroll && currentScroll > this.SCROLL_THRESHOLD) {
       this.isNavbarHidden = true;
-    } else if (currentScroll < this.lastScroll || currentScroll <= this.SCROLL_THRESHOLD) {
+    } else {
       this.isNavbarHidden = false;
     }
 
     this.lastScroll = currentScroll;
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
+    if (!this.isBrowser) return;
+
     this.checkViewport();
     if (!this.isMobileView && this.isMobileMenuOpen) {
       this.closeMobileMenu();
@@ -50,25 +63,35 @@ export class NavbarComponent implements OnInit {
   }
 
   private checkViewport() {
-    this.isMobileView = window.innerWidth <= 991.98;
+    if (this.isBrowser) {
+      this.isMobileView = window.innerWidth <= 991.98;
+    }
   }
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    this.isMenuOpen = this.isMobileMenuOpen; // <- Mantém isMenuOpen sincronizado
-    document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : '';
+    this.isMenuOpen = this.isMobileMenuOpen;
+
+    if (this.isBrowser) {
+      document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : '';
+    }
   }
 
   closeMobileMenu() {
     if (this.isMobileMenuOpen) {
       this.isMobileMenuOpen = false;
       this.isMenuOpen = false;
-      document.body.style.overflow = '';
+
+      if (this.isBrowser) {
+        document.body.style.overflow = '';
+      }
     }
   }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
+    if (!this.isBrowser) return;
+
     const target = event.target as HTMLElement;
     if (!target.closest('.navbar') && !target.closest('.navbar-toggler') && this.isMobileMenuOpen) {
       this.closeMobileMenu();

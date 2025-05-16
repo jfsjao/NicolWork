@@ -1,1 +1,80 @@
-<p>home works!</p>
+<div class="blog-home">
+  <!-- Carrossel Fullscreen -->
+  <section class="hero-carousel">
+    <div class="carousel-track">
+      @for (slide of slides; track $index; let i = $index) {
+      <div class="carousel-slide" [class.active]="currentSlide === i">
+        <img [src]="slide.image" [alt]="slide.alt">
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <h2 class="slide-title">{{ slide.title }}</h2>
+          <p class="slide-description">{{ slide.description }}</p>
+          <a [routerLink]="slide.buttonLink" class="slide-button">{{ slide.buttonText }}</a>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="carousel-nav">
+      <button class="nav-arrow prev" (click)="prevSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      <div class="pagination-dots">
+        @for (slide of slides; track $index; let i = $index) {
+        <span [class.active]="currentSlide === i" (click)="goToSlide(i)"></span>
+        }
+      </div>
+
+      <button class="nav-arrow next" (click)="nextSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Seção Imagem + Texto -->
+  <section class="image-text-section">
+    <div class="container">
+      <div class="content-wrapper">
+        <div class="image-container">
+          <img src="assets/images/selfie-nico.jpg" alt="Destaque">
+        </div>
+        <div class="text-container">
+          <h2>Sobre Nós</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed
+            erat molestie vehicula. Sed auctor neque eu tellus gravida at hendrerit libero consequat. Phasellus
+            scelerisque, libero a commodo feugiat, diam augue volutpat enim, in interdum tellus libero quis lectus.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Seção Logos -->
+<section class="logo-section">
+  <div class="container">
+    <h2>Empresas Agenciadas</h2>
+    <div class="logos-wrapper">
+      <div class="logos-container">
+        @for (logo of partnerLogos; track $index) {
+          <div class="logo-item">
+            <img [src]="logo.image" [alt]="logo.alt">
+          </div>
+        }
+        <!-- Duplica os logos para efeito de loop contínuo -->
+        @for (logo of partnerLogos; track $index) {
+          <div class="logo-item">
+            <img [src]="logo.image" [alt]="logo.alt">
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
