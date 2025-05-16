@@ -355,21 +355,24 @@
     }
 
     .footer-contact-link {
-      flex-direction: column;
+      flex-direction: row; /* Mantém os itens em linha em vez de coluna */
       align-items: center;
-      text-align: center;
-      gap: 0.3rem;
+      text-align: left;
+      gap: 0.5rem;
       padding: 0.5rem;
+      white-space: nowrap; /* Impede a quebra de linha */
+      overflow: hidden; /* Esconde qualquer conteúdo que ultrapasse */
+      text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
 
       i {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0;
       }
 
       span {
-        display: block;
-        width: 100%;
-        word-break: break-word;
-        max-width: 90%;
+        display: inline; 
+        width: auto;
+        word-break: normal;
+        max-width: none;
       }
     }
 

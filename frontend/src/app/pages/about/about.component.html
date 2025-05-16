@@ -1,1 +1,124 @@
-<p>about works!</p>
+<div class="about-container">
+    <!-- Seção Hero -->
+    <section class="about-hero">
+        <div class="hero-content">
+            <h1>Transformando empresas através de marketing digital</h1>
+            <p class="hero-subtitle">Mais de {{stats.years}} anos criando estratégias que geram resultados reais</p>
+        </div>
+    </section>
+
+    <!-- Seção Quem Somos -->
+    <section class="about-section">
+        <div class="section-content">
+            <div class="text-content">
+                <h2>QUEM SOMOS?</h2>
+                <p>A Nicolwork nasceu com a missão de transformar empresas através de estratégias de marketing eficazes
+                    e personalizadas. Nossa trajetória é marcada por resultados expressivos e crescimento constante no
+                    mercado.</p>
+
+                <div class="highlight-card">
+                    <p>Trabalhando para trazer engajamento para sua marca, até chegarmos milhões de engajamentos,
+                        ampliando a visibilidade das marcas parceiras e gerando crescimento real de vendas.</p>
+                </div>
+
+                <p>Sob a liderança do João Nicoletti - experiente em comunicação visual - unindo inovação, dados e criatividade
+                    para oferecer soluções completas em:</p>
+
+                <ul class="services-list">
+                    <li>Criação de conteúdo estratégico</li>
+                    <li>Gestão de redes sociais</li>
+                    <li>Campanhas de performance</li>
+                    <li>Inbound marketing</li>
+                </ul>
+            </div>
+
+            <div class="image-content">
+                <img src="assets/images/selfie-nico.jpg" alt="Equipe Nicolwork" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Diferenciais -->
+    <section class="differentials-section">
+        <div class="section-content">
+            <h2>NOSSO DIFERENCIAL</h2>
+
+            <div class="differentials-grid">
+                <div class="differential-card">
+                    <div class="icon-box">
+                        <i class="bi bi-diagram-3"></i> <!-- Ícone de estratégia -->
+                    </div>
+                    <h3>Estratégia Personalizada</h3>
+                    <p>Diagnóstico completo das necessidades de cada cliente para criar soluções sob medida</p>
+                </div>
+
+                <div class="differential-card">
+                    <div class="icon-box">
+                        <i class="bi bi-bar-chart-line"></i> <!-- Ícone de dados -->
+                    </div>
+                    <h3>Baseado em Dados</h3>
+                    <p>Tomadas de decisão fundamentadas em métricas e análise de resultados</p>
+                </div>
+
+                <div class="differential-card">
+                    <div class="icon-box">
+                        <i class="bi bi-lightbulb"></i> <!-- Ícone de criatividade -->
+                    </div>
+                    <h3>Criatividade Aplicada</h3>
+                    <p>Conteúdo inovador que conecta marcas com seus públicos-alvo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Números -->
+    <section class="numbers-section">
+        <div class="section-content">
+            <h2>EM NÚMEROS</h2>
+
+            <div class="numbers-grid">
+                <div class="number-item">
+                    <span class="number" [countUp]="stats.years">0</span>+
+                    <span class="label">Anos de mercado</span>
+                </div>
+
+                <div class="number-item">
+                    <span class="number" [countUp]="stats.clients">0</span>+
+                    <span class="label">Clientes atendidos</span>
+                </div>
+
+                <div class="number-item">
+                    <span class="number" [countUp]="stats.engagements">0</span>+
+                    <span class="label">Engajamentos</span>
+                </div>
+
+                <div class="number-item">
+                    <span class="number" [countUp]="stats.satisfaction">0</span>%
+                    <span class="label">Satisfação</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="clients-section">
+        <div class="section-content">
+          <h2>NOSSOS PARCEIROS</h2>
+          
+          <div class="clients-grid">
+            <div class="client-logo" *ngFor="let client of clients">
+              <!-- Use a função getImagePath() -->
+              <img [src]="getImagePath(client.logo)" [alt]="client.name" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Seção CTA -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Pronto para transformar sua presença digital?</h2>
+            <p>Vamos criar uma estratégia personalizada para o seu negócio</p>
+            <a routerLink="/contact" class="cta-button">Fale com nossos especialistas</a>
+        </div>
+    </section>
+</div>
