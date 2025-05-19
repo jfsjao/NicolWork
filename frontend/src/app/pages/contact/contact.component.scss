@@ -1,0 +1,324 @@
+/* Estilos gerais */
+.contact-container {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #00527C;
+
+  section {
+    padding: 5rem 0;
+
+    .section-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+  }
+}
+
+/* Seção Hero */
+.contact-hero {
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  color: white;
+  text-align: center;
+  padding: 8rem 1rem;
+  margin-top: -70px;
+  padding-top: 70px;
+
+  h1 {
+    padding-top: 70px;
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    @media (max-width: 768px) {
+      font-size: 2.2rem;
+    }
+  }
+
+  .hero-subtitle {
+    font-size: 1.4rem;
+    opacity: 0.9;
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* Seção de Informações */
+.contact-info-section {
+  background-color: #f8f9fa;
+  padding: 5rem 0;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #2c3e50;
+    font-size: 2rem;
+  }
+
+  .info-cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .info-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(250px, 280px));
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    & > *:nth-child(5) {
+      grid-column: 2 / span 2; /* Faz o quinto card ocupar o centro */
+    }
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(2, minmax(250px, 280px));
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      max-width: 400px;
+    }
+
+    a.info-card {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+  }
+
+  .info-card {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease;
+
+      &.bi-instagram { color: #E1306C; }
+      &.bi-whatsapp { color: #25D366; }
+      &.bi-envelope { color: #3498db; }
+      &.bi-telephone { color: #3498db; }
+      &.bi-calendar { color: #3498db; }
+    }
+
+    h3 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: #7f8c8d;
+      margin: 0.3rem 0;
+      line-height: 1.5;
+      
+      &:first-of-type {
+        font-weight: 500;
+        color: #2c3e50;
+      }
+
+      &.card-footer {
+        color: #95a5a6;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+/* Seção do Formulário */
+.contact-form-section {
+  background: white;
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .form-subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 3rem;
+  }
+
+  .contact-form {
+    max-width: 800px;
+    margin: 0 auto;
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #2c3e50;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #3498db;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .submit-button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 1rem;
+
+      &:hover {
+        background: #2980b9;
+      }
+
+      &:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+/* Notificação de cópia */
+.copy-notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 82, 124, 0.95);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+
+  &.show {
+    bottom: 30px;
+    opacity: 1;
+    animation: pulse 0.5s ease;
+  }
+
+  i {
+    font-size: 16px;
+  }
+
+  &.copied {
+    background: rgba(39, 174, 96, 0.95);
+  }
+}
+
+@keyframes pulse {
+  0% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.05); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+/* Responsividade */
+@media (min-width: 1200px) {
+  .info-cards {
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .info-cards {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-hero {
+    padding: 6rem 1rem;
+  }
+
+  .contact-info-section,
+  .contact-form-section {
+    padding: 3rem 0;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 400px;
+  }
+
+  .info-card {
+    padding: 1.25rem;
+    max-width: 100%;
+  }
+}

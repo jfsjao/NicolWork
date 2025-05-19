@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, Renderer2 } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 interface Slide {
@@ -60,9 +60,17 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly CAROUSEL_DELAY = 6000; // 6 segundos
   private readonly LOGO_DELAY = 3000; // 3 segundos
 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {}
+
   ngAfterViewInit(): void {
-    this.initCarousels();
-    this.resetAnimation();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initCarousels();
+      this.resetAnimation();
+    }
   }
 
   ngOnDestroy(): void {
@@ -71,10 +79,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   // Inicializa ambos carrosséis
   private initCarousels(): void {
-    if (typeof window !== 'undefined') {
-      this.startCarousel();
-      this.startLogoCarousel();
-    }
+    this.startCarousel();
+    this.startLogoCarousel();
   }
 
   // Limpa os intervalos
@@ -128,11 +134,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private scrollToLogo(index: number): void {
-    const container = document.querySelector('.logos-container') as HTMLElement;
-    const logos = document.querySelectorAll('.logo-item');
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const container = this.el.nativeElement.querySelector('.logos-container');
+    const logos = this.el.nativeElement.querySelectorAll('.logo-item');
     
     if (container && logos[index]) {
-      const logo = logos[index] as HTMLElement;
+      const logo = logos[index];
       const containerWidth = container.clientWidth;
       const logoLeft = logo.offsetLeft;
       const logoWidth = logo.clientWidth;
@@ -145,11 +153,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private resetAnimation(): void {
-    const container = document.querySelector('.logos-container') as HTMLElement;
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const container = this.el.nativeElement.querySelector('.logos-container');
     if (container) {
-      container.style.animation = 'none';
+      this.renderer.setStyle(container, 'animation', 'none');
       setTimeout(() => {
-        container.style.animation = '';
+        this.renderer.setStyle(container, 'animation', '');
       }, 10);
     }
   }
