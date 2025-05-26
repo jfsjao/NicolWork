@@ -5,7 +5,6 @@
 │
 ├── 📁 frontend/
 │   ├── 📁 public/
-│   │   └── favicon.ico
 │   │
 │   ├── 📁 src/
 │   │   ├── 📁 app/
@@ -48,11 +47,11 @@
 │   │   │   │    │     ├── about.component.ts
 │   │   │   │    │     └── about.component.html
 │   │   │   │    │
-│   │   │   │    ├── 📁 store/ 
-│   │   │   │    │     ├── store.component.scss
-│   │   │   │    │     ├── store.component.spec.ts
-│   │   │   │    │     ├── store.component.ts
-│   │   │   │    │     └── store.component.html
+│   │   │   │    └── 📁 store/ 
+│   │   │   │          ├── store.component.scss
+│   │   │   │          ├── store.component.spec.ts
+│   │   │   │          ├── store.component.ts
+│   │   │   │          └── store.component.html
 │   │   │   │
 │   │   │   ├── 📁 config/ 
 │   │   │   │    ├── app.config.server.ts
@@ -91,8 +90,7 @@
 │   │   │       │    ├── joaoguilherme.JPG
 │   │   │       │    └── gustavojose.JPG
 │   │   │       │
-|   │   │       ├── nicowork-logo-dark.png
-|   │   │       └── nicowork-logo.png
+|   │   │       └── nicowork-logo.ico
 │   │   │
 │   │   ├── 📁 environment/
 │   │   │   └── environment.prod.ts
