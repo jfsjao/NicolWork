@@ -1,16 +1,14 @@
 .blog-home {
   background-color: var(--bg-color);
   
-  /* Carrossel Hero - Versão Atualizada */
   .hero-carousel {
     position: relative;
     height: 100vh;
     max-height: 900px;
     overflow: hidden;
-    margin-top: -70px; // Compensa a navbar
-    padding-top: 70px; // Adiciona espaço para a navbar
+    margin-top: -70px;
+    padding-top: 70px;
     
-    // Garante que o carrossel cubra toda a largura
     width: 100vw;
     left: 50%;
     transform: translateX(-50%);
@@ -120,6 +118,14 @@
             background-color: transparent;
             color: var(--text-light);
             border-color: var(--text-light);
+          }
+          h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+          }
+          
+          p {
+            margin-bottom: 1.5rem;
           }
         }
       }
@@ -248,7 +254,7 @@
       flex: 1;
 
       h2 {
-        color: var(--color-dark);
+        color: #2c3e50;
         font-size: 2.5rem;
         margin-bottom: 1.5rem;
         line-height: 1.3;
