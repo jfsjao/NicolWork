@@ -2,7 +2,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +15,6 @@ export class AuthComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
-  // Controla se é login ou registro
   isLoginMode = true;
   isLoading = false;  //spinner de carregamento
 
