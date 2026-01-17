@@ -27,7 +27,7 @@
     .footer-company {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #00527C;
+      color: #000000;
       margin-bottom: 0.5rem;
     }
 
@@ -43,7 +43,7 @@
   .footer-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #00527C;
+    color: #000000;
     margin-bottom: 1.5rem;
     text-align: center;
     position: relative;
@@ -56,7 +56,7 @@
       transform: translateX(-50%);
       width: 50px;
       height: 2px;
-      background: #009DCF;
+      background: #656565;
     }
   }
 
@@ -77,7 +77,7 @@
   }
 
   .footer-link {
-    color: #4a5568;
+    color: #000000;
     text-decoration: none;
     font-size: 0.95rem;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -93,12 +93,12 @@
       transform: translateX(-50%);
       width: 0;
       height: 1px;
-      background: #009DCF;
+      background: #707070;
       transition: width 0.25s ease;
     }
 
     &:hover {
-      color: #003457;
+      color: #888888;
       transform: translateX(3px);
 
       &::after {
@@ -143,20 +143,20 @@
     border-radius: 6px;
 
     i {
-      color: #007AA2;
+      color: #414141;
       font-size: 1.1rem;
       transition: transform 0.3s ease;
     }
 
     &::after {
       margin-left: 8px;
-      color: #007AA2;
+      color: #656565;
       font-weight: bold;
       animation: fadeIn 0.3s ease;
     }
 
     &:hover {
-      color: #003457;
+      color: #353535;
       transform: translateX(3px);
 
       i {
@@ -176,7 +176,7 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: rgba(0, 82, 124, 0.95);
+    background: #212121;
     color: white;
     padding: 12px 24px;
     border-radius: 8px;
@@ -263,7 +263,7 @@
   }
 
   .social-icon {
-    color: #00527C;
+    color: #000000;
     font-size: 1.2rem;
     transition: all 0.3s ease;
     display: flex;
@@ -272,18 +272,18 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(0, 157, 207, 0.1);
+    background: rgba(87, 87, 87, 0.137);
 
     &:hover {
       color: white;
-      background: #009DCF;
+      background: #656565;
       transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0, 157, 207, 0.2);
+      box-shadow: 0 2px 2px #575757;
     }
   }
 
   .footer-copyright {
-    color: #718096;
+    color: #acacac;
     font-size: 0.9rem;
     text-align: center;
     display: flex;
@@ -298,13 +298,13 @@
   }
 
   .dev-link {
-    color: #00527C;
+    color: #000000;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s ease;
 
     &:hover {
-      color: #003457;
+      color: #010057;
       text-decoration: underline;
     }
   }

@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, Renderer2 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ViewChild } from '@angular/core';
 
 interface Slide {
   image: string;
@@ -52,6 +53,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
+  @ViewChild('autoVideo') autoVideo!: ElementRef<HTMLVideoElement>;
+
+  private videoObserver!: IntersectionObserver;
+
   // Configuração do carrossel de logos
   partnerLogos: Logo[] = [
     { image: 'assets/images/logos/playtruco.png', alt: 'Play Truco' },
@@ -76,16 +81,43 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     private el: ElementRef
   ) {}
 
+  
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.initCarousels();
       this.resetAnimation();
+      this.initVideoObserver();
     }
+  }
+  private initVideoObserver(): void {
+  if (!this.autoVideo) return;
+
+  this.videoObserver = new IntersectionObserver(
+    ([entry]) => {
+      const video = this.autoVideo.nativeElement;
+
+      if (entry.isIntersecting) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    },
+    {
+      threshold: 0.4 // 40% visível
+    }
+  );
+
+  this.videoObserver.observe(this.autoVideo.nativeElement);
   }
 
   ngOnDestroy(): void {
     this.clearIntervals();
+
+    if (this.videoObserver) {
+      this.videoObserver.disconnect();
+    }
   }
+
 
   // Inicializa ambos carrosséis
   private initCarousels(): void {

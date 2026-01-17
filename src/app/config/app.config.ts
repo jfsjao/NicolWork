@@ -1,7 +1,7 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
-import { routes } from './app.routes';
+import { routes } from '../config/app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { NgbConfig } from '@ng-bootstrap/ng-bootstrap';

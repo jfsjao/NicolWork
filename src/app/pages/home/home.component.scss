@@ -207,8 +207,48 @@
       }
     }
   }
+  .video-text-section {
+  padding: 6rem 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid rgba(0, 82, 124, 0.1);
 
-  /* Seção Imagem + Texto */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .video-container {
+    width: 100%;
+    max-width: 900px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 52, 87, 0.2);
+    background: #000;
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+
+    .video-container {
+      max-width: 100%;
+    }
+  }
+}
+  
   .image-text-section {
     padding: 6rem 0;
     background-color: var(--bg-secondary);
@@ -435,8 +475,7 @@
       }
     }
   }
-
-  /* Seção Final */
+  
   .text-section {
     padding: 6rem 0;
     background: var(--gradient-tech);
