@@ -1,96 +1,168 @@
-<div class="plans-container">
-    <!-- Seção Hero -->
-    <section class="plans-hero">
-        <div class="hero-content">
-            <h1><br><b>PACK N1 4.0</b></h1>
-            <p class="hero-subtitle">Agora editar nunca foi tão fácil, tudo que você precisa para criar conteúdo profissional e viralizar, de maneira vitalícia</p>
-        </div>
-    </section>
+<div class="plans-page">
+  <!-- HERO -->
+  <section class="plans-hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <span class="hero-badge">PACK N1 4.0</span>
+        <h1>Tudo que você precisa para criar, editar e viralizar</h1>
+        <p class="hero-subtitle">
+          Agora editar nunca foi tão fácil, tudo que você precisa para criar conteúdo
+          profissional e viralizar, de maneira vitalícia.
+        </p>
+      </div>
+    </div>
+  </section>
 
-    <!-- Seção Introdução -->
-    <section class="intro-section">
-        <div class="section-content">
-            <h2>Potencialize suas criações com nossos packs</h2>
-            <p>Desenvolvemos pacotes completos com tudo que um criador de conteúdo precisa para produzir materiais de
-                alta qualidade e engajamento. Nossos packs são atualizados mensalmente com novos recursos e tendências
-                do mercado.</p>
+  <!-- INTRODUÇÃO -->
+  <section class="intro-section">
+    <div class="section-content">
+      <h2>Potencialize suas criações com nossos packs</h2>
+      <p class="section-subtitle">
+        Desenvolvemos pacotes completos com tudo que um criador de conteúdo precisa
+        para produzir materiais de alta qualidade e engajamento. Nossos packs são
+        atualizados com novos recursos e tendências do mercado.
+      </p>
 
-            <div class="highlight-card">
-                <p>Muitos dos nossos criadores de conteúdo já utilizam nossos materiais para elevar a qualidade
-                    de suas publicações e aumentar o engajamento nas redes sociais.</p>
+      <div class="highlight-card">
+        <p>
+          Muitos dos nossos criadores de conteúdo já utilizam nossos materiais para
+          elevar a qualidade das publicações e aumentar o engajamento nas redes sociais.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTEÚDO DOS PACKS -->
+  <section class="pack-contents-section">
+    <div class="section-content">
+      <span class="section-kicker">PACK N1 4.0</span>
+      <h2>Organização inteligente para encontrar tudo em segundos</h2>
+      <p class="section-subtitle">
+        Tudo separado por categorias para facilitar seu fluxo e acelerar sua produção.
+      </p>
+
+      <div class="contents-grid">
+        @for (item of packCategories; track $index) {
+          <article class="content-card">
+            <div class="content-number">{{ item.number }}</div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKS POPULARES -->
+  <section class="logo-section">
+    <div class="section-content">
+      <h2>Os nossos packs mais populares</h2>
+
+      <div class="logos-wrapper">
+        <div class="logos-container">
+          @for (logo of partnerLogos; track $index) {
+            <div class="logo-item">
+              <img [src]="logo.image" [alt]="logo.alt" />
             </div>
-        </div>
-    </section>
+          }
 
-    <!-- Seção Comparação de Planos -->
-    <section class="plans-comparison">
-        <div class="section-content">
-            <h2>Escolha o plano ideal para suas necessidades</h2>
-            <p class="section-subtitle">Todos os planos são vitalícios, incluem suporte e atualizações mensais</p>
-
-            <div class="plans-grid">
-                <!-- Plano Basic -->
-                <div class="plan-card basic">
-                    <div class="plan-header">
-                        <h3>Basic</h3>
-                        <div class="price">R$49<span>/Vitalício</span></div>
-                        <p class="starter-pack">Para começar</p>
-                    </div>
-                    <div class="plan-features">
-                        <ul>
-                            <li *ngFor="let feature of basicFeatures">
-                                <i class="bi bi-check-circle-fill"></i> {{feature}}
-                            </li>
-                        </ul>
-                    </div>
-                    <button class="cta-button">Comprar agora</button>
-                </div>
-
-                <!-- Plano Gold -->
-                <div class="plan-card gold">
-                    <div class="plan-header">
-                        <h3>Gold</h3>
-                        <div class="price">R$69<span>/Vitalício</span></div>
-                        <p class="popular-choice">Escolha popular</p>
-                    </div>
-                    <div class="plan-features">
-                        <ul>
-                            <li *ngFor="let feature of goldFeatures">
-                                <i class="bi bi-check-circle-fill"></i> {{feature}}
-                            </li>
-                        </ul>
-                    </div>
-                    <button class="cta-button">Comprar agora</button>
-                </div>
-
-                <!-- Plano Premium -->
-                <div class="plan-card premium">
-                    <div class="plan-header">
-                        <h3>Premium</h3>
-                        <div class="price">R$99<span>/Vitalício</span></div>
-                        <p class="best-value">Melhor custo-benefício</p>
-                    </div>
-                    <div class="plan-features">
-                        <ul>
-                            <li *ngFor="let feature of premiumFeatures">
-                                <i class="bi bi-check-circle-fill"></i> {{feature}}
-                            </li>
-                        </ul>
-                    </div>
-                    <button class="cta-button">Comprar agora</button>
-                </div>
-
-
+          @for (logo of partnerLogos; track $index) {
+            <div class="logo-item">
+              <img [src]="logo.image" [alt]="logo.alt" />
             </div>
+          }
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Seção CTA -->
-    <section class="cta-section">
-        <div class="cta-content">
-            <h2>Pronto para elevar seu conteúdo?</h2>
-            <p>Escolha seu plano e comece a criar como um profissional hoje mesmo</p>
-            <a routerLink="/contact" class="cta-button">Tire suas dúvidas</a>
-        </div>
-    </section>
+  <!-- PLANOS -->
+  <section class="plans-comparison">
+    <div class="section-content">
+      <h2>Escolha o plano ideal para suas necessidades</h2>
+      <p class="section-subtitle">
+        Todos os planos são vitalícios, incluem suporte e atualizações mensais.
+      </p>
+
+      <div class="plans-grid">
+        <!-- BASIC -->
+        <article class="plan-card basic">
+          <div class="plan-header">
+            <span class="plan-badge">Basic</span>
+
+            <div class="price-block">
+              <div class="price">R$49 <span>/Vitalício</span></div>
+              <p class="plan-tag">Para começar</p>
+            </div>
+          </div>
+
+          <div class="plan-features">
+            <ul>
+              <li *ngFor="let feature of basicFeatures">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>{{ feature }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <button class="cta-button">Comprar agora</button>
+        </article>
+
+        <!-- GOLD -->
+        <article class="plan-card gold">
+          <div class="plan-header">
+            <span class="plan-badge">Gold</span>
+
+            <div class="price-block">
+              <div class="price">R$69 <span>/Vitalício</span></div>
+              <p class="plan-tag">Escolha popular</p>
+            </div>
+          </div>
+
+          <div class="plan-features">
+            <ul>
+              <li *ngFor="let feature of goldFeatures">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>{{ feature }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <button class="cta-button">Comprar agora</button>
+        </article>
+
+        <!-- PREMIUM -->
+        <article class="plan-card premium">
+          <div class="plan-header">
+            <span class="plan-badge featured">Premium</span>
+
+            <div class="price-block">
+              <div class="price">R$99 <span>/Vitalício</span></div>
+              <p class="plan-tag highlight">Melhor custo-benefício</p>
+            </div>
+          </div>
+
+          <div class="plan-features">
+            <ul>
+              <li *ngFor="let feature of premiumFeatures">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>{{ feature }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <button class="cta-button">Comprar agora</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Pronto para elevar seu conteúdo?</h2>
+      <p>Escolha seu plano e comece a criar como um profissional hoje mesmo.</p>
+      <a routerLink="/contact" class="cta-button">Tire suas dúvidas</a>
+    </div>
+  </section>
 </div>

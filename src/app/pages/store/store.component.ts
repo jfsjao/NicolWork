@@ -19,6 +19,42 @@ export class StoreComponent {
   joaoGuilhermeImage = 'assets/images/depoimentos/joaoguilherme.png';
   gustavoJoseImage = 'assets/images/depoimentos/gustavojose.png';
 
+  packCategories = [
+    {
+      number: '1',
+      title: 'Plugins',
+      description: 'Scripts, presets, plugins e recursos para agilizar seu fluxo e facilitar sua edição.'
+    },
+    {
+      number: '2',
+      title: 'Vídeos',
+      description: 'Arquivos em MP4, MOV e outros formatos prontos para editar e reutilizar no seu conteúdo.'
+    },
+    {
+      number: '3',
+      title: 'Imagens',
+      description: 'Arquivos em PNG, JPG e outros formatos úteis para composições, thumbnails e posts.'
+    },
+    {
+      number: '4',
+      title: 'Photoshop',
+      description: 'Mockups, texturas, templates, actions e materiais em PSD para acelerar sua criação.'
+    },
+    {
+      number: '5',
+      title: 'Outros',
+      description: 'Arquivos complementares, referências e materiais extras que ampliam ainda mais o pack.'
+    }
+  ];
+
+  partnerLogos = [
+    { image: 'assets/images/depoimentos/joaoguilherme.png', alt: 'Pack de backgrounds' },
+    { image: 'assets/images/depoimentos/gustavojose.png', alt: 'Pack de programas' },
+    { image: 'assets/images/depoimentos/joaoguilherme.png', alt: 'Pack de sfx' },
+    { image: 'assets/images/depoimentos/gustavojose.png', alt: 'Pack de scripts' },
+    { image: 'assets/images/depoimentos/joaoguilherme.png', alt: 'Pack de fontes' }
+  ];
+
   premiumFeatures = [
     "Baixar Reels",
     "Banco de vídeos exclusivos",
