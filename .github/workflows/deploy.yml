@@ -26,6 +26,25 @@ jobs:
       - name: Build Angular
         run: npm run build -- --configuration production --base-href /
 
+      - name: Create .htaccess for Angular routes
+        run: |
+          cat > dist/public/.htaccess << 'EOF'
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteBase /
+
+            RewriteRule ^index\.html$ - [L]
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . /index.html [L]
+          </IfModule>
+          EOF
+
+      - name: Verify build output
+        run: |
+          ls -la dist/public
+          test -f dist/public/index.html
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
