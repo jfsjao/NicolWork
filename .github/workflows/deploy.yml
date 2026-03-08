@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular
-        run: npm run build -- --configuration production
+        run: npm run build -- --configuration production --base-href /
 
       - name: Setup SSH
         run: |
@@ -36,6 +36,6 @@ jobs:
       - name: Deploy build
         run: |
           rsync -avz --delete \
-          -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_rsa" \
-          dist/public/browser/ \
-          ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_TARGET }}/
+            -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_rsa" \
+            dist/public/ \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_TARGET }}/
