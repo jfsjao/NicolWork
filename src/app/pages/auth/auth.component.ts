@@ -1,4 +1,3 @@
-// auth.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +20,7 @@ export class AuthComponent {
   loginForm: FormGroup;
   registerForm: FormGroup;
 
+  
   constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],

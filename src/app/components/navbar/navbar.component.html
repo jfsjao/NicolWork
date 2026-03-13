@@ -33,8 +33,47 @@
         </li>
       </ul>
 
-      <div class="auth-section d-flex">
-        <a routerLink="/auth" class="auth-link auth-btn" (click)="closeMobileMenu()">Acessar</a>
+      <div class="auth-section d-flex align-items-center">
+        <ng-container *ngIf="!isAuthenticated; else loggedMenu">
+          <a routerLink="/auth" class="auth-link auth-btn" (click)="closeMobileMenu()">Acessar</a>
+        </ng-container>
+
+        <ng-template #loggedMenu>
+          <div class="user-menu-wrapper">
+            <button type="button" class="user-menu-trigger" (click)="toggleUserMenu()">
+              <div class="user-avatar">
+                <i class="bi bi-person"></i>
+              </div>
+
+              <div class="user-meta">
+                <span class="user-greeting">
+                  Olá, {{ currentUser?.displayName}}
+                </span>
+                <span class="user-subtitle">Minha conta</span>
+              </div>
+
+              <i class="bi bi-chevron-down user-arrow" [class.open]="isUserMenuOpen"></i>
+            </button>
+
+            <div class="user-dropdown" *ngIf="isUserMenuOpen">
+              <a routerLink="/store" class="dropdown-item" (click)="isUserMenuOpen = false; closeMobileMenu()">
+                Meus produtos
+              </a>
+
+              <a routerLink="/store" class="dropdown-item" (click)="isUserMenuOpen = false; closeMobileMenu()">
+                Meus downloads
+              </a>
+
+              <a routerLink="/store" class="dropdown-item" (click)="isUserMenuOpen = false; closeMobileMenu()">
+                Minha conta
+              </a>
+
+              <button type="button" class="dropdown-item logout-item" (click)="onLogout()">
+                Sair
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

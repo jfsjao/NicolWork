@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword,
+        signOut, User, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import { auth } from '../../../../firebase-config';
 import { ToastrService } from 'ngx-toastr';
 

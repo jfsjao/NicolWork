@@ -1,8 +1,9 @@
-import { Component, OnInit, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Inject, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,10 +16,13 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
+  private authService = inject(AuthService);
+  
   isNavbarHidden = false;
   isMobileMenuOpen = false;
   isMenuOpen = false;
   isMobileView = false;
+  isUserMenuOpen = false;
 
   private lastScroll = 0;
   private readonly SCROLL_THRESHOLD = 100;
@@ -33,6 +37,24 @@ export class NavbarComponent implements OnInit {
     if (this.isBrowser) {
       this.checkViewport();
     }
+  }
+
+  get currentUser() {
+    return this.authService.currentUser();
+  }
+
+  get isAuthenticated() {
+    return this.authService.isAuthenticated();
+  }
+
+  toggleUserMenu() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  async onLogout() {
+    this.isUserMenuOpen = false;
+    this.closeMobileMenu();
+    await this.authService.logout();
   }
 
   @HostListener('window:scroll')
@@ -93,8 +115,13 @@ export class NavbarComponent implements OnInit {
     if (!this.isBrowser) return;
 
     const target = event.target as HTMLElement;
+
     if (!target.closest('.navbar') && !target.closest('.navbar-toggler') && this.isMobileMenuOpen) {
       this.closeMobileMenu();
+    }
+
+    if (!target.closest('.user-menu-wrapper')) {
+      this.isUserMenuOpen = false;
     }
   }
 }
