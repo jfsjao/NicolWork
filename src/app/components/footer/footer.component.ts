@@ -3,11 +3,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ClipboardService } from '../../core/services/clipboard/clipboard.service';
 import { ToastrService } from 'ngx-toastr';
+import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, BrandLogoComponent],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })

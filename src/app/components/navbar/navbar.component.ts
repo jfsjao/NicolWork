@@ -1,23 +1,24 @@
 import { Component, OnInit, Inject, HostListener, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
+import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule 
+    RouterModule,
+    BrandLogoComponent
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
-  
+
   isNavbarHidden = false;
   isMobileMenuOpen = false;
   isMenuOpen = false;
@@ -47,8 +48,22 @@ export class NavbarComponent implements OnInit {
     return this.authService.isAuthenticated();
   }
 
+  get displayUserName(): string {
+    const user = this.currentUser;
+
+    if (!user) return 'Usuário';
+    if (user.displayName && user.displayName.trim()) return user.displayName;
+
+    return user.email?.split('@')[0] || 'Usuário';
+  }
+
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  handleDropdownNavigation() {
+    this.isUserMenuOpen = false;
+    this.closeMobileMenu();
   }
 
   async onLogout() {
@@ -79,6 +94,7 @@ export class NavbarComponent implements OnInit {
     if (!this.isBrowser) return;
 
     this.checkViewport();
+
     if (!this.isMobileView && this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }

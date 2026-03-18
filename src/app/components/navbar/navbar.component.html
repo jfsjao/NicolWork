@@ -1,41 +1,55 @@
 <nav class="navbar navbar-expand-lg fixed-top" [class.navbar-hidden]="isNavbarHidden">
   <div class="container-nico navbar-inner">
 
-    <!-- Logo -->
-    <a class="navbar-brand" routerLink="/home" (click)="closeMobileMenu()">
-      <span class="brand">
-        <img src="/assets/images/logo-dark.webp" alt="N1" class="logo-image" />
-      </span>
-    </a>
+  <a class="navbar-brand" routerLink= "/home" (click)="closeMobileMenu()">
+    <app-brand-logo></app-brand-logo>
+  </a>
 
     <!-- Toggle mobile -->
-    <button class="navbar-toggler" type="button" (click)="toggleMobileMenu()">
-      <i class="bi bi-list"></i>
+    <button
+      class="navbar-toggler"
+      type="button"
+      [class.open]="isMenuOpen"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Abrir menu de navegação"
+      (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
 
     <!-- Conteúdo -->
     <div class="navbar-collapse" [class.show]="isMenuOpen">
+
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
         <li class="nav-item">
-          <a class="nav-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">Home</a>
+          <a class="nav-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()"> Início </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/store" routerLinkActive="active" (click)="closeMobileMenu()">Produtos</a>
+          <a class="nav-link" routerLink="/store" routerLinkActive="active" (click)="closeMobileMenu()"> Packs </a>
+        </li>
+
+        <!-- ÁREA DO CLIENTE (SÓ LOGADO) -->
+        <ng-container *ngIf="isAuthenticated">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" (click)="closeMobileMenu()"> Área do Cliente </a>
+          </li>
+        </ng-container>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="closeMobileMenu()"> Sobre </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="closeMobileMenu()">Sobre</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()">Contato</a>
+          <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()"> Contato </a>
         </li>
       </ul>
 
       <div class="auth-section d-flex align-items-center">
         <ng-container *ngIf="!isAuthenticated; else loggedMenu">
-          <a routerLink="/auth" class="auth-link auth-btn" (click)="closeMobileMenu()">Acessar</a>
+          <a routerLink="/auth" class="auth-link auth-btn" (click)="closeMobileMenu()"> Acessar </a>
         </ng-container>
 
         <ng-template #loggedMenu>
@@ -46,31 +60,19 @@
               </div>
 
               <div class="user-meta">
-                <span class="user-greeting">
-                  Olá, {{ currentUser?.displayName}}
-                </span>
+                <span class="user-greeting"> Olá, {{ displayUserName }} </span>
                 <span class="user-subtitle">Minha conta</span>
               </div>
 
               <i class="bi bi-chevron-down user-arrow" [class.open]="isUserMenuOpen"></i>
             </button>
 
+            <!-- MENU ACESSAR -->
             <div class="user-dropdown" *ngIf="isUserMenuOpen">
-              <a routerLink="/store" class="dropdown-item" (click)="isUserMenuOpen = false; closeMobileMenu()">
-                Meus produtos
-              </a>
-
-              <a routerLink="/store" class="dropdown-item" (click)="isUserMenuOpen = false; closeMobileMenu()">
-                Meus downloads
-              </a>
-
-              <a routerLink="/store" class="dropdown-item" (click)="isUserMenuOpen = false; closeMobileMenu()">
-                Minha conta
-              </a>
-
-              <button type="button" class="dropdown-item logout-item" (click)="onLogout()">
-                Sair
-              </button>
+              <a routerLink="/packs" class="dropdown-item" (click)="handleDropdownNavigation()"> Minha Biblioteca </a>
+              <a routerLink="/downloads" class="dropdown-item" (click)="handleDropdownNavigation()"> Downloads </a>
+              <a routerLink="/account" class="dropdown-item" (click)="handleDropdownNavigation()"> Conta </a>
+              <button type="button" class="dropdown-item logout-item" (click)="onLogout()"> Sair </button>
             </div>
           </div>
         </ng-template>

@@ -48,7 +48,7 @@
                 "output": "assets/videos/"
               },
               {
-                "glob": "**/*.@(woff2|ttf|eot)",
+                "glob": "**/*.@(woff2|ttf|eot|otf)",
                 "input": "src/assets/fonts",
                 "output": "assets/fonts/"
               }

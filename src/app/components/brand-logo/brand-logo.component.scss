@@ -1,0 +1,36 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-text {
+  font-family: 'NicolFont', sans-serif;
+  color: var(--text-light);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.brand-word {
+  display: inline-block;
+  line-height: 0.9;
+}
+
+.brand-word-left {
+  margin-right: -0.32em;
+}
+
+.brand-word-right {
+  margin-left: -0.34em;
+}
+
+.brand-logo {
+  width: auto;
+  display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  flex-shrink: 0;
+  transform: translateY(0.02em);
+}
