@@ -11,7 +11,7 @@
     "test:ci": "ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false",
     "test:main-screens": "ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false --include src/testing/main-screens.workflow.spec.ts",
     "test:buttons-routes": "ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false --include src/testing/buttons-routes.workflow.spec.ts",
-    "test:auth-flow": "ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false --include src/testing/auth-flow.workflow.spec.ts",
+    "test:auth-flow": "ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false --include src/testing/auth-flow.workflow.spec.ts --include src/app/core/services/auth.service.spec.ts",
     "test:post-login": "ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false --include src/testing/post-login.workflow.spec.ts",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
   },
