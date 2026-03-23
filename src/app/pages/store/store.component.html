@@ -59,18 +59,22 @@
       <h2>Os nossos packs mais populares</h2>
 
       <div class="logos-wrapper">
-        <div class="logos-container">
-          @for (logo of partnerLogos; track $index) {
-            <div class="logo-item">
-              <img [src]="logo.image" [alt]="logo.alt" />
-            </div>
-          }
+        <div class="logos-marquee">
+          <div class="logos-container">
+            @for (logo of repeatedPartnerLogos; track $index) {
+              <div class="logo-item">
+                <img [src]="logo.image" [alt]="logo.alt" />
+              </div>
+            }
+          </div>
 
-          @for (logo of partnerLogos; track $index) {
-            <div class="logo-item">
-              <img [src]="logo.image" [alt]="logo.alt" />
-            </div>
-          }
+          <div class="logos-container" aria-hidden="true">
+            @for (logo of repeatedPartnerLogos; track $index) {
+              <div class="logo-item">
+                <img [src]="logo.image" [alt]="logo.alt" />
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>

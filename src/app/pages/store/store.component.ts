@@ -10,15 +10,6 @@ import { RouterModule, RouterLink } from '@angular/router';
   styleUrls: ['./store.component.scss']
 })
 export class StoreComponent {
-  stats = {
-    clients: 500,
-    years: 1,
-    satisfaction: 100
-  };
-
-  joaoGuilhermeImage = 'assets/images/depoimentos/joaoguilherme.png';
-  gustavoJoseImage = 'assets/images/depoimentos/gustavojose.png';
-
   packCategories = [
     {
       number: '1',
@@ -48,12 +39,19 @@ export class StoreComponent {
   ];
 
   partnerLogos = [
-    { image: 'assets/images/depoimentos/joaoguilherme.png', alt: 'Pack de backgrounds' },
-    { image: 'assets/images/depoimentos/gustavojose.png', alt: 'Pack de programas' },
-    { image: 'assets/images/depoimentos/joaoguilherme.png', alt: 'Pack de sfx' },
-    { image: 'assets/images/depoimentos/gustavojose.png', alt: 'Pack de scripts' },
-    { image: 'assets/images/depoimentos/joaoguilherme.png', alt: 'Pack de fontes' }
+    { image: 'assets/images/packs/baixar_reels.webp', alt: 'Pack Baixar Reels' },
+    { image: 'assets/images/packs/kit_after_effects.webp', alt: 'Pack After Effects' },
+    { image: 'assets/images/packs/illustrator_Pack.webp', alt: 'Pack Illustrator' },
+    { image: 'assets/images/packs/PACK_VIRAL.webp', alt: 'Pack Viral' },
+    { image: 'assets/images/packs/kit_photoshop.webp', alt: 'Pack Photoshop' },
+    { image: 'assets/images/packs/VFX.webp', alt: 'Pack VFX' },
+    { image: 'assets/images/packs/premiere.webp', alt: 'Pack Premiere' },
+    { image: 'assets/images/packs/canva.webp', alt: 'Pack Canva' },
+    { image: 'assets/images/packs/personagens.webp', alt: 'Pack Personagens' },
+    { image: 'assets/images/packs/Pack_PLRs.webp', alt: 'Pack PLRs' }
   ];
+
+  repeatedPartnerLogos = [...this.partnerLogos, ...this.partnerLogos];
 
   premiumFeatures = [
     "Baixar Reels",
