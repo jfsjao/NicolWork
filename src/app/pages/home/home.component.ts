@@ -1,10 +1,10 @@
-import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, Renderer2 } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ViewChild } from '@angular/core';
 
 interface Slide {
   image: string;
+  mobileImage?: string;
   alt: string;
   title: string;
   description: string;
@@ -30,44 +30,43 @@ interface PackFeature {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-
 export class HomeComponent implements AfterViewInit, OnDestroy {
-  // Configuração do carrossel principal
+  @ViewChild('autoVideo') autoVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('logosViewport') logosViewport!: ElementRef<HTMLDivElement>;
+
   slides: Slide[] = [
     {
       image: 'assets/images/carrosel/banner1.gif',
+      mobileImage: 'assets/images/empresa/nico-marketing.jpg',
       alt: 'Imagem destaque 1',
-      title: 'Bem-vindo ao Nosso Blog',
-      description: 'Descubra conteúdos exclusivos e atualizados regularmente',
-      buttonText: 'Explorar',
-      buttonLink: '/home'
+      title: 'Descubra conteúdos que aceleram sua criação',
+      description: 'Entre nos banners e navegue direto para as áreas mais importantes da plataforma.',
+      buttonText: 'Explorar agora',
+      buttonLink: '/store'
     },
     {
       image: 'assets/images/carrosel/banner2.gif',
+      mobileImage: 'assets/images/packs/PACK_VIRAL.webp',
       alt: 'Pack Edit',
-      title: 'Conteúdo de edições',
-      description: 'Packs variados para ajudar na edição de vídeos e fotos',
-      buttonText: 'Ver Packs',
+      title: 'Conteúdos completos para edição e marketing',
+      description: 'Packs variados para ajudar na edição de vídeos, fotos e criativos com mais impacto.',
+      buttonText: 'Ver packs',
       buttonLink: '/store'
     },
     {
       image: 'assets/images/carrosel/banner3.gif',
+      mobileImage: 'assets/images/empresa/nico-coringa.jpg',
       alt: 'Sobre nós',
-      title: 'Conheça a NicolWork',
-      description: 'Saiba como nossa empresa funciona e o que fazemos',
-      buttonText: 'Sobre Nós',
+      title: 'Conheça a NicolWork de perto',
+      description: 'Veja como a empresa funciona e o que entregamos para creators, designers e editores.',
+      buttonText: 'Sobre nós',
       buttonLink: '/about'
     }
   ];
 
-  @ViewChild('autoVideo') autoVideo!: ElementRef<HTMLVideoElement>;
-
-  private videoObserver!: IntersectionObserver;
-
   joaoGuilhermeImage = 'assets/images/depoimentos/joaoguilherme.png';
   gustavoJoseImage = 'assets/images/depoimentos/gustavojose.png';
-  
-  // Configuração do carrossel de logos
+
   partnerLogos: Logo[] = [
     { image: 'assets/images/logos/adobe_illustrator.webp', alt: 'Adobe Illustrator' },
     { image: 'assets/images/logos/after_effects.webp', alt: 'After Effects' },
@@ -79,55 +78,40 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     { image: 'assets/images/logos/gemini.webp', alt: 'Gemini' },
     { image: 'assets/images/logos/canva.webp', alt: 'Canva' }
   ];
+  repeatedPartnerLogos: Logo[] = [...this.partnerLogos, ...this.partnerLogos];
 
-  // Configuração do pack showcase
   packFeatures: PackFeature[] = [
-    { number: '44Gb', title: 'Anime (AMV)', description: 'Arquivos para edições de Anime AMV e MMV, incluindo clipes de animes, personagens em PNG, mangas etc...' },
-    { number: '54Gb', title: 'Mockups', description: 'Formas surreais de deixar seus projetos muito mais apresentáveis, com vários mockups de inúmeros estilos diferentes.' },
-    { number: '10Gb', title: 'Plugins e Presets', description: 'Reunimos os melhores Scripts, Plugins e Presets para usar no After Effects! Hoje é impensável editar sem eles.' },
-    { number: '104Gb', title: 'Overlays', description: 'São independente em qualquer edição, ele tem o poder de transformar algo simples em extremamente profissional.' },
-    { number: '105Gb', title: 'Pack para Photoshop', description: 'Sabendo da quantidade enorme de editores que usam esse programa, temos diversos arquivos .psd pra você!' },
-    { number: '115Gb', title: 'Templates de After Effects', description: 'Inúmeros projetos de intros, lower thirds prontos, cenários, edições finalizadas apenas para você usar como quiser!' },
+    { number: '44Gb', title: 'Anime (AMV)', description: 'Arquivos para edições de Anime AMV e MMV, incluindo clipes, PNGs e mangas.' },
+    { number: '54Gb', title: 'Mockups', description: 'Mockups diversos para deixar seus projetos muito mais apresentáveis e profissionais.' },
+    { number: '10Gb', title: 'Plugins e Presets', description: 'Scripts, plugins e presets para acelerar seu fluxo no After Effects.' },
+    { number: '104Gb', title: 'Overlays', description: 'Elementos que transformam algo simples em algo muito mais marcante.' },
+    { number: '105Gb', title: 'Pack para Photoshop', description: 'Arquivos PSD, recursos visuais e materiais extras para editores e designers.' },
+    { number: '115Gb', title: 'Templates de After Effects', description: 'Intros, lower thirds, cenas prontas e projetos completos para usar como quiser.' },
   ];
 
-  // Variáveis para controle do carrossel
   currentSlide = 0;
-  currentLogoIndex = 0;
+  isVideoMuted = true;
+  isVideoPlaying = false;
+
+  private videoObserver!: IntersectionObserver;
   private carouselInterval: number | null = null;
-  private logoInterval: number | null = null;
-  private readonly CAROUSEL_DELAY = 6000; // 6 segundos
-  private readonly LOGO_DELAY = 3000; // 3 segundos
+  private logosAnimationFrame: number | null = null;
+  private logosPreviousTime = 0;
+  private logosOffset = 0;
+  private readonly CAROUSEL_DELAY = 6000;
+  private readonly LOGOS_SPEED = 36;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private renderer: Renderer2,
-    private el: ElementRef
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  
   ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.initCarousels();
-      this.resetAnimation();
-      this.initVideoObserver();
-    }
-  }
-  private initVideoObserver(): void {
-  if (!this.autoVideo) return;
+    if (!isPlatformBrowser(this.platformId)) return;
 
-  this.videoObserver = new IntersectionObserver(
-    ([entry]) => {
-      const video = this.autoVideo.nativeElement;
-
-      if (entry.isIntersecting) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    }
-  );
-
-  this.videoObserver.observe(this.autoVideo.nativeElement);
+    this.initCarousels();
+    this.startLogosLoop();
+    this.initVideoObserver();
+    this.syncVideoState();
   }
 
   ngOnDestroy(): void {
@@ -136,30 +120,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     if (this.videoObserver) {
       this.videoObserver.disconnect();
     }
-  }
-
-  private initCarousels(): void {
-    this.startCarousel();
-    this.startLogoCarousel();
-  }
-
-  // Limpa os intervalos
-  private clearIntervals(): void {
-    if (this.carouselInterval) {
-      clearInterval(this.carouselInterval);
-      this.carouselInterval = null;
-    }
-    if (this.logoInterval) {
-      clearInterval(this.logoInterval);
-      this.logoInterval = null;
-    }
-  }
-
-  // Controle do carrossel principal
-  private startCarousel(): void {
-    this.carouselInterval = window.setInterval(() => {
-      this.nextSlide();
-    }, this.CAROUSEL_DELAY);
   }
 
   nextSlide(): void {
@@ -176,50 +136,103 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private startLogoCarousel(): void {
-    this.logoInterval = window.setInterval(() => {
-      this.nextLogo();
-    }, this.LOGO_DELAY);
+  onVideoPlay(): void {
+    this.isVideoPlaying = true;
   }
 
-  nextLogo(): void {
-    this.currentLogoIndex = (this.currentLogoIndex + 1) % this.partnerLogos.length;
-    this.scrollToLogo(this.currentLogoIndex);
+  onVideoPause(): void {
+    this.isVideoPlaying = false;
   }
 
-  prevLogo(): void {
-    this.currentLogoIndex = (this.currentLogoIndex - 1 + this.partnerLogos.length) % this.partnerLogos.length;
-    this.scrollToLogo(this.currentLogoIndex);
+  onVideoVolumeChange(): void {
+    if (!this.autoVideo) return;
+    this.isVideoMuted = this.autoVideo.nativeElement.muted;
   }
 
-  private scrollToLogo(index: number): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  private initCarousels(): void {
+    this.startCarousel();
+  }
 
-    const container = this.el.nativeElement.querySelector('.logos-container');
-    const logos = this.el.nativeElement.querySelectorAll('.logo-item');
-    
-    if (container && logos[index]) {
-      const logo = logos[index];
-      const containerWidth = container.clientWidth;
-      const logoLeft = logo.offsetLeft;
-      const logoWidth = logo.clientWidth;
-      
-      container.scrollTo({
-        left: logoLeft - (containerWidth / 2) + (logoWidth / 2),
-        behavior: 'smooth'
-      });
+  private initVideoObserver(): void {
+    if (!this.autoVideo) return;
+
+    this.videoObserver = new IntersectionObserver(([entry]) => {
+      const video = this.autoVideo.nativeElement;
+
+      if (entry.isIntersecting) {
+        video.play().then(() => {
+          this.isVideoPlaying = true;
+        }).catch(() => {});
+      } else {
+        video.pause();
+        this.isVideoPlaying = false;
+      }
+    });
+
+    this.videoObserver.observe(this.autoVideo.nativeElement);
+  }
+
+  private clearIntervals(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+      this.carouselInterval = null;
+    }
+
+    if (this.logosAnimationFrame) {
+      cancelAnimationFrame(this.logosAnimationFrame);
+      this.logosAnimationFrame = null;
     }
   }
 
-  private resetAnimation(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  private startCarousel(): void {
+    this.carouselInterval = window.setInterval(() => {
+      this.nextSlide();
+    }, this.CAROUSEL_DELAY);
+  }
 
-    const container = this.el.nativeElement.querySelector('.logos-container');
-    if (container) {
-      this.renderer.setStyle(container, 'animation', 'none');
-      setTimeout(() => {
-        this.renderer.setStyle(container, 'animation', '');
-      }, 10);
-    }
+  private startLogosLoop(): void {
+    if (!this.logosViewport) return;
+
+    const viewport = this.logosViewport.nativeElement;
+    const firstTrack = viewport.querySelector('.logos-container') as HTMLDivElement | null;
+
+    if (!firstTrack) return;
+
+    this.logosOffset = 0;
+    this.logosPreviousTime = 0;
+    viewport.scrollLeft = 0;
+
+    const animate = (time: number) => {
+      if (!this.logosPreviousTime) {
+        this.logosPreviousTime = time;
+      }
+
+      const delta = time - this.logosPreviousTime;
+      this.logosPreviousTime = time;
+
+      const trackWidth = firstTrack.scrollWidth;
+
+      if (trackWidth > 0) {
+        this.logosOffset += (delta / 1000) * this.LOGOS_SPEED;
+
+        if (this.logosOffset >= trackWidth) {
+          this.logosOffset -= trackWidth;
+        }
+
+        viewport.scrollLeft = this.logosOffset;
+      }
+
+      this.logosAnimationFrame = window.requestAnimationFrame(animate);
+    };
+
+    this.logosAnimationFrame = window.requestAnimationFrame(animate);
+  }
+
+  private syncVideoState(): void {
+    if (!this.autoVideo) return;
+
+    const video = this.autoVideo.nativeElement;
+    this.isVideoMuted = video.muted;
+    this.isVideoPlaying = !video.paused;
   }
 }

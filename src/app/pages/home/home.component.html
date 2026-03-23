@@ -1,73 +1,86 @@
 <div class="blog-home">
-  <!-- HERO / CAROUSEL -->
   <section class="hero-carousel">
-    <div class="hero-overlay"></div> 
+    <div class="hero-overlay"></div>
+
     <div class="carousel-track">
       @for (slide of slides; track $index; let i = $index) {
-      <div class="carousel-slide" [class.active]="currentSlide === i">
-        <img [src]="slide.image" [alt]="slide.alt">
-        <div class="slide-overlay"></div>
-        <div class="slide-content">
-          <h2 class="slide-title">{{ slide.title }}</h2>
-          <p class="slide-description">{{ slide.description }}</p>
-          <a [routerLink]="slide.buttonLink" class="slide-button">{{ slide.buttonText }}</a>
+        <div class="carousel-slide" [class.active]="currentSlide === i">
+          <a class="slide-hit-area" [routerLink]="slide.buttonLink" [attr.aria-label]="'Abrir ' + slide.title"></a>
+          <picture>
+            <source [srcset]="slide.mobileImage || slide.image" media="(max-width: 900px)" />
+            <img [src]="slide.image" [alt]="slide.alt" />
+          </picture>
+          <div class="slide-overlay"></div>
+
+          <div class="slide-content">
+            <h2 class="slide-title">{{ slide.title }}</h2>
+            <p class="slide-description">{{ slide.description }}</p>
+            <a [routerLink]="slide.buttonLink" class="slide-button">{{ slide.buttonText }}</a>
+          </div>
         </div>
-      </div>
       }
     </div>
 
     <div class="carousel-nav">
-      <button class="nav-arrow prev" (click)="prevSlide()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
+      <button class="nav-arrow prev" type="button" (click)="prevSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
 
       <div class="pagination-dots">
         @for (slide of slides; track $index; let i = $index) {
-        <span [class.active]="currentSlide === i" (click)="goToSlide(i)"></span>
+          <span [class.active]="currentSlide === i" (click)="goToSlide(i)"></span>
         }
       </div>
 
-      <button class="nav-arrow next" (click)="nextSlide()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
+      <button class="nav-arrow next" type="button" (click)="nextSlide()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
     </div>
   </section>
 
-  <!-- LOGOS -->
   <section class="logo-section">
     <div class="container">
       <h2>Principal foco dos nossos produtos</h2>
 
-      <div class="logos-wrapper">
-        <div class="logos-container">
-          @for (logo of partnerLogos; track $index) {
-          <div class="logo-item">
-            <img [src]="logo.image" [alt]="logo.alt" />
+      <div class="logos-wrapper" #logosViewport>
+        <div class="logos-marquee">
+          <div class="logos-container">
+            @for (logo of repeatedPartnerLogos; track $index) {
+              <div class="logo-item">
+                <img [src]="logo.image" [alt]="logo.alt" />
+              </div>
+            }
           </div>
-          }
 
-          @for (logo of partnerLogos; track $index) {
-          <div class="logo-item">
-            <img [src]="logo.image" [alt]="logo.alt" />
+          <div class="logos-container" aria-hidden="true">
+            @for (logo of repeatedPartnerLogos; track $index) {
+              <div class="logo-item">
+                <img [src]="logo.image" [alt]="logo.alt" />
+              </div>
+            }
           </div>
-          }
         </div>
       </div>
     </div>
   </section>
 
-  <!-- VIDEO -->
   <section class="video-text-section">
     <div class="container">
       <div class="content-wrapper">
         <div class="video-container">
-          <video #autoVideo muted playsinline preload="metadata">
+          <video
+            #autoVideo
+            muted
+            controls
+            playsinline
+            preload="metadata"
+            (play)="onVideoPlay()"
+            (pause)="onVideoPause()"
+            (volumechange)="onVideoVolumeChange()">
             <source src="assets/videos/video_exemplo.mp4" type="video/mp4" />
             Seu navegador não suporta a tag de vídeo.
           </video>
@@ -76,49 +89,47 @@
     </div>
   </section>
 
-<!-- PACK SHOWCASE -->
-<section class="pack-showcase-section">
-  <div class="showcase-content">
-    <h2>Conheça nosso Pack Supremo</h2>
+  <section class="pack-showcase-section">
+    <div class="showcase-content">
+      <h2>Conheça nosso Pack Supremo</h2>
 
-    <div class="showcase-wrapper">
-      <div class="cards-col cards-left">
-        @for (feature of packFeatures.slice(0, 3); track $index) {
-          <div class="feature-card">
-            <div class="feature-number">{{ feature.number }}</div>
-            <h3>{{ feature.title }}</h3>
-            <p>{{ feature.description }}</p>
+      <div class="showcase-wrapper">
+        <div class="cards-col cards-left">
+          @for (feature of packFeatures.slice(0, 3); track $index) {
+            <div class="feature-card">
+              <div class="feature-number">{{ feature.number }}</div>
+              <h3>{{ feature.title }}</h3>
+              <p>{{ feature.description }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="showcase-center">
+          <div class="product-image">
+            <img [src]="gustavoJoseImage" alt="Pack Supremo" />
           </div>
-        }
-      </div>
+        </div>
 
-      <div class="showcase-center">
-        <div class="product-image">
-          <img [src]="gustavoJoseImage" alt="Pack Supremo" />
+        <div class="cards-col cards-right">
+          @for (feature of packFeatures.slice(3, 6); track $index) {
+            <div class="feature-card">
+              <div class="feature-number">{{ feature.number }}</div>
+              <h3>{{ feature.title }}</h3>
+              <p>{{ feature.description }}</p>
+            </div>
+          }
         </div>
       </div>
 
-      <div class="cards-col cards-right">
-        @for (feature of packFeatures.slice(3, 6); track $index) {
-          <div class="feature-card">
-            <div class="feature-number">{{ feature.number }}</div>
-            <h3>{{ feature.title }}</h3>
-            <p>{{ feature.description }}</p>
-          </div>
-        }
+      <div class="showcase-footer">
+        <p class="showcase-description">
+          Todos na nuvem para acessar e baixar quando quiser e apenas o que quiser, de forma vitalícia.
+        </p>
+        <a routerLink="/store" class="showcase-cta">Pack Supremo</a>
       </div>
     </div>
+  </section>
 
-    <div class="showcase-footer">
-      <p class="showcase-description">
-        Todos na nuvem para acessar e baixar quando quiser e apenas o que quiser, de forma vitalícia.
-      </p>
-      <a href="/store" class="showcase-cta">Pack Supremo</a>
-    </div>
-  </div>
-</section>
-
-  <!-- PLANOS -->
   <section class="pricing-section">
     <div class="section-content">
       <h2>Planos</h2>
@@ -127,15 +138,12 @@
       </p>
 
       <div class="pricing-grid">
-
-        <!-- BÁSICO -->
         <article class="pricing-card">
           <div class="pricing-head">
             <span class="plan-badge">Básico</span>
             <h3>Para começar com padrão</h3>
 
             <div class="price">
-
               <div class="price-top">
                 <span class="old-price">R$249</span>
               </div>
@@ -147,7 +155,6 @@
               </div>
 
               <span class="pay-badge">normal</span>
-
             </div>
           </div>
 
@@ -157,18 +164,15 @@
             <li><i class="bi bi-check2"></i> Suporte padrão</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/contact">Quero esse</a>
+          <a class="pricing-cta" routerLink="/store">Quero esse</a>
         </article>
 
-
-        <!-- GOLD -->
         <article class="pricing-card">
           <div class="pricing-head">
             <span class="plan-badge">Gold</span>
             <h3>Mais variedade e velocidade</h3>
 
             <div class="price">
-
               <div class="price-top">
                 <span class="old-price">R$429</span>
               </div>
@@ -176,11 +180,10 @@
               <div class="price-main">
                 <span class="currency">R$</span>
                 <span class="value">350</span>
-                <span class="period">/Vitalício </span>
+                <span class="period">/Vitalício</span>
               </div>
 
               <span class="pay-badge">mais popular</span>
-
             </div>
           </div>
 
@@ -190,18 +193,15 @@
             <li><i class="bi bi-check2"></i> Suporte prioritário</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/contact">Quero esse</a>
+          <a class="pricing-cta" routerLink="/store">Quero esse</a>
         </article>
 
-
-        <!-- PREMIUM -->
         <article class="pricing-card featured">
           <div class="pricing-head">
             <span class="plan-badge featured-badge">Mais escolhido</span>
             <h3>O completo para crescer rápido</h3>
 
             <div class="price">
-
               <div class="price-top">
                 <span class="old-price">R$699</span>
               </div>
@@ -213,7 +213,6 @@
               </div>
 
               <span class="pay-badge">com pix</span>
-
             </div>
           </div>
 
@@ -223,14 +222,12 @@
             <li><i class="bi bi-check2"></i> Prioridade total</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/contact">Quero esse</a>
+          <a class="pricing-cta" routerLink="/store">Quero esse</a>
         </article>
-
       </div>
     </div>
   </section>
 
-  <!-- DIFERENCIAIS -->
   <section class="differentials-section">
     <div class="section-content">
       <h2>Por que escolher nossos packs?</h2>
@@ -241,7 +238,7 @@
             <i class="bi bi-arrow-repeat"></i>
           </div>
           <h3>Atualizações Mensais</h3>
-          <p>Novos conteúdos adicionados todo mês para manter você na frente da concorrência</p>
+          <p>Novos conteúdos adicionados todo mês para manter você na frente da concorrência.</p>
         </div>
 
         <div class="differential-card">
@@ -249,7 +246,7 @@
             <i class="bi bi-headset"></i>
           </div>
           <h3>Suporte Prioritário</h3>
-          <p>Equipe especializada para tirar dúvidas e ajudar na implementação</p>
+          <p>Equipe especializada para tirar dúvidas e ajudar na implementação.</p>
         </div>
 
         <div class="differential-card">
@@ -257,13 +254,12 @@
             <i class="bi bi-lightning-charge"></i>
           </div>
           <h3>Conteúdo Viralizável</h3>
-          <p>Materiais testados e aprovados por criadores com milhões de views</p>
+          <p>Materiais testados e aprovados por criadores com milhões de views.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DEPOIMENTOS -->
   <section class="testimonials-section">
     <div class="section-content">
       <h2>O que nossos clientes dizem</h2>
@@ -291,7 +287,7 @@
             <div class="quote-icon">
               <i class="bi bi-quote"></i>
             </div>
-            <p>"O pack premium tem TUDO que preciso, ainda mais por ser vitalício. Economizo horas de trabalho com os templates prontos."</p>
+            <p>"O pack premium tem tudo que preciso, ainda mais por ser vitalício. Economizo horas de trabalho com os templates prontos."</p>
           </div>
 
           <div class="testimonial-author">
