@@ -8,10 +8,21 @@
   color: var(--text-light);
 }
 
+.about-page .section-content,
 .about-page .container {
   width: min(100% - 32px, 1200px);
   margin-inline: auto;
   padding: 0;
+}
+
+.about-page .section-kicker {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8e99ff;
 }
 
 /* ===========================
@@ -20,29 +31,18 @@
 .about-page {
   .about-hero {
     position: relative;
-    min-height: 72vh;
-    max-height: 860px;
-    overflow: hidden;
-
-    margin-top: -70px;
-    padding-top: 70px;
-
+    padding: 7rem 1.5rem 30px;
     width: 100vw;
     left: 50%;
     margin-left: -50vw;
-
     background:
-      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      linear-gradient(rgba(0, 0, 0, 0.46), rgba(0, 0, 0, 0.46)),
       linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-2) 100%);
-
-    display: flex;
-    align-items: center;
   }
 
   .hero-content {
-    width: min(100% - 32px, 1200px);
+    width: min(100%, 1200px);
     margin-inline: auto;
-    padding: 6rem 0 5rem;
     position: relative;
     z-index: 2;
   }
@@ -53,19 +53,19 @@
 
   .about-hero h1 {
     margin: 0 0 1rem;
-    font-size: clamp(2.3rem, 5vw, 4rem);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
     line-height: 1.05;
     font-weight: 900;
     color: var(--text-light);
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
   }
 
-  .about-hero p {
+  .hero-subtitle {
     margin: 0;
-    max-width: 60ch;
+    max-width: 62ch;
     font-size: clamp(1rem, 2vw, 1.15rem);
     color: rgba(255, 255, 255, 0.86);
-    line-height: 1.7;
+    line-height: 1.75;
   }
 
   .hero-badge {
@@ -89,7 +89,7 @@
 =========================== */
 .about-page {
   .about-story {
-    padding: 5.5rem 0;
+    padding: 60px 0;
     background: var(--color-bg);
     color: var(--text-light);
     position: relative;
@@ -97,13 +97,19 @@
     &::before {
       content: "";
       position: absolute;
-      left: 0;
-      right: 0;
-      top: -1px;
-      height: 70px;
-      pointer-events: none;
-      background: linear-gradient(180deg, transparent 0%, var(--color-bg) 100%);
-      opacity: 0.35;
+      top: 0;
+      left: 50%;
+      width: min(88vw, 1120px);
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.04) 12%,
+        rgba(79, 172, 254, 0.26) 50%,
+        rgba(255, 255, 255, 0.04) 88%,
+        transparent 100%
+      );
     }
 
     .story-grid {
@@ -208,7 +214,26 @@
     padding: 5rem 0;
     background: var(--color-ice);
     color: var(--text-dark);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid rgba(47, 44, 121, 0.08);
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: min(88vw, 1120px);
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(47, 44, 121, 0.05) 10%,
+        rgba(79, 172, 254, 0.3) 50%,
+        rgba(47, 44, 121, 0.05) 90%,
+        transparent 100%
+      );
+    }
 
     .section-content {
       width: min(100% - 32px, 1200px);
@@ -302,13 +327,19 @@
     &::before {
       content: "";
       position: absolute;
-      left: 0;
-      right: 0;
-      top: -1px;
-      height: 70px;
-      pointer-events: none;
-      background: linear-gradient(180deg, transparent 0%, var(--color-bg) 100%);
-      opacity: 0.35;
+      top: 0;
+      left: 50%;
+      width: min(88vw, 1120px);
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.04) 12%,
+        rgba(79, 172, 254, 0.26) 50%,
+        rgba(255, 255, 255, 0.04) 88%,
+        transparent 100%
+      );
     }
 
     .section-content {
@@ -384,7 +415,26 @@
     padding: 5rem 0;
     background: var(--color-ice);
     color: var(--text-dark);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid rgba(47, 44, 121, 0.08);
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: min(88vw, 1120px);
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(47, 44, 121, 0.05) 10%,
+        rgba(79, 172, 254, 0.3) 50%,
+        rgba(47, 44, 121, 0.05) 90%,
+        transparent 100%
+      );
+    }
 
     .cta-box {
       width: min(100% - 32px, 980px);

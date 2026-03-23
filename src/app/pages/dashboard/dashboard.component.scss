@@ -11,10 +11,7 @@
 /* HERO */
 .dashboard-hero {
   position: relative;
-  min-height: 72vh;
-  display: flex;
-  align-items: center;
-  padding: 7rem 1.5rem 4rem;
+  padding: 7rem 1.5rem 3rem;
   background:
     linear-gradient(rgba(8, 8, 16, 0.55), rgba(8, 8, 16, 0.75)),
     url('/assets/images/empresa/nico-marketing.jpg') center/cover no-repeat;
@@ -107,7 +104,7 @@
 .dashboard-carousel-section {
   width: min(100% - 32px, 1200px);
   margin: 0 auto;
-  padding: 4.5rem 0;
+  padding: 60px 0 4rem;
 }
 
 .alt-bg {
@@ -529,8 +526,7 @@
 
 @media (max-width: 768px) {
   .dashboard-hero {
-    min-height: auto;
-    padding-top: 6.5rem;
+    padding-top: 6rem;
     padding-bottom: 3.5rem;
 
     h1 {
