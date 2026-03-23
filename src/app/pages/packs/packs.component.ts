@@ -22,12 +22,13 @@ interface PackItem {
 })
 export class PacksComponent {
   searchTerm = '';
+  private readonly ROW_SCROLL_AMOUNT = 960;
 
   myPacks: PackItem[] = [
     {
       id: 1,
       title: 'Baixar Reels',
-      description: 'Materiais essenciais para começar com mais qualidade.',
+      description: 'Materiais essenciais para comecar com mais qualidade.',
       image: 'assets/images/packs/baixar_reels.webp',
       category: 'Liberados',
       badge: 'Liberado'
@@ -35,7 +36,7 @@ export class PacksComponent {
     {
       id: 2,
       title: 'Kit After Effects',
-      description: 'Modelos prontos para vídeos curtos e reels.',
+      description: 'Modelos prontos para videos curtos e reels.',
       image: 'assets/images/packs/kit_after_effects.webp',
       category: 'Liberados',
       badge: 'Novo'
@@ -43,10 +44,34 @@ export class PacksComponent {
     {
       id: 3,
       title: 'Emojis',
-      description: 'Ajustes rápidos para elevar o visual do conteúdo.',
+      description: 'Ajustes rapidos para elevar o visual do conteudo.',
       image: 'assets/images/packs/emojis.webp',
       category: 'Liberados',
       badge: 'Popular'
+    },
+    {
+      id: 11,
+      title: 'Transicoes',
+      description: 'Cortes, transicoes e encaixes para edicoes mais fluidas.',
+      image: 'assets/images/packs/transições.webp',
+      category: 'Liberados',
+      badge: 'Atualizado'
+    },
+    {
+      id: 15,
+      title: 'Programas',
+      description: 'Base de apps e utilitarios para acelerar seu fluxo.',
+      image: 'assets/images/packs/programas.webp',
+      category: 'Liberados',
+      badge: 'Essencial'
+    },
+    {
+      id: 16,
+      title: 'Presets Lightroom',
+      description: 'Ajustes prontos para foto, capa e feed com mais impacto.',
+      image: 'assets/images/packs/presets_lightroom.webp',
+      category: 'Liberados',
+      badge: 'Curado'
     }
   ];
 
@@ -62,7 +87,7 @@ export class PacksComponent {
     {
       id: 5,
       title: 'Pack IA',
-      description: 'Conteúdos visuais focados em retenção.',
+      description: 'Conteudos visuais focados em retencao.',
       image: 'assets/images/packs/IA.webp',
       category: 'Populares',
       badge: 'Em alta'
@@ -70,11 +95,35 @@ export class PacksComponent {
     {
       id: 6,
       title: 'Photoshop Pack',
-      description: 'Biblioteca avançada para creators mais exigentes.',
-      image: 'assets/images/packs/photoshop_pack.webp',
+      description: 'Biblioteca avancada para creators mais exigentes.',
+      image: 'assets/images/packs/kit_photoshop.webp',
       category: 'Populares',
       badge: 'Premium',
       locked: true
+    },
+    {
+      id: 12,
+      title: 'VFX Pack',
+      description: 'Explosoes visuais, energia e impacto para reels e edits.',
+      image: 'assets/images/packs/VFX.webp',
+      category: 'Populares',
+      badge: 'Trending'
+    },
+    {
+      id: 17,
+      title: 'Premiere Pack',
+      description: 'Biblioteca forte para timeline, ritmo e acabamento.',
+      image: 'assets/images/packs/premiere.webp',
+      category: 'Populares',
+      badge: 'Hot'
+    },
+    {
+      id: 18,
+      title: 'Ferramentas Online',
+      description: 'Recursos praticos para creators que produzem em escala.',
+      image: 'assets/images/packs/ferramentas_online.webp',
+      category: 'Populares',
+      badge: 'Top choice'
     }
   ];
 
@@ -82,16 +131,40 @@ export class PacksComponent {
     {
       id: 7,
       title: 'Pack Stories Pro',
-      description: 'Templates modernos para stories e anúncios.',
-      image: 'assets/images/empresa/nico-marketing.jpg',
+      description: 'Templates modernos para stories e anuncios.',
+      image: 'assets/images/packs/PACK_VIRAL.webp',
       category: 'Novidades',
       badge: 'Novo'
     },
     {
       id: 8,
       title: 'Motion Fast Pack',
-      description: 'Elementos e composições com mais impacto visual.',
-      image: 'assets/images/empresa/nico-coringa.jpg',
+      description: 'Elementos e composicoes com mais impacto visual.',
+      image: 'assets/images/packs/elementos.webp',
+      category: 'Novidades',
+      badge: 'Atualizado'
+    },
+    {
+      id: 13,
+      title: 'Pack Canva',
+      description: 'Assets prontos para posts, artes e criativos mais rapidos.',
+      image: 'assets/images/packs/canva.webp',
+      category: 'Novidades',
+      badge: 'Fresh'
+    },
+    {
+      id: 19,
+      title: 'Icones Pro',
+      description: 'Colecao de icones para interface, post e material visual.',
+      image: 'assets/images/packs/icones.webp',
+      category: 'Novidades',
+      badge: 'Novo drop'
+    },
+    {
+      id: 20,
+      title: 'Personagens',
+      description: 'Recortes, renders e personagens para composicoes mais ricas.',
+      image: 'assets/images/packs/personagens.webp',
       category: 'Novidades',
       badge: 'Atualizado'
     }
@@ -102,7 +175,7 @@ export class PacksComponent {
       id: 9,
       title: 'Elite Premium Pack',
       description: 'Acesso aos materiais mais completos da plataforma.',
-      image: 'assets/images/depoimentos/gustavojose.png',
+      image: 'assets/images/packs/Pack_PLRs.webp',
       category: 'Premium',
       badge: 'Upgrade',
       locked: true
@@ -110,10 +183,37 @@ export class PacksComponent {
     {
       id: 10,
       title: 'Full Creator Library',
-      description: 'Biblioteca premium com conteúdos exclusivos.',
-      image: 'assets/images/empresa/nico-marketing.jpg',
+      description: 'Biblioteca premium com conteudos exclusivos.',
+      image: 'assets/images/packs/banco_de_videos.webp',
       category: 'Premium',
       badge: 'Exclusivo',
+      locked: true
+    },
+    {
+      id: 14,
+      title: 'Backgrounds Pro',
+      description: 'Pacote premium com cenarios, fundos e composicoes exclusivas.',
+      image: 'assets/images/packs/kit_background.webp',
+      category: 'Premium',
+      badge: 'Elite',
+      locked: true
+    },
+    {
+      id: 21,
+      title: 'Capa Pack Edicao',
+      description: 'Selecao premium de capas, cenas e composicoes para edits.',
+      image: 'assets/images/packs/capa_pack_edição.webp',
+      category: 'Premium',
+      badge: 'Ultra',
+      locked: true
+    },
+    {
+      id: 22,
+      title: 'Banco de Elementos',
+      description: 'Biblioteca premium com elementos visuais para varias areas.',
+      image: 'assets/images/packs/elementos.webp',
+      category: 'Premium',
+      badge: 'Vault',
       locked: true
     }
   ];
@@ -128,5 +228,16 @@ export class PacksComponent {
       pack.description.toLowerCase().includes(term) ||
       pack.badge.toLowerCase().includes(term)
     );
+  }
+
+  scrollRow(rowId: string, direction: number): void {
+    const row = document.getElementById(rowId);
+
+    if (!row) return;
+
+    row.scrollBy({
+      left: this.ROW_SCROLL_AMOUNT * direction,
+      behavior: 'smooth'
+    });
   }
 }

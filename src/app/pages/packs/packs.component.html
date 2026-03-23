@@ -22,18 +22,26 @@
       <h2>Seus packs liberados</h2>
     </div>
 
-    <div class="packs-row">
-      @for (pack of filterPacks(myPacks); track pack.id) {
-        <article class="pack-card">
-          <img [src]="pack.image" [alt]="pack.title" />
-          <div class="card-overlay">
-            <span class="badge">{{ pack.badge }}</span>
-            <h3>{{ pack.title }}</h3>
-            <p>{{ pack.description }}</p>
-            <a routerLink="/dashboard" class="card-btn">Abrir pack</a>
-          </div>
-        </article>
-      }
+    <div class="packs-row-shell">
+      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('my-packs-row', -1)" aria-label="Voltar packs liberados">
+        <span>&lsaquo;</span>
+      </button>
+      <div class="packs-row" id="my-packs-row">
+        @for (pack of filterPacks(myPacks); track pack.id) {
+          <article class="pack-card">
+            <img [src]="pack.image" [alt]="pack.title" />
+            <div class="card-content">
+              <span class="badge">{{ pack.badge }}</span>
+              <h3>{{ pack.title }}</h3>
+              <p>{{ pack.description }}</p>
+              <a routerLink="/dashboard" class="card-btn">Abrir pack</a>
+            </div>
+          </article>
+        }
+      </div>
+      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('my-packs-row', 1)" aria-label="Avancar packs liberados">
+        <span>&rsaquo;</span>
+      </button>
     </div>
   </section>
 
@@ -42,23 +50,31 @@
       <h2>Mais populares</h2>
     </div>
 
-    <div class="packs-row">
-      @for (pack of filterPacks(popularPacks); track pack.id) {
-        <article class="pack-card" [class.locked]="pack.locked">
-          <img [src]="pack.image" [alt]="pack.title" />
-          <div class="card-overlay">
-            <span class="badge">{{ pack.badge }}</span>
-            <h3>{{ pack.title }}</h3>
-            <p>{{ pack.description }}</p>
+    <div class="packs-row-shell">
+      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('popular-packs-row', -1)" aria-label="Voltar packs populares">
+        <span>&lsaquo;</span>
+      </button>
+      <div class="packs-row" id="popular-packs-row">
+        @for (pack of filterPacks(popularPacks); track pack.id) {
+          <article class="pack-card" [class.locked]="pack.locked">
+            <img [src]="pack.image" [alt]="pack.title" />
+            <div class="card-content">
+              <span class="badge">{{ pack.badge }}</span>
+              <h3>{{ pack.title }}</h3>
+              <p>{{ pack.description }}</p>
 
-            @if (pack.locked) {
-              <a routerLink="/store" class="card-btn secondary">Fazer upgrade</a>
-            } @else {
-              <a routerLink="/dashboard" class="card-btn">Ver detalhes</a>
-            }
-          </div>
-        </article>
-      }
+              @if (pack.locked) {
+                <a routerLink="/store" class="card-btn secondary">Fazer upgrade</a>
+              } @else {
+                <a routerLink="/dashboard" class="card-btn">Ver detalhes</a>
+              }
+            </div>
+          </article>
+        }
+      </div>
+      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('popular-packs-row', 1)" aria-label="Avancar packs populares">
+        <span>&rsaquo;</span>
+      </button>
     </div>
   </section>
 
@@ -67,18 +83,26 @@
       <h2>Novidades</h2>
     </div>
 
-    <div class="packs-row">
-      @for (pack of filterPacks(newPacks); track pack.id) {
-        <article class="pack-card">
-          <img [src]="pack.image" [alt]="pack.title" />
-          <div class="card-overlay">
-            <span class="badge">{{ pack.badge }}</span>
-            <h3>{{ pack.title }}</h3>
-            <p>{{ pack.description }}</p>
-            <a routerLink="/dashboard" class="card-btn">Explorar</a>
-          </div>
-        </article>
-      }
+    <div class="packs-row-shell">
+      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('new-packs-row', -1)" aria-label="Voltar novidades">
+        <span>&lsaquo;</span>
+      </button>
+      <div class="packs-row" id="new-packs-row">
+        @for (pack of filterPacks(newPacks); track pack.id) {
+          <article class="pack-card">
+            <img [src]="pack.image" [alt]="pack.title" />
+            <div class="card-content">
+              <span class="badge">{{ pack.badge }}</span>
+              <h3>{{ pack.title }}</h3>
+              <p>{{ pack.description }}</p>
+              <a routerLink="/dashboard" class="card-btn">Explorar</a>
+            </div>
+          </article>
+        }
+      </div>
+      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('new-packs-row', 1)" aria-label="Avancar novidades">
+        <span>&rsaquo;</span>
+      </button>
     </div>
   </section>
 
@@ -87,18 +111,26 @@
       <h2>Premium</h2>
     </div>
 
-    <div class="packs-row">
-      @for (pack of filterPacks(premiumSuggestions); track pack.id) {
-        <article class="pack-card locked">
-          <img [src]="pack.image" [alt]="pack.title" />
-          <div class="card-overlay">
-            <span class="badge">{{ pack.badge }}</span>
-            <h3>{{ pack.title }}</h3>
-            <p>{{ pack.description }}</p>
-            <a routerLink="/store" class="card-btn secondary">Desbloquear</a>
-          </div>
-        </article>
-      }
+    <div class="packs-row-shell">
+      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('premium-packs-row', -1)" aria-label="Voltar premium">
+        <span>&lsaquo;</span>
+      </button>
+      <div class="packs-row" id="premium-packs-row">
+        @for (pack of filterPacks(premiumSuggestions); track pack.id) {
+          <article class="pack-card locked">
+            <img [src]="pack.image" [alt]="pack.title" />
+            <div class="card-content">
+              <span class="badge">{{ pack.badge }}</span>
+              <h3>{{ pack.title }}</h3>
+              <p>{{ pack.description }}</p>
+              <a routerLink="/store" class="card-btn secondary">Desbloquear</a>
+            </div>
+          </article>
+        }
+      </div>
+      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('premium-packs-row', 1)" aria-label="Avancar premium">
+        <span>&rsaquo;</span>
+      </button>
     </div>
   </section>
 </div>
