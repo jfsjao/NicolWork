@@ -1,13 +1,12 @@
 <div class="dashboard-page">
-  <!-- HERO -->
   <section class="dashboard-hero">
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
-      <span class="hero-badge">Área do cliente</span>
+      <span class="hero-badge">Area do cliente</span>
       <h1>Bem-vindo de volta, {{ userName }}</h1>
       <p>
-        Acompanhe novidades, acesse seus packs liberados e descubra os conteúdos
+        Acompanhe novidades, acesse seus packs liberados e descubra os conteudos
         mais populares da plataforma.
       </p>
 
@@ -18,11 +17,10 @@
     </div>
   </section>
 
-  <!-- CAROUSEL / NOVIDADES -->
   <section class="dashboard-carousel-section">
     <div class="section-header">
       <h2>Destaques para você</h2>
-      <p>Atualizações, novidades e conteúdos em evidência.</p>
+      <p>Atualizacoes, novidades e conteudos em evidencia.</p>
     </div>
 
     <div class="carousel-box">
@@ -45,7 +43,7 @@
       </div>
 
       <div class="carousel-controls">
-        <button type="button" class="nav-arrow" (click)="prevSlide()">‹</button>
+        <button type="button" class="nav-arrow" (click)="prevSlide()">&lsaquo;</button>
 
         <div class="pagination-dots">
           @for (slide of slides; track $index; let i = $index) {
@@ -56,43 +54,46 @@
           }
         </div>
 
-        <button type="button" class="nav-arrow" (click)="nextSlide()">›</button>
+        <button type="button" class="nav-arrow" (click)="nextSlide()">&rsaquo;</button>
       </div>
     </div>
   </section>
 
-  <!-- MEUS PACKS -->
   <section class="dashboard-section" id="meus-packs">
     <div class="section-header">
-      <h2>Seus packs</h2>
-      <p>Conteúdos já liberados na sua conta.</p>
+      <h2>Packs pra você</h2>
+      <p>Conteudos ja liberados na sua conta.</p>
     </div>
 
-    <div class="packs-grid">
-      @for (pack of myPacks; track pack.id) {
-        <article class="pack-card owned">
-          <div class="pack-top">
-            <span class="pack-badge">Liberado</span>
-            <span class="pack-files">{{ pack.totalFiles }} arquivos</span>
-          </div>
+    @if (isLoadingPacks) {
+      <p class="section-feedback">Carregando seus packs...</p>
+    } @else if (packsError) {
+      <p class="section-feedback">Nao foi possivel carregar seus packs agora.</p>
+    } @else if (myPacks.length === 0) {
+      <p class="section-feedback">Seu plano atual ainda nao liberou packs para esta conta.</p>
+    } @else {
+      <div class="packs-grid">
+        @for (pack of myPacks; track pack.id) {
+          <article class="pack-card owned">
+            <div class="pack-top">
+              <span class="pack-badge">{{ pack.badge }}</span>
+            </div>
 
-          <h3>{{ pack.name }}</h3>
-          <p>{{ pack.description }}</p>
+            <h3>{{ pack.title }}</h3>
+            <p>{{ pack.description }}</p>
 
-          <div class="pack-meta">
-            <span>Última atualização: {{ pack.updatedAt }}</span>
-          </div>
-
-          <div class="pack-actions">
-            <a [routerLink]="pack.link" class="btn-card primary">Acessar</a>
-            <a [href]="pack.downloadUrl" target="_blank" class="btn-card secondary">Baixar</a>
-          </div>
-        </article>
-      }
-    </div>
+            <div class="pack-actions">
+              <a [routerLink]="pack.link" class="btn-card primary">Abrir biblioteca</a>
+              @if (pack.downloadUrl) {
+                <a [href]="pack.downloadUrl" target="_blank" class="btn-card secondary">Baixar</a>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
   </section>
 
-  <!-- NOVIDADES -->
   <section class="dashboard-section alt-bg">
     <div class="section-header">
       <h2>Novidades</h2>
@@ -111,34 +112,86 @@
     </div>
   </section>
 
-  <!-- POPULARES -->
   <section class="dashboard-section">
     <div class="section-header">
       <h2>Mais populares</h2>
-      <p>Os packs e conteúdos mais procurados pelos clientes.</p>
+      <p>Os packs e conteudos mais procurados pelos clientes.</p>
     </div>
 
-    <div class="popular-grid">
-      @for (pack of popularPacks; track pack.id) {
-        <article class="popular-card">
-          <div class="popular-rank">#{{ pack.rank }}</div>
-          <h3>{{ pack.name }}</h3>
-          <p>{{ pack.description }}</p>
-          <div class="popular-footer">
-            <span>{{ pack.highlight }}</span>
-            <a [routerLink]="pack.link">Ver detalhes</a>
-          </div>
-        </article>
-      }
-    </div>
+    @if (isLoadingPacks) {
+      <p class="section-feedback">Carregando destaques...</p>
+    } @else if (popularPacks.length > 0) {
+      <div class="popular-grid">
+        @for (pack of popularPacks; track pack.id) {
+          <article class="popular-card">
+            <img class="popular-image" [src]="pack.image" [alt]="pack.title" />
+            <div class="popular-overlay"></div>
+
+            <div class="popular-top">
+              <div class="popular-rank">#{{ pack.rank }}</div>
+              <span class="popular-chip">{{ pack.highlight }}</span>
+            </div>
+
+            <div class="popular-body">
+              <h3>{{ pack.title }}</h3>
+              <p>{{ pack.description }}</p>
+
+              <div class="popular-footer">
+                <span class="popular-status">Em alta na plataforma</span>
+                <div class="popular-actions">
+                  <a [routerLink]="pack.locked ? '/store' : '/packs'" class="popular-btn primary">
+                    {{ pack.locked ? 'Upgrade' : 'Abrir pack' }}
+                  </a>
+                  <button type="button" class="popular-btn secondary" (click)="openPopularPackDetails(pack)">
+                    Saiba mais
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
   </section>
 
-  <!-- UPGRADE -->
+  @if (selectedPopularPack; as pack) {
+    <div class="popular-modal-backdrop" (click)="closePopularPackDetails()">
+      <section class="popular-modal" (click)="$event.stopPropagation()">
+        <button type="button" class="popular-modal-close" (click)="closePopularPackDetails()" aria-label="Fechar detalhes do pack">
+          &times;
+        </button>
+
+        <div class="popular-modal-media">
+          <img [src]="pack.image" [alt]="pack.title" />
+        </div>
+
+        <div class="popular-modal-content">
+          <div class="popular-modal-head">
+            <span class="popular-rank">#{{ pack.rank }}</span>
+            <span class="popular-chip">{{ pack.highlight }}</span>
+          </div>
+
+          <h3>{{ pack.title }}</h3>
+          <p>{{ pack.description }}</p>
+
+          <div class="popular-modal-actions">
+            <a [routerLink]="pack.locked ? '/store' : '/packs'" class="popular-btn primary" (click)="closePopularPackDetails()">
+              {{ pack.locked ? 'Upgrade' : 'Abrir pack' }}
+            </a>
+            <button type="button" class="popular-btn secondary" (click)="closePopularPackDetails()">
+              Fechar
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+
   @if (upgradeSuggestions.length > 0) {
     <section class="dashboard-section alt-bg">
       <div class="section-header">
-        <h2>Desbloqueie o próximo nível</h2>
-        <p>Planos acima do seu para liberar ainda mais conteúdo.</p>
+        <h2>Desbloqueie o proximo nivel</h2>
+        <p>Planos acima do seu para liberar ainda mais conteudo.</p>
       </div>
 
       <div class="upgrade-grid">

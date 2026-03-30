@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -12,13 +13,15 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../../../firebase-config';
 import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '../api.service';
 
 export interface UserData {
+  backendUserId?: number | null;
   uid: string;
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
-  plano?: 'basic' | 'intermediate' | 'premium' | null;
+  plano?: 'gratuito' | 'basic' | 'gold' | 'premium' | null;
 }
 
 @Injectable({
@@ -27,6 +30,7 @@ export interface UserData {
 export class AuthService {
   private router = inject(Router);
   private toastr = inject(ToastrService);
+  private apiService = inject(ApiService);
 
   currentUser = signal<UserData | null>(null);
   isLoading = signal<boolean>(true);
@@ -40,15 +44,18 @@ export class AuthService {
    * Listener do Firebase Auth
    */
   private initAuthListener(): void {
-    auth.onAuthStateChanged((user: User | null) => {
+    auth.onAuthStateChanged(async (user: User | null) => {
       if (user) {
         this.currentUser.set({
+          backendUserId: null,
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
           plano: null
         });
+
+        await this.syncBackendUser(user);
       } else {
         this.currentUser.set(null);
       }
@@ -56,6 +63,30 @@ export class AuthService {
       this.isLoading.set(false);
       this.authInitialized.set(true);
     });
+  }
+
+  private async syncBackendUser(user: User): Promise<void> {
+    try {
+      const response = await firstValueFrom(this.apiService.syncAuth({
+        nome: user.displayName,
+        email: user.email,
+        provedor_autenticacao: 'firebase',
+        id_usuario_provedor: user.uid,
+        foto_url: user.photoURL
+      }));
+
+      const current = this.currentUser();
+
+      if (!current) return;
+
+      this.currentUser.set({
+        ...current,
+        backendUserId: Number(response.usuario.id),
+        plano: response.plano_atual?.slug ?? null
+      });
+    } catch (error) {
+      console.error('Erro ao sincronizar usuario com o backend:', error);
+    }
   }
 
   /**

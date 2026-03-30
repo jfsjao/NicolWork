@@ -1,10 +1,10 @@
 <div class="packs-page">
   <section class="packs-hero">
     <div class="hero-content">
-      <span class="hero-badge">Catálogo exclusivo</span>
-      <h1>Seus Packs</h1>
+      <span class="hero-badge">Catalogo exclusivo</span>
+      <h1>Biblioteca</h1>
       <p>
-        Explore sua biblioteca, descubra novidades e veja os packs mais populares da plataforma.
+        Explore sua biblioteca e veja com clareza o que seu plano ja liberou e o que pode ser desbloqueado com upgrade.
       </p>
 
       <div class="search-box">
@@ -19,118 +19,212 @@
 
   <section class="packs-section">
     <div class="section-header">
-      <h2>Seus packs liberados</h2>
+      <h2>Seus packs liberados: </h2>
     </div>
 
-    <div class="packs-row-shell">
-      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('my-packs-row', -1)" aria-label="Voltar packs liberados">
-        <span>&lsaquo;</span>
-      </button>
-      <div class="packs-row" id="my-packs-row">
-        @for (pack of filterPacks(myPacks); track pack.id) {
-          <article class="pack-card">
-            <img [src]="pack.image" [alt]="pack.title" />
-            <div class="card-content">
-              <span class="badge">{{ pack.badge }}</span>
-              <h3>{{ pack.title }}</h3>
-              <p>{{ pack.description }}</p>
-              <a routerLink="/dashboard" class="card-btn">Abrir pack</a>
-            </div>
-          </article>
-        }
+    @if (isLoadingPacks) {
+      <p class="section-feedback">Carregando seus packs...</p>
+    } @else if (packsError) {
+      <p class="section-feedback">Nao foi possivel carregar sua biblioteca agora.</p>
+    } @else if (filterPacks(myPacks).length === 0) {
+      <p class="section-feedback">Nenhum pack liberado foi encontrado para o seu plano atual.</p>
+    } @else {
+      <div class="packs-row-shell">
+        <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('my-packs-row', -1)" aria-label="Voltar packs liberados">
+          <span>&lsaquo;</span>
+        </button>
+        <div class="packs-row" id="my-packs-row">
+          @for (pack of filterPacks(myPacks); track pack.id) {
+            <article class="pack-card">
+              <img [src]="pack.image" [alt]="pack.title" />
+              <div class="card-content">
+                <span class="badge">{{ pack.badge }}</span>
+                <h3>{{ pack.title }}</h3>
+                <div class="card-actions">
+                  @if (pack.downloadUrl) {
+                    <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
+                  } @else {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Abrir</a>
+                  }
+                  <button type="button" class="card-btn" (click)="openPackDetails(pack)">
+                    Saiba mais
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+        <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('my-packs-row', 1)" aria-label="Avancar packs liberados">
+          <span>&rsaquo;</span>
+        </button>
       </div>
-      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('my-packs-row', 1)" aria-label="Avancar packs liberados">
-        <span>&rsaquo;</span>
-      </button>
-    </div>
+    }
   </section>
 
   <section class="packs-section">
     <div class="section-header">
-      <h2>Mais populares</h2>
+      <h2>Mais populares:</h2>
     </div>
 
-    <div class="packs-row-shell">
-      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('popular-packs-row', -1)" aria-label="Voltar packs populares">
-        <span>&lsaquo;</span>
-      </button>
-      <div class="packs-row" id="popular-packs-row">
-        @for (pack of filterPacks(popularPacks); track pack.id) {
-          <article class="pack-card" [class.locked]="pack.locked">
-            <img [src]="pack.image" [alt]="pack.title" />
-            <div class="card-content">
-              <span class="badge">{{ pack.badge }}</span>
-              <h3>{{ pack.title }}</h3>
-              <p>{{ pack.description }}</p>
-
-              @if (pack.locked) {
-                <a routerLink="/store" class="card-btn secondary">Fazer upgrade</a>
-              } @else {
-                <a routerLink="/dashboard" class="card-btn">Ver detalhes</a>
-              }
-            </div>
-          </article>
-        }
+    @if (isLoadingPacks) {
+      <p class="section-feedback">Carregando packs em destaque...</p>
+    } @else if (packsError) {
+      <p class="section-feedback">Nao foi possivel carregar os packs em destaque agora.</p>
+    } @else if (filterPacks(featuredPacks).length === 0) {
+      <p class="section-feedback">Nenhum pack em destaque foi encontrado.</p>
+    } @else {
+      <div class="packs-row-shell">
+        <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('featured-packs-row', -1)" aria-label="Voltar packs em destaque">
+          <span>&lsaquo;</span>
+        </button>
+        <div class="packs-row" id="featured-packs-row">
+          @for (pack of filterPacks(featuredPacks); track pack.id) {
+            <article class="pack-card" [class.locked]="pack.locked">
+              <img [src]="pack.image" [alt]="pack.title" />
+              <div class="card-content">
+                <span class="badge">{{ pack.badge }}</span>
+                <h3>{{ pack.title }}</h3>
+                <div class="card-actions">
+                  @if (pack.locked) {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                  } @else if (pack.downloadUrl) {
+                    <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
+                  } @else {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Abrir</a>
+                  }
+                  <button type="button" class="card-btn" (click)="openPackDetails(pack)">
+                    Saiba mais
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+        <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('featured-packs-row', 1)" aria-label="Avancar packs em destaque">
+          <span>&rsaquo;</span>
+        </button>
       </div>
-      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('popular-packs-row', 1)" aria-label="Avancar packs populares">
-        <span>&rsaquo;</span>
-      </button>
-    </div>
+    }
   </section>
 
   <section class="packs-section">
     <div class="section-header">
-      <h2>Novidades</h2>
+      <h2>Novidades:</h2>
     </div>
 
-    <div class="packs-row-shell">
-      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('new-packs-row', -1)" aria-label="Voltar novidades">
-        <span>&lsaquo;</span>
-      </button>
-      <div class="packs-row" id="new-packs-row">
-        @for (pack of filterPacks(newPacks); track pack.id) {
-          <article class="pack-card">
-            <img [src]="pack.image" [alt]="pack.title" />
-            <div class="card-content">
-              <span class="badge">{{ pack.badge }}</span>
-              <h3>{{ pack.title }}</h3>
-              <p>{{ pack.description }}</p>
-              <a routerLink="/dashboard" class="card-btn">Explorar</a>
-            </div>
-          </article>
-        }
+    @if (isLoadingPacks) {
+      <p class="section-feedback">Carregando novidades...</p>
+    } @else if (packsError) {
+      <p class="section-feedback">Nao foi possivel carregar as novidades agora.</p>
+    } @else if (filterPacks(noveltyPacks).length === 0) {
+      <p class="section-feedback">Nenhuma novidade foi encontrada.</p>
+    } @else {
+      <div class="packs-row-shell">
+        <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('novelty-packs-row', -1)" aria-label="Voltar novidades">
+          <span>&lsaquo;</span>
+        </button>
+        <div class="packs-row" id="novelty-packs-row">
+          @for (pack of filterPacks(noveltyPacks); track pack.id) {
+            <article class="pack-card" [class.locked]="pack.locked">
+              <img [src]="pack.image" [alt]="pack.title" />
+              <div class="card-content">
+                <span class="badge">{{ pack.badge }}</span>
+                <h3>{{ pack.title }}</h3>
+                <div class="card-actions">
+                  @if (pack.locked) {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                  } @else if (pack.downloadUrl) {
+                    <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
+                  } @else {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Abrir</a>
+                  }
+                  <button type="button" class="card-btn" (click)="openPackDetails(pack)">
+                    Saiba mais
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+        <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('novelty-packs-row', 1)" aria-label="Avancar novidades">
+          <span>&rsaquo;</span>
+        </button>
       </div>
-      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('new-packs-row', 1)" aria-label="Avancar novidades">
-        <span>&rsaquo;</span>
-      </button>
-    </div>
+    }
   </section>
 
   <section class="packs-section">
     <div class="section-header">
-      <h2>Premium</h2>
+      <h2>Todos os packs:</h2>
     </div>
 
-    <div class="packs-row-shell">
-      <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('premium-packs-row', -1)" aria-label="Voltar premium">
-        <span>&lsaquo;</span>
-      </button>
-      <div class="packs-row" id="premium-packs-row">
-        @for (pack of filterPacks(premiumSuggestions); track pack.id) {
-          <article class="pack-card locked">
-            <img [src]="pack.image" [alt]="pack.title" />
-            <div class="card-content">
-              <span class="badge">{{ pack.badge }}</span>
-              <h3>{{ pack.title }}</h3>
-              <p>{{ pack.description }}</p>
-              <a routerLink="/store" class="card-btn secondary">Desbloquear</a>
-            </div>
-          </article>
-        }
+    @if (isLoadingPacks) {
+      <p class="section-feedback">Carregando todos os packs...</p>
+    } @else if (packsError) {
+      <p class="section-feedback">Nao foi possivel carregar todos os packs agora.</p>
+    } @else if (filterPacks(allPacks).length === 0) {
+      <p class="section-feedback">Nenhum pack foi encontrado.</p>
+    } @else {
+      <div class="packs-row-shell">
+        <button type="button" class="row-arrow row-arrow-left" (click)="scrollRow('all-packs-row', -1)" aria-label="Voltar todos os packs">
+          <span>&lsaquo;</span>
+        </button>
+        <div class="packs-row" id="all-packs-row">
+          @for (pack of filterPacks(allPacks); track pack.id) {
+            <article class="pack-card" [class.locked]="pack.locked">
+              <img [src]="pack.image" [alt]="pack.title" />
+              <div class="card-content">
+                <span class="badge">{{ pack.badge }}</span>
+                <h3>{{ pack.title }}</h3>
+                <div class="card-actions">
+                  @if (pack.locked) {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                  } @else if (pack.downloadUrl) {
+                    <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
+                  } @else {
+                    <a [routerLink]="pack.link" class="card-btn secondary">Abrir</a>
+                  }
+                  <button type="button" class="card-btn" (click)="openPackDetails(pack)">
+                    Saiba mais
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+        <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('all-packs-row', 1)" aria-label="Avancar todos os packs">
+          <span>&rsaquo;</span>
+        </button>
       </div>
-      <button type="button" class="row-arrow row-arrow-right" (click)="scrollRow('premium-packs-row', 1)" aria-label="Avancar premium">
-        <span>&rsaquo;</span>
-      </button>
-    </div>
+    }
   </section>
+
+  @if (selectedPack; as pack) {
+    <div class="pack-modal-backdrop" (click)="closePackDetails()">
+      <section class="pack-modal" (click)="$event.stopPropagation()">
+        <button type="button" class="modal-close" (click)="closePackDetails()" aria-label="Fechar detalhes do pack">
+          &times;
+        </button>
+
+        <div class="modal-media">
+          <img [src]="pack.image" [alt]="pack.title" />
+        </div>
+
+        <div class="modal-content">
+          <span class="badge" [class.locked]="pack.locked">{{ pack.badge }}</span>
+          <h3>{{ pack.title }}</h3>
+          <p>{{ pack.description }}</p>
+
+          <div class="modal-actions">
+            <a [routerLink]="pack.link" class="card-btn" [class.secondary]="pack.locked" (click)="closePackDetails()">
+              {{ pack.locked ? 'Fazer upgrade' : 'Abrir pack' }}
+            </a>
+            @if (!pack.locked && pack.downloadUrl) {
+              <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar agora</a>
+            }
+          </div>
+        </div>
+      </section>
+    </div>
+  }
 </div>

@@ -1,6 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLink } from '@angular/router';
+import { ApiService } from '@core/api.service';
+import { mapPacksWithImage } from '@core/pack-image-map';
+import { finalize } from 'rxjs';
+
+interface StoreHighlight {
+  image: string;
+  alt: string;
+}
 
 @Component({
   selector: 'app-store',
@@ -9,107 +17,127 @@ import { RouterModule, RouterLink } from '@angular/router';
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.scss']
 })
-export class StoreComponent {
+export class StoreComponent implements OnInit {
+  private apiService = inject(ApiService);
+
   packCategories = [
     {
       number: '1',
       title: 'Plugins',
-      description: 'Scripts, presets, plugins e recursos para agilizar seu fluxo e facilitar sua edição.'
+      description: 'Scripts, presets, plugins e recursos para agilizar seu fluxo e facilitar sua edicao.'
     },
     {
       number: '2',
-      title: 'Vídeos',
-      description: 'Arquivos em MP4, MOV e outros formatos prontos para editar e reutilizar no seu conteúdo.'
+      title: 'Videos',
+      description: 'Arquivos em MP4, MOV e outros formatos prontos para editar e reutilizar no seu conteudo.'
     },
     {
       number: '3',
       title: 'Imagens',
-      description: 'Arquivos em PNG, JPG e outros formatos úteis para composições, thumbnails e posts.'
+      description: 'Arquivos em PNG, JPG e outros formatos uteis para composicoes, thumbnails e posts.'
     },
     {
       number: '4',
       title: 'Photoshop',
-      description: 'Mockups, texturas, templates, actions e materiais em PSD para acelerar sua criação.'
+      description: 'Mockups, texturas, templates, actions e materiais em PSD para acelerar sua criacao.'
     },
     {
       number: '5',
       title: 'Outros',
-      description: 'Arquivos complementares, referências e materiais extras que ampliam ainda mais o pack.'
+      description: 'Arquivos complementares, referencias e materiais extras que ampliam ainda mais o pack.'
     }
   ];
 
-  partnerLogos = [
-    { image: 'assets/images/packs/baixar_reels.webp', alt: 'Pack Baixar Reels' },
-    { image: 'assets/images/packs/kit_after_effects.webp', alt: 'Pack After Effects' },
-    { image: 'assets/images/packs/illustrator_Pack.webp', alt: 'Pack Illustrator' },
-    { image: 'assets/images/packs/PACK_VIRAL.webp', alt: 'Pack Viral' },
-    { image: 'assets/images/packs/kit_photoshop.webp', alt: 'Pack Photoshop' },
-    { image: 'assets/images/packs/VFX.webp', alt: 'Pack VFX' },
-    { image: 'assets/images/packs/premiere.webp', alt: 'Pack Premiere' },
-    { image: 'assets/images/packs/canva.webp', alt: 'Pack Canva' },
-    { image: 'assets/images/packs/personagens.webp', alt: 'Pack Personagens' },
-    { image: 'assets/images/packs/Pack_PLRs.webp', alt: 'Pack PLRs' }
-  ];
-
-  repeatedPartnerLogos = [...this.partnerLogos, ...this.partnerLogos];
+  partnerLogos: StoreHighlight[] = [];
+  repeatedPartnerLogos: StoreHighlight[] = [];
+  isLoadingPopularPacks = true;
+  popularPacksError = false;
 
   premiumFeatures = [
-    "Baixar Reels",
-    "Banco de vídeos exclusivos",
-    "Coral Pack completo",
-    "Elementos premium",
-    "Emojis exclusivos",
-    "Fundos de vídeo HD",
-    "Illustrator Pack",
-    "Presets Lightroom",
-    "Otimização de imagem",
-    "Pack de IA para edição",
-    "Templates After Effects",
-    "Backgrounds animados",
-    "Templates Canva",
-    "Pacote de ícones premium",
-    "Templates de edição de vídeo",
-    "Modelos Excel para gestão",
-    "Conteúdo PLR exclusivo",
-    "Templates Premiere Pro",
-    "Ferramentas de remoção de fundo",
-    "Personagens editáveis",
-    "Actions Photoshop",
-    "Programas bônus",
-    "Transições profissionais",
-    "Efeitos VFX premium",
-    "Vídeos virais prontos"
+    'Baixar Reels',
+    'Banco de videos exclusivos',
+    'Coral Pack completo',
+    'Elementos premium',
+    'Emojis exclusivos',
+    'Fundos de video HD',
+    'Illustrator Pack',
+    'Presets Lightroom',
+    'Otimizacao de imagem',
+    'Pack de IA para edicao',
+    'Templates After Effects',
+    'Backgrounds animados',
+    'Templates Canva',
+    'Pacote de icones premium',
+    'Templates de edicao de video',
+    'Modelos Excel para gestao',
+    'Conteudo PLR exclusivo',
+    'Templates Premiere Pro',
+    'Ferramentas de remocao de fundo',
+    'Personagens editaveis',
+    'Actions Photoshop',
+    'Programas bonus',
+    'Transicoes profissionais',
+    'Efeitos VFX premium',
+    'Videos virais prontos'
   ];
 
   goldFeatures = [
-    "Coral Pack completo",
-    "Elementos premium",
-    "Emojis exclusivos",
-    "Fundos de vídeo HD",
-    "Pack de IA para edição",
-    "Backgrounds animados",
-    "Templates Canva",
-    "Pacote de ícones premium",
-    "Templates de edição de vídeo",
-    "Templates Premiere Pro",
-    "Personagens editáveis",
-    "Actions Photoshop",
-    "Programas bônus",
-    "Transições profissionais",
-    "Efeitos VFX premium",
-    "Vídeos virais prontos"
+    'Coral Pack completo',
+    'Elementos premium',
+    'Emojis exclusivos',
+    'Fundos de video HD',
+    'Pack de IA para edicao',
+    'Backgrounds animados',
+    'Templates Canva',
+    'Pacote de icones premium',
+    'Templates de edicao de video',
+    'Templates Premiere Pro',
+    'Personagens editaveis',
+    'Actions Photoshop',
+    'Programas bonus',
+    'Transicoes profissionais',
+    'Efeitos VFX premium',
+    'Videos virais prontos'
   ];
 
   basicFeatures = [
-    "Coral Pack básico",
-    "Elementos essenciais",
-    "Emojis básicos",
-    "Pacote de ícones",
-    "Templates de edição de vídeo",
-    "Templates Premiere Pro",
-    "Actions Photoshop",
-    "Programas básicos",
-    "Transições simples",
-    "Vídeos virais básicos"
+    'Coral Pack basico',
+    'Elementos essenciais',
+    'Emojis basicos',
+    'Pacote de icones',
+    'Templates de edicao de video',
+    'Templates Premiere Pro',
+    'Actions Photoshop',
+    'Programas basicos',
+    'Transicoes simples',
+    'Videos virais basicos'
   ];
+
+  ngOnInit(): void {
+    this.loadPopularPacks();
+  }
+
+  private loadPopularPacks(): void {
+    this.apiService.getPacksDestaque(10).pipe(
+      finalize(() => {
+        this.isLoadingPopularPacks = false;
+      })
+    ).subscribe({
+      next: ({ packs }) => {
+        this.popularPacksError = false;
+
+        this.partnerLogos = mapPacksWithImage(packs).map((pack) => ({
+          image: pack.image,
+          alt: pack.nome
+        }));
+        this.repeatedPartnerLogos = [...this.partnerLogos, ...this.partnerLogos];
+      },
+      error: (error) => {
+        this.popularPacksError = true;
+        this.partnerLogos = [];
+        this.repeatedPartnerLogos = [];
+        console.error('Erro ao carregar packs populares na store:', error);
+      }
+    });
+  }
 }

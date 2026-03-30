@@ -107,6 +107,11 @@
   padding: 60px 0 4rem;
 }
 
+.dashboard-section-wide,
+.dashboard-section-inner {
+  width: auto;
+}
+
 .alt-bg {
   position: relative;
 
@@ -137,6 +142,12 @@
     color: rgba(255, 255, 255, 0.72);
     line-height: 1.6;
   }
+}
+
+.section-feedback {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
 }
 
 /* CAROUSEL */
@@ -405,35 +416,136 @@
 
 /* POPULARES */
 .popular-grid {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.popular-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.popular-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.78rem 1rem;
+  border-radius: 999px;
+  font-weight: 900;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    opacity: 0.94;
+  }
+
+  &.primary {
+    background: #fff;
+    color: #111;
+  }
+
+  &.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+  }
 }
 
 .popular-card {
-  border-radius: 20px;
-  padding: 1.4rem;
+  position: relative;
+  min-height: 320px;
+  border-radius: 18px;
+  overflow: hidden;
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04));
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .popular-image {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .popular-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(7, 9, 20, 0.08) 0%, rgba(7, 9, 20, 0.4) 44%, rgba(7, 9, 20, 0.96) 100%);
+  }
+
+  .popular-top {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .popular-rank,
+  .popular-chip {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.45rem 0.72rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    backdrop-filter: blur(8px);
+  }
 
   .popular-rank {
-    width: fit-content;
-    margin-bottom: 1rem;
-    padding: 0.45rem 0.7rem;
-    border-radius: 12px;
-    background: rgba(255, 215, 0, 0.12);
-    border: 1px solid rgba(255, 215, 0, 0.22);
-    font-weight: 900;
+    background: rgba(255, 215, 0, 0.18);
+    border: 1px solid rgba(255, 215, 0, 0.28);
+    color: #fff4bf;
+  }
+
+  .popular-chip {
+    background: rgba(79, 172, 254, 0.16);
+    border: 1px solid rgba(79, 172, 254, 0.24);
+    color: #d8eeff;
+    text-align: right;
+  }
+
+  .popular-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 1.1rem;
+    background: linear-gradient(180deg, rgba(7, 9, 20, 0) 0%, rgba(7, 9, 20, 0.72) 32%, rgba(7, 9, 20, 0.96) 100%);
   }
 
   h3 {
-    margin: 0 0 0.6rem;
-    font-size: 1.15rem;
+    margin: 0 0 0.45rem;
+    font-size: 1.1rem;
     font-weight: 900;
   }
 
   p {
-    margin: 0 0 1rem;
-    color: rgba(255, 255, 255, 0.72);
-    line-height: 1.65;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.5;
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .popular-footer {
@@ -442,18 +554,115 @@
     gap: 1rem;
     align-items: center;
     flex-wrap: wrap;
+    margin-top: 0.85rem;
 
-    span {
-      color: rgba(255, 255, 255, 0.58);
-      font-size: 0.92rem;
+    .popular-status {
+      color: rgba(255, 255, 255, 0.64);
+      font-size: 0.85rem;
     }
 
     a {
-      color: #fff;
-      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0.78rem 1rem;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      font-weight: 900;
       text-decoration: none;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        opacity: 0.94;
+      }
     }
   }
+}
+
+.popular-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(4, 6, 15, 0.82);
+  backdrop-filter: blur(10px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.popular-modal {
+  position: relative;
+  width: min(960px, 100%);
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) 1fr;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(14, 18, 34, 0.98), rgba(8, 10, 20, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.popular-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.popular-modal-media {
+  img {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.popular-modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+
+  h3 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+}
+
+.popular-modal-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.popular-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
 }
 
 /* UPGRADE */
@@ -550,6 +759,18 @@
   .popular-grid,
   .upgrade-grid {
     grid-template-columns: 1fr;
+  }
+
+  .popular-modal {
+    grid-template-columns: 1fr;
+  }
+
+  .popular-modal-media img {
+    min-height: 280px;
+  }
+
+  .popular-modal-content {
+    padding: 1.4rem;
   }
 
   .carousel-controls {

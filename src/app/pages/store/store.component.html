@@ -13,22 +13,38 @@
     </div>
   </section>
 
-  <!-- INTRODUÇÃO -->
-  <section class="intro-section">
+  <!-- PACKS POPULARES -->
+  <section class="logo-section">
     <div class="section-content">
-      <h2>Potencialize suas criações com nossos packs</h2>
-      <p class="section-subtitle">
-        Desenvolvemos pacotes completos com tudo que um criador de conteúdo precisa
-        para produzir materiais de alta qualidade e engajamento. Nossos packs são
-        atualizados com novos recursos e tendências do mercado.
-      </p>
+      <h2>Os nossos packs mais populares</h2>
 
-      <div class="highlight-card">
-        <p>
-          Muitos dos nossos criadores de conteúdo já utilizam nossos materiais para
-          elevar a qualidade das publicações e aumentar o engajamento nas redes sociais.
-        </p>
-      </div>
+      @if (isLoadingPopularPacks) {
+        <p class="popular-feedback">Carregando packs principais...</p>
+      } @else if (popularPacksError) {
+        <p class="popular-feedback">Nao foi possivel carregar os packs principais agora.</p>
+      } @else if (repeatedPartnerLogos.length > 0) {
+        <div class="logos-wrapper">
+          <div class="logos-marquee">
+            <div class="logos-container">
+              @for (logo of repeatedPartnerLogos; track $index) {
+                <div class="logo-item">
+                  <img [src]="logo.image" [alt]="logo.alt" />
+                </div>
+              }
+            </div>
+
+            <div class="logos-container" aria-hidden="true">
+              @for (logo of repeatedPartnerLogos; track $index) {
+                <div class="logo-item">
+                  <img [src]="logo.image" [alt]="logo.alt" />
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      } @else {
+        <p class="popular-feedback">Nenhum pack principal foi encontrado no momento.</p>
+      }
     </div>
   </section>
 
@@ -49,33 +65,6 @@
             <p>{{ item.description }}</p>
           </article>
         }
-      </div>
-    </div>
-  </section>
-
-  <!-- PACKS POPULARES -->
-  <section class="logo-section">
-    <div class="section-content">
-      <h2>Os nossos packs mais populares</h2>
-
-      <div class="logos-wrapper">
-        <div class="logos-marquee">
-          <div class="logos-container">
-            @for (logo of repeatedPartnerLogos; track $index) {
-              <div class="logo-item">
-                <img [src]="logo.image" [alt]="logo.alt" />
-              </div>
-            }
-          </div>
-
-          <div class="logos-container" aria-hidden="true">
-            @for (logo of repeatedPartnerLogos; track $index) {
-              <div class="logo-item">
-                <img [src]="logo.image" [alt]="logo.alt" />
-              </div>
-            }
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -157,6 +146,25 @@
 
           <button class="cta-button">Comprar agora</button>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Entendendo packs -->
+  <section class="intro-section">
+    <div class="section-content">
+      <h2>Potencialize suas criações com nossos packs</h2>
+      <p class="section-subtitle">
+        Desenvolvemos pacotes completos com tudo que um criador de conteúdo precisa
+        para produzir materiais de alta qualidade e engajamento. Nossos packs são
+        atualizados com novos recursos e tendências do mercado.
+      </p>
+
+      <div class="highlight-card">
+        <p>
+          Muitos dos nossos criadores de conteúdo já utilizam nossos materiais para
+          elevar a qualidade das publicações e aumentar o engajamento nas redes sociais.
+        </p>
       </div>
     </div>
   </section>
