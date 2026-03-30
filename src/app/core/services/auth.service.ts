@@ -2,14 +2,11 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-  updateProfile,
-  sendPasswordResetEmail,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+  User
 } from 'firebase/auth';
 import { auth } from '../../../../firebase-config';
 import { ToastrService } from 'ngx-toastr';
@@ -22,6 +19,7 @@ export interface UserData {
   displayName: string | null;
   photoURL: string | null;
   plano?: 'gratuito' | 'basic' | 'gold' | 'premium' | null;
+  authProvider?: 'firebase' | 'backend';
 }
 
 @Injectable({
@@ -52,12 +50,18 @@ export class AuthService {
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          plano: null
+          plano: null,
+          authProvider: 'firebase'
         });
 
         await this.syncBackendUser(user);
       } else {
-        this.currentUser.set(null);
+        const cached = this.getBackendSession();
+        if (cached) {
+          this.currentUser.set(cached);
+        } else {
+          this.currentUser.set(null);
+        }
       }
 
       this.isLoading.set(false);
@@ -90,7 +94,7 @@ export class AuthService {
   }
 
   /**
-   * Espera o Firebase terminar de restaurar a sessão
+   * Espera o Firebase terminar de restaurar a sessao
    */
   async waitForAuthInit(): Promise<void> {
     if (this.authInitialized()) return;
@@ -110,15 +114,16 @@ export class AuthService {
    */
   async register(email: string, password: string, name: string): Promise<boolean> {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await firstValueFrom(this.apiService.registerEmail({
+        nome: name,
+        email,
+        senha: password
+      }));
 
-      await updateProfile(userCredential.user, { displayName: name });
-
-      this.toastr.success('Conta criada com sucesso!', 'Bem-vindo!');
-      this.router.navigate(['/dashboard']);
+      this.toastr.success('Conta criada! Verifique seu email para confirmar.', 'Bem-vindo!');
       return true;
     } catch (error: any) {
-      this.handleAuthError(error);
+      this.handleBackendError(error);
       return false;
     }
   }
@@ -128,12 +133,17 @@ export class AuthService {
    */
   async login(email: string, password: string): Promise<boolean> {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await firstValueFrom(this.apiService.loginEmail({
+        email,
+        senha: password
+      }));
+
+      this.setBackendSession(response.token, response.usuario);
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo de volta!');
       this.router.navigate(['/dashboard']);
       return true;
     } catch (error: any) {
-      this.handleAuthError(error);
+      this.handleBackendError(error);
       return false;
     }
   }
@@ -144,7 +154,15 @@ export class AuthService {
   async loginWithGoogle(): Promise<boolean> {
     try {
       const provider = new GoogleAuthProvider();
-      await this.signInWithGooglePopup(provider);
+      provider.setCustomParameters({ prompt: 'select_account' });
+
+      const mode = await this.signInWithGooglePopup(provider);
+
+      if (mode === 'redirect') {
+        this.toastr.info('Continuando login com Google...', 'Aguarde');
+        return true;
+      }
+
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo!');
       this.router.navigate(['/dashboard']);
       return true;
@@ -154,8 +172,25 @@ export class AuthService {
     }
   }
 
-  private signInWithGooglePopup(provider: GoogleAuthProvider): Promise<unknown> {
-    return signInWithPopup(auth, provider);
+  private async signInWithGooglePopup(provider: GoogleAuthProvider): Promise<'popup' | 'redirect'> {
+    try {
+      await signInWithPopup(auth, provider);
+      return 'popup';
+    } catch (error: any) {
+      const popupErrors = [
+        'auth/popup-closed-by-user',
+        'auth/popup-blocked',
+        'auth/cancelled-popup-request',
+        'auth/operation-not-supported-in-this-environment'
+      ];
+
+      if (popupErrors.includes(error?.code)) {
+        await signInWithRedirect(auth, provider);
+        return 'redirect';
+      }
+
+      throw error;
+    }
   }
 
   /**
@@ -163,8 +198,13 @@ export class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      await signOut(auth);
-      this.toastr.info('Você saiu da conta', 'Até logo!');
+      if (auth.currentUser) {
+        await signOut(auth);
+      }
+
+      this.clearBackendSession();
+      this.currentUser.set(null);
+      this.toastr.info('Voce saiu da conta', 'Ate logo!');
       this.router.navigate(['/home']);
     } catch (error: any) {
       this.toastr.error('Erro ao sair', 'Tente novamente');
@@ -176,28 +216,24 @@ export class AuthService {
    */
   async resetPassword(email: string): Promise<boolean> {
     try {
-      await sendPasswordResetEmail(auth, email);
-      this.toastr.success('Email de recuperação enviado!', 'Verifique sua caixa de entrada');
+      await firstValueFrom(this.apiService.requestPasswordReset({ email }));
+      this.toastr.success('Email de recuperacao enviado!', 'Verifique sua caixa de entrada');
       return true;
     } catch (error: any) {
-      this.handleAuthError(error);
+      this.handleBackendError(error);
       return false;
     }
   }
 
   /**
-   * Pegar token JWT do usuário
+   * Pegar token JWT do usuario
    */
   async getToken(): Promise<string | null> {
-    const user = auth.currentUser;
-    if (user) {
-      return await user.getIdToken();
-    }
-    return null;
+    return localStorage.getItem('nicol_auth_token');
   }
 
   /**
-   * Verificar se usuário está logado
+   * Verificar se usuario esta logado
    */
   isAuthenticated(): boolean {
     return this.currentUser() !== null;
@@ -208,20 +244,77 @@ export class AuthService {
    */
   private handleAuthError(error: any): void {
     const errorMessages: { [key: string]: string } = {
-      'auth/email-already-in-use': 'Este email já está em uso',
-      'auth/invalid-email': 'Email inválido',
-      'auth/operation-not-allowed': 'Operação não permitida',
-      'auth/weak-password': 'Senha muito fraca (mínimo 6 caracteres)',
-      'auth/user-disabled': 'Usuário desabilitado',
-      'auth/user-not-found': 'Usuário não encontrado',
+      'auth/email-already-in-use': 'Este email ja esta em uso',
+      'auth/invalid-email': 'Email invalido',
+      'auth/operation-not-allowed': 'Operacao nao permitida',
+      'auth/weak-password': 'Senha muito fraca (minimo 6 caracteres)',
+      'auth/user-disabled': 'Usuario desabilitado',
+      'auth/user-not-found': 'Usuario nao encontrado',
       'auth/wrong-password': 'Senha incorreta',
-      'auth/invalid-credential': 'Credenciais inválidas',
+      'auth/invalid-credential': 'Credenciais invalidas',
       'auth/too-many-requests': 'Muitas tentativas. Tente mais tarde',
-      'auth/network-request-failed': 'Erro de conexão. Verifique sua internet',
-      'auth/popup-closed-by-user': 'Login cancelado'
+      'auth/network-request-failed': 'Erro de conexao. Verifique sua internet',
+      'auth/popup-closed-by-user': 'Login cancelado',
+      'auth/popup-blocked': 'Popup bloqueado. Vamos continuar em outra janela.',
+      'auth/unauthorized-domain': 'Dominio nao autorizado no Firebase.'
     };
 
-    const message = errorMessages[error.code] || 'Erro ao realizar operação';
-    this.toastr.error(message, 'Erro de Autenticação');
+    const message = errorMessages[error.code] || 'Erro ao realizar operacao';
+    this.toastr.error(message, 'Erro de Autenticacao');
+  }
+
+  private handleBackendError(error: any): void {
+    const status = error?.status;
+    const message = error?.error?.message;
+
+    if (status && message) {
+      const title = status === 403 ? 'Verificacao pendente' : 'Erro de Autenticacao';
+      const type = status === 403 ? 'warning' : 'error';
+      this.toastr[type](message, title);
+      return;
+    }
+
+    this.toastr.error(message || 'Erro ao realizar operacao', 'Erro de Autenticacao');
+  }
+
+  private setBackendSession(token: string, usuario: {
+    id: string;
+    nome: string | null;
+    email: string;
+    provedor_autenticacao: string;
+    id_usuario_provedor: string | null;
+    foto_url: string | null;
+    criado_em: string;
+    atualizado_em: string;
+  }): void {
+    const userData: UserData = {
+      backendUserId: Number(usuario.id),
+      uid: `backend-${usuario.id}`,
+      email: usuario.email,
+      displayName: usuario.nome,
+      photoURL: usuario.foto_url,
+      plano: null,
+      authProvider: 'backend'
+    };
+
+    localStorage.setItem('nicol_auth_token', token);
+    localStorage.setItem('nicol_auth_user', JSON.stringify(userData));
+    this.currentUser.set(userData);
+  }
+
+  private getBackendSession(): UserData | null {
+    const raw = localStorage.getItem('nicol_auth_user');
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw) as UserData;
+    } catch {
+      return null;
+    }
+  }
+
+  private clearBackendSession(): void {
+    localStorage.removeItem('nicol_auth_token');
+    localStorage.removeItem('nicol_auth_user');
   }
 }

@@ -54,12 +54,12 @@ describe('Auth Flow Workflow', () => {
   it('submits valid login credentials', async () => {
     component.loginForm.setValue({
       email: 'joao@example.com',
-      password: '123456'
+      password: '12345678'
     });
 
     await component.onLogin();
 
-    expect(authServiceMock.login).toHaveBeenCalledWith('joao@example.com', '123456');
+    expect(authServiceMock.login).toHaveBeenCalledWith('joao@example.com', '12345678');
   });
 
   it('submits valid registration data', async () => {
@@ -69,13 +69,13 @@ describe('Auth Flow Workflow', () => {
     component.registerForm.setValue({
       name: 'Joao Felipe',
       email: 'joao@example.com',
-      password: '123456',
-      confirmPassword: '123456'
+      password: '12345678',
+      confirmPassword: '12345678'
     });
 
     await component.onRegister();
 
-    expect(authServiceMock.register).toHaveBeenCalledWith('joao@example.com', '123456', 'Joao Felipe');
+    expect(authServiceMock.register).toHaveBeenCalledWith('joao@example.com', '12345678', 'Joao Felipe');
   });
 
   it('triggers google login', async () => {

@@ -2,13 +2,13 @@
   <section class="auth-hero">
     <div class="hero-content">
       <div class="hero-text">
-        <span class="hero-badge">Área do cliente</span>
+        <span class="hero-badge">Area do cliente</span>
         <h1>{{ isLoginMode ? 'Acesse sua conta' : 'Crie sua conta' }}</h1>
         <p>
           {{
             isLoginMode
               ? 'Gerencie seus projetos e acompanhe seus resultados com praticidade.'
-              : 'Comece agora e tenha acesso à sua área para acompanhar tudo de perto.'
+              : 'Comece agora e tenha acesso a sua area para acompanhar tudo de perto.'
           }}
         </p>
       </div>
@@ -20,7 +20,7 @@
       <div class="auth-shell">
         <div class="auth-copy">
           <span class="form-badge">
-            {{ isLoginMode ? 'Login seguro' : 'Cadastro rápido' }}
+            {{ isLoginMode ? 'Login seguro' : 'Cadastro rapido' }}
           </span>
 
           <h2>
@@ -30,8 +30,8 @@
           <p>
             {{
               isLoginMode
-                ? 'Entre com seus dados para acessar sua área, acompanhar projetos e visualizar suas informações.'
-                : 'Preencha os dados abaixo para criar sua conta e começar sua jornada com a NicolWork.'
+                ? 'Entre com seus dados para acessar sua area, acompanhar projetos e visualizar suas informacoes.'
+                : 'Preencha os dados abaixo para criar sua conta e comecar sua jornada com a NicolWork.'
             }}
           </p>
         </div>
@@ -57,7 +57,7 @@
                 [class.is-invalid]="loginEmail?.invalid && loginEmail?.touched"
               />
               <small class="text-danger" *ngIf="loginEmail?.invalid && loginEmail?.touched">
-                Email inválido.
+                Email invalido.
               </small>
             </div>
 
@@ -71,10 +71,12 @@
                 [class.is-invalid]="loginPassword?.invalid && loginPassword?.touched"
               />
               <small class="text-danger" *ngIf="loginPassword?.invalid && loginPassword?.touched">
-                Senha deve ter no mínimo 6 caracteres.
+                Senha deve ter no minimo 8 caracteres.
               </small>
 
-              <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+              <a href="#" class="forgot-password" (click)="onForgotPassword($event)">
+                Esqueceu sua senha?
+              </a>
             </div>
 
             <button
@@ -119,7 +121,7 @@
                   [class.is-invalid]="registerName?.invalid && registerName?.touched"
                 />
                 <small class="text-danger" *ngIf="registerName?.invalid && registerName?.touched">
-                  Nome deve ter no mínimo 3 caracteres.
+                  Nome deve ter no minimo 3 caracteres.
                 </small>
               </div>
 
@@ -133,7 +135,7 @@
                   [class.is-invalid]="registerEmail?.invalid && registerEmail?.touched"
                 />
                 <small class="text-danger" *ngIf="registerEmail?.invalid && registerEmail?.touched">
-                  Email inválido.
+                  Email invalido.
                 </small>
               </div>
 
@@ -143,11 +145,11 @@
                   type="password"
                   id="register-password"
                   formControlName="password"
-                  placeholder="Mínimo 6 caracteres"
+                  placeholder="Minimo 8 caracteres"
                   [class.is-invalid]="registerPassword?.invalid && registerPassword?.touched"
                 />
                 <small class="text-danger" *ngIf="registerPassword?.invalid && registerPassword?.touched">
-                  Senha deve ter no mínimo 6 caracteres.
+                  Senha deve ter no minimo 8 caracteres.
                 </small>
               </div>
 
@@ -164,7 +166,7 @@
                   class="text-danger"
                   *ngIf="registerConfirmPassword?.touched && registerForm.errors?.['passwordMismatch']"
                 >
-                  As senhas não coincidem.
+                  As senhas nao coincidem.
                 </small>
               </div>
 
@@ -195,10 +197,10 @@
 
           <div class="auth-switch">
             <span>
-              {{ isLoginMode ? 'Não tem uma conta?' : 'Já tem uma conta?' }}
+              {{ isLoginMode ? 'Nao tem uma conta?' : 'Ja tem uma conta?' }}
             </span>
             <a (click)="onSwitchMode()">
-              {{ isLoginMode ? 'Cadastre-se' : 'Faça login' }}
+              {{ isLoginMode ? 'Cadastre-se' : 'Faca login' }}
             </a>
           </div>
         </div>

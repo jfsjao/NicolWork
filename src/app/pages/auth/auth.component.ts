@@ -24,13 +24,13 @@ export class AuthComponent {
   constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
 
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     }, { 
       validators: this.passwordMatchValidator
@@ -67,7 +67,11 @@ export class AuthComponent {
 
     try {
       const { name, email, password } = this.registerForm.value;
-      await this.authService.register(email, password, name);
+      const ok = await this.authService.register(email, password, name);
+
+      if (ok) {
+        this.isLoginMode = true;
+      }
     } finally {
       this.isLoading = false;
     }
@@ -78,6 +82,25 @@ export class AuthComponent {
 
     try {
       await this.authService.loginWithGoogle();
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async onForgotPassword(event: Event) {
+    event.preventDefault();
+
+    const email = this.loginForm.get('email')?.value;
+
+    if (!email || this.loginEmail?.invalid) {
+      this.loginForm.get('email')?.markAsTouched();
+      return;
+    }
+
+    this.isLoading = true;
+
+    try {
+      await this.authService.resetPassword(email);
     } finally {
       this.isLoading = false;
     }

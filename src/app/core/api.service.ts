@@ -38,6 +38,53 @@ export interface SyncAuthResponse {
   plano_atual: PlanoAtualResponse | null;
 }
 
+export interface RegisterEmailPayload {
+  nome: string | null;
+  email: string;
+  senha: string;
+}
+
+export interface LoginEmailPayload {
+  email: string;
+  senha: string;
+}
+
+export interface AuthTokenResponse {
+  token: string;
+  usuario: {
+    id: string;
+    nome: string | null;
+    email: string;
+    provedor_autenticacao: string;
+    id_usuario_provedor: string | null;
+    foto_url: string | null;
+    criado_em: string;
+    atualizado_em: string;
+  };
+}
+
+export interface VerifyEmailPayload {
+  token: string;
+}
+
+export interface ResendEmailPayload {
+  email: string;
+}
+
+export interface RequestResetPayload {
+  email: string;
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  nova_senha: string;
+}
+
+export interface ChangePasswordPayload {
+  senha_atual: string;
+  nova_senha: string;
+}
+
 export interface PackResponse {
   id: number;
   slug: string;
@@ -91,6 +138,48 @@ export class ApiService {
     return this.http.post<SyncAuthResponse>(`${this.backendUrl}/auth/sync`, payload);
   }
 
+  registerEmail(payload: RegisterEmailPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/register`, payload);
+  }
+
+  loginEmail(payload: LoginEmailPayload): Observable<AuthTokenResponse> {
+    return this.http.post<AuthTokenResponse>(`${this.backendUrl}/auth/login`, payload);
+  }
+
+  verifyEmail(payload: VerifyEmailPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/verify-email`, payload);
+  }
+
+  resendVerification(payload: ResendEmailPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.backendUrl}/auth/resend-verification`,
+      payload
+    );
+  }
+
+  requestPasswordReset(payload: RequestResetPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.backendUrl}/auth/request-password-reset`,
+      payload
+    );
+  }
+
+  resetPassword(payload: ResetPasswordPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/reset-password`, payload);
+  }
+
+  changePassword(payload: ChangePasswordPayload, token: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.backendUrl}/auth/change-password`,
+      payload,
+      {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${token}`
+        })
+      }
+    );
+  }
+
   getPacksDestaque(limite = 10): Observable<PacksDestaqueResponse> {
     return this.http.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
   }
@@ -100,10 +189,13 @@ export class ApiService {
   }
 
   getMeusPacks(usuarioId: number): Observable<MeusPacksResponse> {
-    return this.http.get<MeusPacksResponse>(`${this.backendUrl}/usuarios/me/packs`, {
-      headers: new HttpHeaders({
-        'x-usuario-id': String(usuarioId)
-      })
-    });
+    const token = localStorage.getItem('nicol_auth_token');
+    const headers = new HttpHeaders(
+      token
+        ? { Authorization: `Bearer ${token}` }
+        : { 'x-usuario-id': String(usuarioId) }
+    );
+
+    return this.http.get<MeusPacksResponse>(`${this.backendUrl}/usuarios/me/packs`, { headers });
   }
 }
