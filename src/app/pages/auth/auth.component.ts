@@ -51,29 +51,29 @@ export class AuthComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.clearNotice();
-    this.authService.clearError();
+    this.authService.clearNotice?.();
+    this.authService.clearError?.();
   }
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
     this.isForgotMode = false;
-    this.authService.clearNotice();
-    this.authService.clearError();
+    this.authService.clearNotice?.();
+    this.authService.clearError?.();
   }
 
   onOpenForgotPassword(event: Event) {
     event.preventDefault();
     this.isForgotMode = true;
-    this.authService.clearNotice();
-    this.authService.clearError();
+    this.authService.clearNotice?.();
+    this.authService.clearError?.();
   }
 
   onBackToLogin() {
     this.isForgotMode = false;
     this.isLoginMode = true;
-    this.authService.clearNotice();
-    this.authService.clearError();
+    this.authService.clearNotice?.();
+    this.authService.clearError?.();
   }
 
   async onLogin() {

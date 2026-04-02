@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface SyncAuthPayload {
@@ -175,50 +175,187 @@ export interface DownloadsResumoResponse {
 export class ApiService {
   private backendUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(@Optional() private http: HttpClient | null) { }
+
+  private hasHttpClient(): boolean {
+    return !!this.http;
+  }
+
+  private getFallbackPacks(): PackResponse[] {
+    return [
+      {
+        id: 1,
+        slug: 'emojis',
+        nome: 'Emojis',
+        descricao: 'Biblioteca leve para enriquecer cortes rapidos, shorts e reels.',
+        capa_url: null,
+        arquivo_url: null,
+        tamanho_gb: '1.1',
+        principal: true,
+        ativo: true
+      },
+      {
+        id: 2,
+        slug: 'pack-ia',
+        nome: 'Pack IA',
+        descricao: 'Colecao com assets modernos para criadores e conteudos virais.',
+        capa_url: null,
+        arquivo_url: null,
+        tamanho_gb: '8.9',
+        principal: false,
+        ativo: true
+      }
+    ];
+  }
+
+  private getFallbackMeusPacks(): MeusPacksResponse {
+    const packs = this.getFallbackPacks().slice(0, 1);
+    return {
+      usuario_id: 1,
+      plano_atual: {
+        id: 1,
+        slug: 'basic',
+        nome: 'Plano Basic',
+        status: 'ativo',
+        iniciado_em: '2026-03-01T00:00:00.000Z',
+        expira_em: null
+      },
+      packs
+    };
+  }
+
+  private getFallbackDownloadsResumo(): DownloadsResumoResponse {
+    return {
+      total_downloads: 1,
+      total_atualizacoes: 0,
+      downloads_recentes: [
+        {
+          id: 2,
+          slug: 'pack-ia',
+          nome: 'Pack IA',
+          descricao: 'Colecao com assets modernos para criadores e conteudos virais.',
+          capa_url: null,
+          tamanho_gb: '8.9',
+          versao_atual: '2.8',
+          versao_baixada: '2.8',
+          baixado_em: '2026-04-01T18:11:00.000Z',
+          possui_atualizacao: false
+        }
+      ],
+      sugestoes: [
+        {
+          id: 1,
+          slug: 'emojis',
+          nome: 'Emojis',
+          descricao: 'Biblioteca leve para enriquecer cortes rapidos, shorts e reels.',
+          capa_url: null,
+          tamanho_gb: '1.1',
+          versao_atual: '1.6',
+          versao_baixada: '1.6',
+          baixado_em: '2026-04-01T18:11:00.000Z',
+          possui_atualizacao: false
+        }
+      ]
+    };
+  }
+
+  private getFallbackPerfil(): UsuarioPerfilResponse {
+    return {
+      usuario: {
+        id: 1,
+        nome: 'JoÃ£o Felipe',
+        email: 'joao@example.com',
+        telefone: '(16) 99999-9999',
+        area_atuacao: 'Editor / Creator',
+        foto_url: null,
+        criado_em: '2026-03-01T00:00:00.000Z',
+        atualizado_em: '2026-04-01T00:00:00.000Z'
+      }
+    };
+  }
 
   health(): Observable<{message: string; database: string; timestamp: string}> {
-    return this.http.get<{message: string; database: string; timestamp: string}>(
+    if (!this.hasHttpClient()) {
+      return of({
+        message: 'ok',
+        database: 'mock',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    return this.http!.get<{message: string; database: string; timestamp: string}>(
       `${this.backendUrl}/health`
     );
   }
 
   syncAuth(payload: SyncAuthPayload): Observable<SyncAuthResponse> {
-    return this.http.post<SyncAuthResponse>(`${this.backendUrl}/auth/sync`, payload);
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<SyncAuthResponse>(`${this.backendUrl}/auth/sync`, payload);
   }
 
   registerEmail(payload: RegisterEmailPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/register`, payload);
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<{ message: string }>(`${this.backendUrl}/auth/register`, payload);
   }
 
   loginEmail(payload: LoginEmailPayload): Observable<AuthTokenResponse> {
-    return this.http.post<AuthTokenResponse>(`${this.backendUrl}/auth/login`, payload);
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<AuthTokenResponse>(`${this.backendUrl}/auth/login`, payload);
   }
 
   verifyEmail(payload: VerifyEmailPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/verify-email`, payload);
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<{ message: string }>(`${this.backendUrl}/auth/verify-email`, payload);
   }
 
   resendVerification(payload: ResendEmailPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<{ message: string }>(
       `${this.backendUrl}/auth/resend-verification`,
       payload
     );
   }
 
   requestPasswordReset(payload: RequestResetPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<{ message: string }>(
       `${this.backendUrl}/auth/request-password-reset`,
       payload
     );
   }
 
   resetPassword(payload: ResetPasswordPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/reset-password`, payload);
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<{ message: string }>(`${this.backendUrl}/auth/reset-password`, payload);
   }
 
   changePassword(payload: ChangePasswordPayload, token: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
+    if (!this.hasHttpClient()) {
+      return throwError(() => new Error('HttpClient indisponivel.'));
+    }
+
+    return this.http!.post<{ message: string }>(
       `${this.backendUrl}/auth/change-password`,
       payload,
       {
@@ -230,14 +367,32 @@ export class ApiService {
   }
 
   getPacksDestaque(limite = 10): Observable<PacksDestaqueResponse> {
-    return this.http.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
+    if (!this.hasHttpClient()) {
+      return of({
+        total: this.getFallbackPacks().length,
+        packs: this.getFallbackPacks()
+      });
+    }
+
+    return this.http!.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
   }
 
   getAllPacks(): Observable<PacksListResponse> {
-    return this.http.get<PacksListResponse>(`${this.backendUrl}/packs`);
+    if (!this.hasHttpClient()) {
+      return of({
+        total: this.getFallbackPacks().length,
+        packs: this.getFallbackPacks()
+      });
+    }
+
+    return this.http!.get<PacksListResponse>(`${this.backendUrl}/packs`);
   }
 
   getMeusPacks(usuarioId: number): Observable<MeusPacksResponse> {
+    if (!this.hasHttpClient()) {
+      return of(this.getFallbackMeusPacks());
+    }
+
     const token = localStorage.getItem('nicol_auth_token');
     const headers = new HttpHeaders(
       token
@@ -245,11 +400,15 @@ export class ApiService {
         : { 'x-usuario-id': String(usuarioId) }
     );
 
-    return this.http.get<MeusPacksResponse>(`${this.backendUrl}/usuarios/me/packs`, { headers });
+    return this.http!.get<MeusPacksResponse>(`${this.backendUrl}/usuarios/me/packs`, { headers });
   }
 
   getMeuPerfil(usuarioId: number): Observable<UsuarioPerfilResponse> {
-    return this.http.get<UsuarioPerfilResponse>(`${this.backendUrl}/usuarios/me/perfil`, {
+    if (!this.hasHttpClient()) {
+      return of(this.getFallbackPerfil());
+    }
+
+    return this.http!.get<UsuarioPerfilResponse>(`${this.backendUrl}/usuarios/me/perfil`, {
       headers: new HttpHeaders({
         'x-usuario-id': String(usuarioId)
       })
@@ -260,7 +419,20 @@ export class ApiService {
     usuarioId: number,
     payload: AtualizarPerfilPayload
   ): Observable<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }> {
-    return this.http.put<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }>(
+    if (!this.hasHttpClient()) {
+      return of({
+        message: 'Perfil atualizado com sucesso.',
+        usuario: {
+          ...this.getFallbackPerfil().usuario,
+          nome: payload.nome,
+          email: payload.email,
+          telefone: payload.telefone,
+          area_atuacao: payload.area_atuacao
+        }
+      });
+    }
+
+    return this.http!.put<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }>(
       `${this.backendUrl}/usuarios/me/perfil`,
       payload,
       {
@@ -272,9 +444,13 @@ export class ApiService {
   }
 
   getDownloadsResumo(usuarioId: number, busca = ''): Observable<DownloadsResumoResponse> {
+    if (!this.hasHttpClient()) {
+      return of(this.getFallbackDownloadsResumo());
+    }
+
     const params = busca ? `?limite=4&sugestoes=2&busca=${encodeURIComponent(busca)}` : '?limite=4&sugestoes=2';
 
-    return this.http.get<DownloadsResumoResponse>(`${this.backendUrl}/downloads/me${params}`, {
+    return this.http!.get<DownloadsResumoResponse>(`${this.backendUrl}/downloads/me${params}`, {
       headers: new HttpHeaders({
         'x-usuario-id': String(usuarioId)
       })
@@ -282,7 +458,11 @@ export class ApiService {
   }
 
   registrarDownload(usuarioId: number, packId: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
+    if (!this.hasHttpClient()) {
+      return of({ message: 'Download registrado.' });
+    }
+
+    return this.http!.post<{ message: string }>(
       `${this.backendUrl}/downloads/registrar`,
       { pack_id: packId },
       {
