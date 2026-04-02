@@ -27,7 +27,7 @@ interface AccountActivity {
 export class AccountComponent implements OnInit {
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
-  private toastr = inject(ToastrService);
+  private toastr = inject(ToastrService, { optional: true });
 
   profileForm = {
     name: '',
@@ -82,14 +82,15 @@ export class AccountComponent implements OnInit {
   }
 
   async carregarPerfil(): Promise<void> {
-    await this.authService.waitForAuthInit();
-    const usuarioId = this.authService.currentUser()?.backendUserId;
+    const snapshotUser = this.authService.currentUser();
+    const usuarioId = snapshotUser?.backendUserId;
 
     if (!usuarioId) {
       this.preencherFallback();
       return;
     }
 
+    await this.authService.waitForAuthInit();
     this.isLoading = true;
 
     try {
@@ -102,7 +103,7 @@ export class AccountComponent implements OnInit {
       };
     } catch {
       this.preencherFallback();
-      this.toastr.error('Nao foi possivel carregar o perfil.', 'Erro');
+      this.toastr?.error('Nao foi possivel carregar o perfil.', 'Erro');
     } finally {
       this.isLoading = false;
     }
@@ -120,7 +121,7 @@ export class AccountComponent implements OnInit {
   async salvarPerfil(): Promise<void> {
     const usuarioId = this.authService.currentUser()?.backendUserId;
     if (!usuarioId) {
-      this.toastr.error('Usuario nao identificado.', 'Erro');
+      this.toastr?.error('Usuario nao identificado.', 'Erro');
       return;
     }
 
@@ -143,9 +144,9 @@ export class AccountComponent implements OnInit {
         role: response.usuario.area_atuacao ?? this.profileForm.role
       };
 
-      this.toastr.success('Perfil atualizado com sucesso.', 'Sucesso');
+      this.toastr?.success('Perfil atualizado com sucesso.', 'Sucesso');
     } catch (error: any) {
-      this.toastr.error(error?.error?.message || 'Nao foi possivel salvar o perfil.', 'Erro');
+      this.toastr?.error(error?.error?.message || 'Nao foi possivel salvar o perfil.', 'Erro');
     } finally {
       this.isSaving = false;
     }
@@ -155,7 +156,7 @@ export class AccountComponent implements OnInit {
     const email = this.profileForm.email || this.authService.currentUser()?.email;
 
     if (!email) {
-      this.toastr.error('Informe um email valido para recuperar a senha.', 'Erro');
+      this.toastr?.error('Informe um email valido para recuperar a senha.', 'Erro');
       return;
     }
 

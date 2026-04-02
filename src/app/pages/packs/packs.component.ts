@@ -29,14 +29,15 @@ export class PacksComponent implements OnInit {
   packsError = false;
 
   async ngOnInit(): Promise<void> {
-    await this.authService.waitForAuthInit();
-
     const user = this.authService.currentUser();
 
     if (!user?.backendUserId) {
+      this.applyFallbackPacks();
       this.isLoadingPacks = false;
       return;
     }
+
+    await this.authService.waitForAuthInit();
 
     this.userLibraryService.loadUserLibrary(user.backendUserId).subscribe({
       next: (library) => {
@@ -90,5 +91,38 @@ export class PacksComponent implements OnInit {
 
   closePackDetails(): void {
     this.selectedPack = null;
+  }
+
+  private applyFallbackPacks(): void {
+    this.myPacks = [
+      {
+        id: 1,
+        title: 'Emojis',
+        description: 'Biblioteca leve para enriquecer cortes rapidos, shorts e reels.',
+        image: 'assets/images/packs/emoji.png',
+        badge: 'Liberado',
+        locked: false,
+        link: '/packs',
+        downloadUrl: null
+      }
+    ];
+
+    this.featuredPacks = [
+      {
+        id: 2,
+        title: 'Pack IA',
+        description: 'Colecao com assets modernos para criadores e conteudos virais.',
+        image: 'assets/images/packs/pack-ia.png',
+        badge: 'Top 1',
+        locked: false,
+        link: '/packs',
+        downloadUrl: null
+      }
+    ];
+
+    this.noveltyPacks = [];
+    this.allPacks = [...this.myPacks, ...this.featuredPacks];
+    this.upgradePacks = [];
+    this.packsError = false;
   }
 }

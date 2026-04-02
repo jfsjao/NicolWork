@@ -182,10 +182,10 @@ export class AuthComponent implements OnInit {
   }
 
   get authNotice() {
-    return this.authService.authNotice();
+    return typeof this.authService.authNotice === 'function' ? this.authService.authNotice() : null;
   }
 
   get authError() {
-    return this.authService.authError();
+    return typeof this.authService.authError === 'function' ? this.authService.authError() : null;
   }
 }
