@@ -186,6 +186,9 @@ jobs:
 
       - name: Deploy build
         run: |
+          ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_rsa \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} \
+            "mkdir -p '${{ secrets.HOSTINGER_TARGET }}'"
           rsync -avz \
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_rsa" \
             dist/public/browser/ \
