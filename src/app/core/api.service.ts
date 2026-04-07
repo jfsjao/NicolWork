@@ -181,49 +181,6 @@ export class ApiService {
     return !!this.http;
   }
 
-  private getFallbackPacks(): PackResponse[] {
-    return [
-      {
-        id: 1,
-        slug: 'emojis',
-        nome: 'Emojis',
-        descricao: 'Biblioteca leve para enriquecer cortes rapidos, shorts e reels.',
-        capa_url: null,
-        arquivo_url: null,
-        tamanho_gb: '1.1',
-        principal: true,
-        ativo: true
-      },
-      {
-        id: 2,
-        slug: 'pack-ia',
-        nome: 'Pack IA',
-        descricao: 'Colecao com assets modernos para criadores e conteudos virais.',
-        capa_url: null,
-        arquivo_url: null,
-        tamanho_gb: '8.9',
-        principal: false,
-        ativo: true
-      }
-    ];
-  }
-
-  private getFallbackMeusPacks(): MeusPacksResponse {
-    const packs = this.getFallbackPacks().slice(0, 1);
-    return {
-      usuario_id: 1,
-      plano_atual: {
-        id: 1,
-        slug: 'basic',
-        nome: 'Plano Basic',
-        status: 'ativo',
-        iniciado_em: '2026-03-01T00:00:00.000Z',
-        expira_em: null
-      },
-      packs
-    };
-  }
-
   private getFallbackDownloadsResumo(): DownloadsResumoResponse {
     return {
       total_downloads: 1,
@@ -368,10 +325,7 @@ export class ApiService {
 
   getPacksDestaque(limite = 10): Observable<PacksDestaqueResponse> {
     if (!this.hasHttpClient()) {
-      return of({
-        total: this.getFallbackPacks().length,
-        packs: this.getFallbackPacks()
-      });
+      return throwError(() => new Error('HttpClient indisponivel.'));
     }
 
     return this.http!.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
@@ -379,10 +333,7 @@ export class ApiService {
 
   getAllPacks(): Observable<PacksListResponse> {
     if (!this.hasHttpClient()) {
-      return of({
-        total: this.getFallbackPacks().length,
-        packs: this.getFallbackPacks()
-      });
+      return throwError(() => new Error('HttpClient indisponivel.'));
     }
 
     return this.http!.get<PacksListResponse>(`${this.backendUrl}/packs`);
@@ -390,7 +341,7 @@ export class ApiService {
 
   getMeusPacks(usuarioId: number): Observable<MeusPacksResponse> {
     if (!this.hasHttpClient()) {
-      return of(this.getFallbackMeusPacks());
+      return throwError(() => new Error('HttpClient indisponivel.'));
     }
 
     const token = localStorage.getItem('nicol_auth_token');

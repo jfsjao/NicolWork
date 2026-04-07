@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.applyUserSnapshot(this.authService.currentUser());
     void this.loadUserData();
-    this.loadDashboardData();
+    void this.loadDashboardData();
     this.startAutoSlide();
   }
 
@@ -122,16 +122,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadDashboardData(): void {
+  private async loadDashboardData(): Promise<void> {
+    await this.authService.waitForAuthInit();
     this.news = this.getNewsItems();
     this.upgradeSuggestions = this.getUpgradeSuggestions(this.userPlan);
 
     const user = this.authService.currentUser();
 
     if (!user?.backendUserId) {
-      const fallback = this.getFallbackLibrary();
-      this.myPacks = fallback.ownedPacks;
-      this.popularPacks = fallback.popularPacks;
+      this.myPacks = [];
+      this.popularPacks = [];
+      this.packsError = true;
       this.isLoadingPacks = false;
       return;
     }
@@ -307,35 +308,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ];
   }
 
-  private getFallbackLibrary(): { ownedPacks: UserLibraryPack[]; popularPacks: PopularPack[] } {
-    const ownedPacks: UserLibraryPack[] = [
-      {
-        id: 1,
-        title: 'Emojis',
-        description: 'Biblioteca leve para enriquecer cortes rapidos, shorts e reels.',
-        image: 'assets/images/packs/emoji.png',
-        badge: 'Liberado',
-        locked: false,
-        link: '/packs',
-        downloadUrl: null
-      }
-    ];
-
-    const popularPacks: PopularPack[] = [
-      {
-        id: 2,
-        title: 'Pack IA',
-        description: 'Colecao com assets modernos para criadores e conteudos virais.',
-        image: 'assets/images/packs/pack-ia.png',
-        badge: 'Top 1',
-        locked: false,
-        link: '/packs',
-        downloadUrl: null,
-        rank: 1,
-        highlight: 'Em destaque na plataforma'
-      }
-    ];
-
-    return { ownedPacks, popularPacks };
-  }
 }
