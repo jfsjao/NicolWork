@@ -13,16 +13,12 @@
     </div>
   </section>
 
-  <!-- PACKS POPULARES -->
+  <!-- PROGRAMAS E FERRAMENTAS POPULARES -->
   <section class="logo-section">
     <div class="section-content">
-      <h2>No que você irá ter acesso...</h2>
+      <h2>Ferramentas e programas que atendemos</h2>
 
-      @if (isLoadingPopularPacks) {
-        <p class="popular-feedback">Carregando packs principais...</p>
-      } @else if (popularPacksError) {
-        <p class="popular-feedback">Não foi possível carregar os packs principais agora.</p>
-      } @else if (repeatedPartnerLogos.length > 0) {
+      @if (repeatedPartnerLogos.length > 0) {
         <div class="logos-wrapper">
           <div class="logos-marquee">
             <div class="logos-container">
@@ -43,7 +39,7 @@
           </div>
         </div>
       } @else {
-        <p class="popular-feedback">Nenhum pack principal foi encontrado no momento.</p>
+        <p class="popular-feedback">Nenhuma ferramenta foi encontrada no momento.</p>
       }
     </div>
   </section>

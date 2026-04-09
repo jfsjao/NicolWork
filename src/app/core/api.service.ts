@@ -1,4 +1,4 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -25,7 +25,7 @@ export interface PlanoAtualResponse {
 export interface SyncAuthResponse {
   message: string;
   primeiro_acesso: boolean;
-  usuario: {
+  usuario: { 
     id: string;
     nome: string | null;
     email: string;
@@ -175,7 +175,7 @@ export interface DownloadsResumoResponse {
 export class ApiService {
   private backendUrl = environment.apiUrl;
 
-  constructor(@Optional() private http: HttpClient | null) { }
+  constructor(private http: HttpClient | null) { }
 
   private hasHttpClient(): boolean {
     return !!this.http;

@@ -8,7 +8,14 @@
           <a class="slide-hit-area" [routerLink]="slide.buttonLink" [attr.aria-label]="'Abrir ' + slide.title"></a>
           <picture>
             <source [srcset]="slide.mobileImage || slide.image" media="(max-width: 900px)" />
-            <img [src]="slide.image" [alt]="slide.alt" />
+            <img
+              [src]="slide.image"
+              [alt]="slide.alt"
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
+              draggable="false"
+            />
           </picture>
           <div class="slide-overlay"></div>
 
@@ -43,30 +50,36 @@
   </section>
 
   <section class="logo-section">
-    <div class="container">
-      <h2>Principal foco dos nossos produtos
-        <p>Todos os arquivos e ferramentas, em um só lugar.</p>
-      </h2> 
+    <div class="section-content">
+      <h2>No que você irá ter acesso...</h2>
 
-      <div class="logos-wrapper" #logosViewport>
-        <div class="logos-marquee">
-          <div class="logos-container">
-            @for (logo of repeatedPartnerLogos; track $index) {
-              <div class="logo-item">
-                <img [src]="logo.image" [alt]="logo.alt" />
-              </div>
-            }
-          </div>
+      @if (isLoadingPopularPacks) {
+        <p class="popular-feedback">Carregando packs principais...</p>
+      } @else if (popularPacksError) {
+        <p class="popular-feedback">Não foi possível carregar os packs principais agora.</p>
+      } @else if (popularPackCards.length > 0) {
+        <div class="logos-wrapper">
+          <div class="logos-marquee">
+            <div class="logos-container">
+              @for (logo of popularPackCards; track $index) {
+                <div class="logo-item">
+                  <img [src]="logo.image" [alt]="logo.alt" />
+                </div>
+              }
+            </div>
 
-          <div class="logos-container" aria-hidden="true">
-            @for (logo of repeatedPartnerLogos; track $index) {
-              <div class="logo-item">
-                <img [src]="logo.image" [alt]="logo.alt" />
-              </div>
-            }
+            <div class="logos-container" aria-hidden="true">
+              @for (logo of popularPackCards; track $index) {
+                <div class="logo-item">
+                  <img [src]="logo.image" [alt]="logo.alt" />
+                </div>
+              }
+            </div>
           </div>
         </div>
-      </div>
+      } @else {
+        <p class="popular-feedback">Nenhum pack principal foi encontrado no momento.</p>
+      }
     </div>
   </section>
 
@@ -138,7 +151,7 @@
       </p>
 
       <div class="pricing-grid">
-        <article class="pricing-card">
+        <article class="pricing-card pricing-basic">
           <div class="pricing-head">
             <span class="plan-badge">Básico</span>
             <h3>Para começar com padrão</h3>
@@ -167,7 +180,7 @@
           <a class="pricing-cta" routerLink="/store">Saiba mais</a>
         </article>
 
-        <article class="pricing-card">
+        <article class="pricing-card pricing-gold">
           <div class="pricing-head">
             <span class="plan-badge">Gold</span>
             <h3>Mais variedade e velocidade</h3>
@@ -196,7 +209,7 @@
           <a class="pricing-cta" routerLink="/store">Saiba mais</a>
         </article>
 
-        <article class="pricing-card featured">
+        <article class="pricing-card pricing-premium featured">
           <div class="pricing-head">
             <span class="plan-badge featured-badge">Premium</span>
             <h3>O completo para crescer rápido</h3>

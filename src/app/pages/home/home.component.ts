@@ -1,6 +1,9 @@
-import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, Inject, PLATFORM_ID, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ApiService } from '@core/api.service';
+import { mapPacksWithImage } from '@core/pack-image-map';
+import { finalize } from 'rxjs';
 
 interface Slide {
   image: string;
@@ -12,7 +15,7 @@ interface Slide {
   buttonLink: string;
 }
 
-interface Logo {
+interface HighlightCard {
   image: string;
   alt: string;
 }
@@ -29,9 +32,9 @@ interface PackFeature {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('autoVideo') autoVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('logosViewport') logosViewport!: ElementRef<HTMLDivElement>;
+  private apiService = inject(ApiService);
 
   slides: Slide[] = [
     {
@@ -66,18 +69,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   joaoGuilhermeImage = 'assets/images/depoimentos/joaoguilherme.png';
   gustavoJoseImage = 'assets/images/depoimentos/gustavojose.png';
   packsupremoImage = 'assets/images/empresa/pack_supremo.png';
-  partnerLogos: Logo[] = [
-    { image: 'assets/images/logos/adobe_illustrator.webp', alt: 'Adobe Illustrator' },
-    { image: 'assets/images/logos/after_effects.webp', alt: 'After Effects' },
-    { image: 'assets/images/logos/lightroom.webp', alt: 'Adobe Lightroom' },
-    { image: 'assets/images/logos/premier.webp', alt: 'Adobe Premiere' },
-    { image: 'assets/images/logos/photoshop.webp', alt: 'Adobe Photoshop' },
-    { image: 'assets/images/logos/broke.webp', alt: 'Broke' },
-    { image: 'assets/images/logos/chatgpt.webp', alt: 'ChatGPT' },
-    { image: 'assets/images/logos/gemini.webp', alt: 'Gemini' },
-    { image: 'assets/images/logos/canva.webp', alt: 'Canva' }
-  ];
-  repeatedPartnerLogos: Logo[] = [...this.partnerLogos, ...this.partnerLogos];
+  popularPackCards: HighlightCard[] = [];
+  isLoadingPopularPacks = true;
+  popularPacksError = false;
 
   packFeatures: PackFeature[] = [
     { title: 'Criação e Edição de Vídeo', description: 'Tudo que você precisa para criar conteúdos dinâmicos e com alto potencial de viralização.' },
@@ -94,21 +88,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   private videoObserver!: IntersectionObserver;
   private carouselInterval: number | null = null;
-  private logosAnimationFrame: number | null = null;
-  private logosPreviousTime = 0;
-  private logosOffset = 0;
-  private readonly CAROUSEL_DELAY = 6000;
-  private readonly LOGOS_SPEED = 36;
+  private readonly CAROUSEL_DELAY = 11000;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
+  ngOnInit(): void {
+    this.loadPopularPacks();
+  }
+
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
     this.initCarousels();
-    this.startLogosLoop();
     this.initVideoObserver();
     this.syncVideoState();
   }
@@ -123,15 +116,18 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   nextSlide(): void {
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+    this.restartCarousel();
   }
 
   prevSlide(): void {
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+    this.restartCarousel();
   }
 
   goToSlide(index: number): void {
     if (index >= 0 && index < this.slides.length) {
       this.currentSlide = index;
+      this.restartCarousel();
     }
   }
 
@@ -177,54 +173,21 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.carouselInterval = null;
     }
 
-    if (this.logosAnimationFrame) {
-      cancelAnimationFrame(this.logosAnimationFrame);
-      this.logosAnimationFrame = null;
-    }
   }
 
   private startCarousel(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+
     this.carouselInterval = window.setInterval(() => {
-      this.nextSlide();
+      this.currentSlide = (this.currentSlide + 1) % this.slides.length;
     }, this.CAROUSEL_DELAY);
   }
 
-  private startLogosLoop(): void {
-    if (!this.logosViewport) return;
-
-    const viewport = this.logosViewport.nativeElement;
-    const firstTrack = viewport.querySelector('.logos-container') as HTMLDivElement | null;
-
-    if (!firstTrack) return;
-
-    this.logosOffset = 0;
-    this.logosPreviousTime = 0;
-    viewport.scrollLeft = 0;
-
-    const animate = (time: number) => {
-      if (!this.logosPreviousTime) {
-        this.logosPreviousTime = time;
-      }
-
-      const delta = time - this.logosPreviousTime;
-      this.logosPreviousTime = time;
-
-      const trackWidth = firstTrack.scrollWidth;
-
-      if (trackWidth > 0) {
-        this.logosOffset += (delta / 1000) * this.LOGOS_SPEED;
-
-        if (this.logosOffset >= trackWidth) {
-          this.logosOffset -= trackWidth;
-        }
-
-        viewport.scrollLeft = this.logosOffset;
-      }
-
-      this.logosAnimationFrame = window.requestAnimationFrame(animate);
-    };
-
-    this.logosAnimationFrame = window.requestAnimationFrame(animate);
+  private restartCarousel(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.startCarousel();
   }
 
   private syncVideoState(): void {
@@ -233,5 +196,26 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const video = this.autoVideo.nativeElement;
     this.isVideoMuted = video.muted;
     this.isVideoPlaying = !video.paused;
+  }
+
+  private loadPopularPacks(): void {
+    this.apiService.getPacksDestaque(10).pipe(
+      finalize(() => {
+        this.isLoadingPopularPacks = false;
+      })
+    ).subscribe({
+      next: ({ packs }) => {
+        this.popularPacksError = false;
+        this.popularPackCards = mapPacksWithImage(packs).map((pack) => ({
+          image: pack.image,
+          alt: pack.nome
+        }));
+      },
+      error: (error) => {
+        this.popularPacksError = true;
+        this.popularPackCards = [];
+        console.error('Erro ao carregar packs populares na home:', error);
+      }
+    });
   }
 }

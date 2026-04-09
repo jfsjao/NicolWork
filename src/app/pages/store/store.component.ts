@@ -1,9 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLink } from '@angular/router';
-import { ApiService } from '@core/api.service';
-import { mapPacksWithImage } from '@core/pack-image-map';
-import { finalize } from 'rxjs';
 
 interface StoreHighlight {
   image: string;
@@ -17,9 +14,7 @@ interface StoreHighlight {
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.scss']
 })
-export class StoreComponent implements OnInit {
-  private apiService = inject(ApiService);
-
+export class StoreComponent {
   packCategories = [
     {
       number: '1',
@@ -48,10 +43,18 @@ export class StoreComponent implements OnInit {
     }
   ];
 
-  partnerLogos: StoreHighlight[] = [];
-  repeatedPartnerLogos: StoreHighlight[] = [];
-  isLoadingPopularPacks = true;
-  popularPacksError = false;
+  partnerLogos: StoreHighlight[] = [
+    { image: 'assets/images/logos/adobe_illustrator.webp', alt: 'Adobe Illustrator' },
+    { image: 'assets/images/logos/after_effects.webp', alt: 'After Effects' },
+    { image: 'assets/images/logos/lightroom.webp', alt: 'Adobe Lightroom' },
+    { image: 'assets/images/logos/premier.webp', alt: 'Adobe Premiere' },
+    { image: 'assets/images/logos/photoshop.webp', alt: 'Adobe Photoshop' },
+    { image: 'assets/images/logos/broke.webp', alt: 'Broke' },
+    { image: 'assets/images/logos/chatgpt.webp', alt: 'ChatGPT' },
+    { image: 'assets/images/logos/gemini.webp', alt: 'Gemini' },
+    { image: 'assets/images/logos/canva.webp', alt: 'Canva' }
+  ];
+  repeatedPartnerLogos: StoreHighlight[] = [...this.partnerLogos, ...this.partnerLogos];
 
   premiumFeatures = [
     'Biblioteca de Elementos',
@@ -113,31 +116,4 @@ export class StoreComponent implements OnInit {
     'Banco de Vídeos Virais'
   ];
 
-  ngOnInit(): void {
-    this.loadPopularPacks();
-  }
-
-  private loadPopularPacks(): void {
-    this.apiService.getPacksDestaque(10).pipe(
-      finalize(() => {
-        this.isLoadingPopularPacks = false;
-      })
-    ).subscribe({
-      next: ({ packs }) => {
-        this.popularPacksError = false;
-
-        this.partnerLogos = mapPacksWithImage(packs).map((pack) => ({
-          image: pack.image,
-          alt: pack.nome
-        }));
-        this.repeatedPartnerLogos = [...this.partnerLogos, ...this.partnerLogos];
-      },
-      error: (error) => {
-        this.popularPacksError = true;
-        this.partnerLogos = [];
-        this.repeatedPartnerLogos = [];
-        console.error('Erro ao carregar packs populares na store:', error);
-      }
-    });
-  }
 }
