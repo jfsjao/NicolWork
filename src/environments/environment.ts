@@ -1,4 +1,3 @@
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3333'
-};
+import { environmentLocal } from './environment.local';
+
+export const environment = environmentLocal;

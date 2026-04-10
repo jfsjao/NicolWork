@@ -30,6 +30,9 @@ out-tsc/
 .firebaserc
 *.firebase-debug.log
 .dataconnect
+firebase-config.local.ts
+src/environments/environment.local.ts
+src/environments/environment.prod.local.ts
 
 # IDEs e Configurações
 .vscode/
