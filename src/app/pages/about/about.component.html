@@ -27,7 +27,7 @@
 
           <p>
             Hoje, à frente da ALL-IN, sua empresa é focada na criação e venda de infoprodutos
-            voltados principalmente para editores de vídeo e iniciantes no mercado digital. 
+            voltados principalmente para editores de vídeo e iniciantes no mercado digital.
             A ALL IN nasce com o propósito de simplificar o caminho de quem quer começar, oferecendo
             ferramentas, conhecimento e direcionamento prático para transformar habilidade em renda.
           </p>
@@ -100,30 +100,30 @@
     </div>
   </section>
 
-  <section class="about-numbers">
+  <section class="about-numbers" #numbersSection>
     <div class="section-content">
       <span class="section-kicker">Resultados</span>
       <h2>Em números</h2>
 
       <div class="numbers-grid">
         <div class="number-card">
-          <span class="number" [countUp]="stats.years">0</span>
+          <span class="number" [countUp]="animatedStats.years">0</span>
           <span class="label">Anos de mercado</span>
         </div>
 
         <div class="number-card">
-          <span class="number" [countUp]="stats.clients">0</span>
+          <span class="number" [countUp]="animatedStats.clients" [options]="clientsCountOptions">0</span>
           <span class="label">Produtos vendidos</span>
         </div>
 
         <div class="number-card">
-          <span class="number" [countUp]="stats.engagements">0</span>
-          <span class="label">Segurança (%)</span>
+          <span class="number" [countUp]="animatedStats.engagements" [options]="percentageCountOptions">0</span>
+          <span class="label">Engajamento</span>
         </div>
 
         <div class="number-card">
-          <span class="number" [countUp]="stats.satisfaction">0</span>
-          <span class="label">Satisfação (%)</span>
+          <span class="number" [countUp]="animatedStats.satisfaction" [options]="percentageCountOptions">0</span>
+          <span class="label">Satisfação</span>
         </div>
       </div>
     </div>

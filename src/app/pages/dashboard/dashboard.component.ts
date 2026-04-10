@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   slides: DashboardSlide[] = [
     {
-      image: 'assets/images/empresa/nico-marketing.jpg',
+      image: 'assets/images/carrosel_cliente/novidades.webp',
       alt: 'Novidades da plataforma',
       tag: 'Atualização',
       title: 'Novos conteúdos adicionados ao seu acesso',
@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       buttonLink: '/packs'
     },
     {
-      image: 'assets/images/empresa/nico-coringa.jpg',
+      image: 'assets/images/carrosel_cliente/slides_packs.webp',
       alt: 'Packs em destaque',
       tag: 'Destaque',
       title: 'Os packs mais populares da semana',
@@ -76,7 +76,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       buttonLink: '/packs'
     },
     {
-      image: 'assets/images/depoimentos/gustavojose.png',
+      image: 'assets/images/carrosel_cliente/pack.webp',
       alt: 'Upgrade de acesso',
       tag: 'Upgrade do plano',
       title: 'Atualize seu plano e desbloqueie mais conteúdos',
