@@ -71,7 +71,6 @@
               <i class="bi bi-chevron-down user-arrow" [class.open]="isUserMenuOpen"></i>
             </button>
 
-            <!-- MENU ACESSAR -->
             <div class="user-dropdown" *ngIf="isUserMenuOpen">
               <a routerLink="/my-downloads" class="dropdown-item" (click)="handleDropdownNavigation()"> Meus Downloads </a>
               <a routerLink="/my-account" class="dropdown-item" (click)="handleDropdownNavigation()"> Minha Conta </a>
