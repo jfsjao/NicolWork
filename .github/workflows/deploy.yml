@@ -86,7 +86,13 @@ jobs:
       - name: Run auth flow tests
         env:
           CHROME_BIN: ${{ steps.chrome-auth.outputs.chrome-path }}
-        run: npm run test:auth-flow
+        run: >
+          npx ng run frontend:test --watch=false --browsers=ChromeHeadlessCI --progress=false
+          --include src/testing/auth-flow.workflow.spec.ts
+          --include src/app/core/services/auth.service.spec.ts
+          --include src/app/pages/auth-action/auth-action.component.spec.ts
+          --include src/app/core/guards/auth.guard.spec.ts
+          --include src/app/pages/auth/auth.component.spec.ts
 
   test-post-login:
     runs-on: ubuntu-latest
