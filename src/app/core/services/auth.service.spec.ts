@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { auth } from '../../../../firebase-config';
+import { auth } from '../firebase';
 import { ApiService } from '../api.service';
 import { AuthService } from './auth.service';
 
@@ -45,7 +45,7 @@ describe('AuthService', () => {
 
     expect(result).toBeTrue();
     expect(popupSpy).toHaveBeenCalled();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/client-area']);
     expect(toastrSpy.success).toHaveBeenCalled();
   });
 
@@ -104,7 +104,7 @@ describe('AuthService', () => {
       mockUser,
       jasmine.objectContaining({ url: jasmine.stringMatching(/\/auth\/action$/) })
     );
-    expect(routerSpy.navigate).not.toHaveBeenCalledWith(['/dashboard']);
+    expect(routerSpy.navigate).not.toHaveBeenCalledWith(['/client-area']);
   });
 
   it('sends password reset email with auth action URL', async () => {

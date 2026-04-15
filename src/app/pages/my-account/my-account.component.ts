@@ -18,13 +18,13 @@ interface AccountActivity {
 }
 
 @Component({
-  selector: 'app-account',
+  selector: 'app-my-account',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './account.component.html',
-  styleUrl: './account.component.scss',
+  templateUrl: './my-account.component.html',
+  styleUrl: './my-account.component.scss',
 })
-export class AccountComponent implements OnInit {
+export class MyAccountComponent implements OnInit {
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
   private toastr = inject(SafeToastrService);

@@ -6,13 +6,13 @@ import { AuthService } from '@core/services/auth.service';
 import { UserLibraryPack, UserLibraryService } from '@core/services/user-library.service';
 
 @Component({
-  selector: 'app-packs',
+  selector: 'app-library',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './packs.component.html',
-  styleUrls: ['./packs.component.scss']
+  templateUrl: './library.component.html',
+  styleUrls: ['./library.component.scss']
 })
-export class PacksComponent implements OnInit {
+export class LibraryComponent implements OnInit {
   private authService = inject(AuthService);
   private userLibraryService = inject(UserLibraryService);
 

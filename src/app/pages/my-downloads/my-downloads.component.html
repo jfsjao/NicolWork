@@ -37,7 +37,7 @@
         <h2>Últimos baixados</h2>
         <p>Retome seus arquivos com um clique.</p>
       </div>
-      <a routerLink="/packs" class="section-link">Ver biblioteca completa</a>
+      <a routerLink="/library" class="section-link">Ver biblioteca completa</a>
     </div>
 
     <div class="downloads-grid" *ngIf="!isLoading && !hasError; else downloadsState">
@@ -60,8 +60,8 @@
             </div>
 
             <div class="card-actions">
-              <a routerLink="/packs" class="card-btn">Baixar novamente</a>
-              <a routerLink="/store" class="card-btn secondary">Ver pack</a>
+              <a routerLink="/library" class="card-btn">Baixar novamente</a>
+              <a routerLink="/plans" class="card-btn secondary">Ver pack</a>
             </div>
           </div>
         </article>
@@ -100,7 +100,7 @@
               <span>{{ item.size }}</span>
               <span>{{ item.version }}</span>
             </div>
-            <a routerLink="/store" class="card-btn secondary">Abrir pack</a>
+            <a routerLink="/plans" class="card-btn secondary">Abrir pack</a>
           </div>
         </article>
       }

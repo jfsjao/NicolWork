@@ -9,7 +9,7 @@ import { ClipboardService } from '../app/core/services/clipboard/clipboard.servi
 import { AboutComponent } from '../app/pages/about/about.component';
 import { ContactComponent } from '../app/pages/contact/contact.component';
 import { HomeComponent } from '../app/pages/home/home.component';
-import { StoreComponent } from '../app/pages/store/store.component';
+import { PlansComponent } from '../app/pages/plans/plans.component';
 
 describe('Main Screens Workflow', () => {
   const authServiceMock = {
@@ -121,10 +121,10 @@ describe('Main Screens Workflow', () => {
     expect(element.querySelectorAll('.pricing-card').length).toBe(3);
   });
 
-  it('renders the store plans page with the comparison cards', async () => {
-    await configureTestingModule(StoreComponent);
+  it('renders the plans page with the comparison cards', async () => {
+    await configureTestingModule(PlansComponent);
 
-    const fixture = TestBed.createComponent(StoreComponent);
+    const fixture = TestBed.createComponent(PlansComponent);
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;

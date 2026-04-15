@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
-import { PacksComponent } from './packs.component';
+import { LibraryComponent } from './library.component';
 import { AuthService } from '@core/services/auth.service';
 import { UserLibraryService } from '@core/services/user-library.service';
 
-describe('PacksComponent', () => {
-  let component: PacksComponent;
-  let fixture: ComponentFixture<PacksComponent>;
+describe('LibraryComponent', () => {
+  let component: LibraryComponent;
+  let fixture: ComponentFixture<LibraryComponent>;
   const authServiceMock = {
     waitForAuthInit: jasmine.createSpy('waitForAuthInit').and.resolveTo(),
     currentUser: jasmine.createSpy('currentUser').and.returnValue({
@@ -33,7 +33,7 @@ describe('PacksComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PacksComponent],
+      imports: [LibraryComponent],
       providers: [
         { provide: AuthService, useValue: authServiceMock },
         { provide: UserLibraryService, useValue: userLibraryServiceMock }
@@ -41,7 +41,7 @@ describe('PacksComponent', () => {
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PacksComponent);
+    fixture = TestBed.createComponent(LibraryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

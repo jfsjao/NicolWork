@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       title: 'Descubra conteúdos que aceleram sua criação',
       description: 'Entre nos banners e navegue direto para as áreas mais importantes da plataforma.',
       buttonText: 'Explorar agora',
-      buttonLink: '/store'
+      buttonLink: '/plans'
     },
     {
       image: 'assets/images/carrosel/banner2.gif',
@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       title: 'Conteúdos completos para edição e design',
       description: 'Packs variados para ajudar na edição de vídeos, fotos e criativos com mais impacto.',
       buttonText: 'Ver packs',
-      buttonLink: '/store'
+      buttonLink: '/plans'
     },
     {
       image: 'assets/images/carrosel/banner3.gif',

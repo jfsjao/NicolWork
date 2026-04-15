@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
-import { StoreComponent } from './store.component';
+import { PlansComponent } from './plans.component';
 import { ApiService } from '@core/api.service';
 
-describe('StoreComponent', () => {
-  let component: StoreComponent;
-  let fixture: ComponentFixture<StoreComponent>;
+describe('PlansComponent', () => {
+  let component: PlansComponent;
+  let fixture: ComponentFixture<PlansComponent>;
   const apiServiceMock = {
     getPacksDestaque: jasmine.createSpy('getPacksDestaque').and.returnValue(of({
       total: 0,
@@ -16,14 +16,14 @@ describe('StoreComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StoreComponent],
+      imports: [PlansComponent],
       providers: [
         { provide: ApiService, useValue: apiServiceMock }
       ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StoreComponent);
+    fixture = TestBed.createComponent(PlansComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

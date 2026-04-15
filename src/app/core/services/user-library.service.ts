@@ -59,7 +59,7 @@ export class UserLibraryService {
       image: pack.image,
       badge: 'Liberado',
       locked: false,
-      link: '/packs',
+      link: '/library',
       downloadUrl: pack.arquivo_url
     }));
 
@@ -72,7 +72,7 @@ export class UserLibraryService {
       image: pack.image,
       badge: `Top ${index + 1}`,
       locked: !ownedPackIds.has(pack.id),
-      link: ownedPackIds.has(pack.id) ? '/downloads' : '/store',
+      link: ownedPackIds.has(pack.id) ? '/my-downloads' : '/plans',
       downloadUrl: ownedPackIds.has(pack.id) ? pack.arquivo_url : null
     }));
 
@@ -85,7 +85,7 @@ export class UserLibraryService {
       image: pack.image,
       badge: ownedPackIds.has(pack.id) ? 'Liberado' : 'Upgrade',
       locked: !ownedPackIds.has(pack.id),
-      link: ownedPackIds.has(pack.id) ? '/downloads' : '/store',
+      link: ownedPackIds.has(pack.id) ? '/my-downloads' : '/plans',
       downloadUrl: ownedPackIds.has(pack.id) ? pack.arquivo_url : null
     }));
 
@@ -108,7 +108,7 @@ export class UserLibraryService {
         image: pack.image,
         badge: 'Upgrade',
         locked: true,
-        link: '/store',
+        link: '/plans',
         downloadUrl: null
       }));
 

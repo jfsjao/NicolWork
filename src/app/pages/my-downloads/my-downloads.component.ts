@@ -26,13 +26,13 @@ interface QuickAction {
 }
 
 @Component({
-  selector: 'app-downloads',
+  selector: 'app-my-downloads',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './downloads.component.html',
-  styleUrl: './downloads.component.scss',
+  templateUrl: './my-downloads.component.html',
+  styleUrl: './my-downloads.component.scss',
 })
-export class DownloadsComponent implements OnInit {
+export class MyDownloadsComponent implements OnInit {
   private apiService = inject(ApiService);
   private authService = inject(AuthService);
 
@@ -51,13 +51,13 @@ export class DownloadsComponent implements OnInit {
       label: 'Abrir biblioteca',
       detail: 'Veja todos os packs liberados na sua conta.',
       action: 'Ir para packs',
-      link: '/packs'
+      link: '/library'
     },
     {
       label: 'Atualizar downloads',
       detail: 'Confira novas versões dos arquivos que você já baixou.',
       action: 'Ver novidades',
-      link: '/store'
+      link: '/plans'
     }
   ];
 

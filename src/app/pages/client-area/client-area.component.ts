@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { UserLibraryPack, UserLibraryService, UserPlanSlug } from '@core/services/user-library.service';
 
-interface DashboardSlide {
+interface ClientAreaSlide {
   image: string;
   alt: string;
   tag: string;
@@ -37,13 +37,13 @@ interface UpgradePlan {
 }
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-client-area',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './client-area.component.html',
+  styleUrls: ['./client-area.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class ClientAreaComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private userLibraryService = inject(UserLibraryService);
   private readonly POPULAR_SCROLL_AMOUNT = 960;
@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentSlide = 0;
   private slideInterval?: ReturnType<typeof setInterval>;
 
-  slides: DashboardSlide[] = [
+  slides: ClientAreaSlide[] = [
     {
       image: 'assets/images/carrosel_cliente/novidades.webp',
       alt: 'Novidades da plataforma',
@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: 'Novos conteúdos adicionados ao seu acesso',
       description: 'Acompanhe as últimas novidades da plataforma e veja quais materiais foram liberados ou atualizados.',
       buttonText: 'Ver novidades',
-      buttonLink: '/packs'
+      buttonLink: '/library'
     },
     {
       image: 'assets/images/carrosel_cliente/slides_packs.webp',
@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: 'Os packs mais populares da semana',
       description: 'Veja o que está em alta entre os clientes e descubra novos conteúdos para elevar seu resultado.',
       buttonText: 'Explorar os destaques',
-      buttonLink: '/packs'
+      buttonLink: '/library'
     },
     {
       image: 'assets/images/carrosel_cliente/pack.webp',
@@ -82,7 +82,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: 'Atualize seu plano e desbloqueie mais conteúdos',
       description: 'Veja as vantagens de cada plano e descubra como acessar uma biblioteca mais completa para acelerar seus resultados.',
       buttonText: 'Ver planos',
-      buttonLink: '/store'
+      buttonLink: '/plans'
     }
   ];
 
@@ -246,7 +246,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             'Biblioteca inicial liberada',
             'Upgrade rápido para começar'
           ],
-          link: '/store'
+          link: '/plans'
         },
         {
           id: 2,
@@ -258,7 +258,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             'Mais variedade de conteúdos',
             'Melhor custo-benefício para escalar'
           ],
-          link: '/store'
+          link: '/plans'
         }
       ];
     }
@@ -275,7 +275,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             'Mais variedade de templates',
             'Atualizações recorrentes'
           ],
-          link: '/store'
+          link: '/plans'
         },
         {
           id: 4,
@@ -287,7 +287,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             'Conteúdos premium exclusivos',
             'Biblioteca mais completa'
           ],
-          link: '/store'
+          link: '/plans'
         }
       ];
     }
@@ -303,7 +303,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           'Materiais premium',
           'Mais recursos e conteúdos avançados'
         ],
-        link: '/store'
+        link: '/plans'
       }
     ];
   }

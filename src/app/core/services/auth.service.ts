@@ -18,7 +18,7 @@ import {
   User,
   verifyPasswordResetCode
 } from 'firebase/auth';
-import { auth } from '../../../../firebase-config';
+import { auth } from '../firebase';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../api.service';
 import { environment } from '../../../environments/environment';
@@ -231,7 +231,7 @@ export class AuthService {
       this.clearError();
       this.clearPendingVerificationEmail();
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo de volta!');
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/client-area']);
       return true;
     } catch (error: any) {
       const pendingEmail = this.getPendingVerificationEmail();
@@ -265,7 +265,7 @@ export class AuthService {
       }
 
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo!');
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/client-area']);
       return true;
     } catch (error: any) {
       this.clearError();

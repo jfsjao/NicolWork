@@ -12,8 +12,8 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/home/home.component').then(m => m.HomeComponent) 
   },
   { 
-    path: 'store', 
-    loadComponent: () => import('../pages/store/store.component').then(m => m.StoreComponent) 
+    path: 'plans', 
+    loadComponent: () => import('../pages/plans/plans.component').then(m => m.PlansComponent) 
   },
   { 
     path: 'about', 
@@ -33,38 +33,38 @@ export const routes: Routes = [
       import('../pages/auth-action/auth-action.component').then(m => m.AuthActionComponent)
   },
   {
-    path: 'verificar-email',
+    path: 'verify-email',
     redirectTo: 'auth/action'
   },
   {
-    path: 'redefinir-senha',
+    path: 'reset-password',
     redirectTo: 'auth/action'
   },
 
   //privadas
   
   {
-    path: 'dashboard',
+    path: 'client-area',
     loadComponent: () =>
-      import('../pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+      import('../pages/client-area/client-area.component').then(m => m.ClientAreaComponent),
     canActivate: [authGuard]
   },
   {
-    path: 'packs',
+    path: 'library',
     loadComponent: () =>
-      import('../pages/packs/packs.component').then(m => m.PacksComponent),
+      import('../pages/library/library.component').then(m => m.LibraryComponent),
     canActivate: [authGuard]
   },
   { 
-    path: 'downloads',
+    path: 'my-downloads',
     loadComponent: () => 
-      import('../pages/downloads/downloads.component').then(m => m.DownloadsComponent), 
+      import('../pages/my-downloads/my-downloads.component').then(m => m.MyDownloadsComponent), 
     canActivate: [authGuard] 
   },
   { 
-    path: 'account',
+    path: 'my-account',
     loadComponent: () =>
-      import('../pages/account/account.component').then(m => m.AccountComponent), 
+      import('../pages/my-account/my-account.component').then(m => m.MyAccountComponent), 
     canActivate: [authGuard] 
   },
   

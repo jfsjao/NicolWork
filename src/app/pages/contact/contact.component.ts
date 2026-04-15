@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { ApiService, ContactPayload } from '../../core/api.service';
 import { ClipboardService } from '../../core/services/clipboard/clipboard.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -23,6 +25,7 @@ interface ContactFormData {
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent {
+  private apiService = inject(ApiService);
   private clipboard = inject(ClipboardService);
   private toastr = inject(ToastrService);
 
@@ -101,15 +104,15 @@ export class ContactComponent {
     this.isSubmitting = true;
 
     try {
-      const payload = {
-        ...this.contactInfo,
-        phone: this.normalizePhone(this.contactInfo.phone),
-        createdAt: new Date().toISOString()
+      const payload: ContactPayload = {
+        nome: this.contactInfo.name.trim(),
+        email: this.contactInfo.email.trim(),
+        telefone: this.normalizePhone(this.contactInfo.phone),
+        assunto: this.contactInfo.subject as ContactPayload['assunto'],
+        mensagem: this.contactInfo.message.trim()
       };
 
-      console.log('Form submitted:', payload);
-
-      await new Promise(resolve => setTimeout(resolve, 1200));
+      await firstValueFrom(this.apiService.sendContact(payload));
 
       this.toastr.success('Formulário enviado com sucesso!');
       this.contactInfo = this.getEmptyForm();

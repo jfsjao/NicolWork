@@ -2,19 +2,19 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLink } from '@angular/router';
 
-interface StoreHighlight {
+interface PlansHighlight {
   image: string;
   alt: string;
 }
 
 @Component({
-  selector: 'app-store',
+  selector: 'app-plans',
   standalone: true,
   imports: [CommonModule, RouterModule, RouterLink],
-  templateUrl: './store.component.html',
-  styleUrls: ['./store.component.scss']
+  templateUrl: './plans.component.html',
+  styleUrls: ['./plans.component.scss']
 })
-export class StoreComponent {
+export class PlansComponent {
   packCategories = [
     {
       number: '1',
@@ -43,7 +43,7 @@ export class StoreComponent {
     }
   ];
 
-  partnerLogos: StoreHighlight[] = [
+  partnerLogos: PlansHighlight[] = [
     { image: 'assets/images/logos/adobe_illustrator.webp', alt: 'Adobe Illustrator' },
     { image: 'assets/images/logos/after_effects.webp', alt: 'After Effects' },
     { image: 'assets/images/logos/lightroom.webp', alt: 'Adobe Lightroom' },
@@ -54,7 +54,7 @@ export class StoreComponent {
     { image: 'assets/images/logos/gemini.webp', alt: 'Gemini' },
     { image: 'assets/images/logos/canva.webp', alt: 'Canva' }
   ];
-  repeatedPartnerLogos: StoreHighlight[] = [...this.partnerLogos, ...this.partnerLogos];
+  repeatedPartnerLogos: PlansHighlight[] = [...this.partnerLogos, ...this.partnerLogos];
 
   premiumFeatures = [
     'Biblioteca de Elementos',

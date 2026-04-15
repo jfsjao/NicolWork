@@ -144,6 +144,14 @@ export interface AtualizarPerfilPayload {
   area_atuacao: string;
 }
 
+export interface ContactPayload {
+  nome: string;
+  email: string;
+  telefone: string;
+  assunto: 'orcamento' | 'duvida' | 'parceria' | 'agendamento';
+  mensagem: string;
+}
+
 export interface DownloadsResumoResponse {
   total_downloads: number;
   total_atualizacoes: number;
@@ -378,7 +386,7 @@ export class ApiService {
         : { 'x-usuario-id': String(usuarioId) }
     );
 
-    return this.http!.get<MeusPacksResponse>(`${this.backendUrl}/usuarios/me/packs`, { headers });
+    return this.http!.get<MeusPacksResponse>(`${this.backendUrl}/users/me/library`, { headers });
   }
 
   getMeuPerfil(usuarioId: number): Observable<UsuarioPerfilResponse> {
@@ -386,7 +394,7 @@ export class ApiService {
       return of(this.getFallbackPerfil());
     }
 
-    return this.http!.get<UsuarioPerfilResponse>(`${this.backendUrl}/usuarios/me/perfil`, {
+    return this.http!.get<UsuarioPerfilResponse>(`${this.backendUrl}/users/me/profile`, {
       headers: new HttpHeaders({
         'x-usuario-id': String(usuarioId)
       })
@@ -411,7 +419,7 @@ export class ApiService {
     }
 
     return this.http!.put<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }>(
-      `${this.backendUrl}/usuarios/me/perfil`,
+      `${this.backendUrl}/users/me/profile`,
       payload,
       {
         headers: new HttpHeaders({
@@ -449,5 +457,13 @@ export class ApiService {
         })
       }
     );
+  }
+
+  sendContact(payload: ContactPayload): Observable<{ message: string }> {
+    if (!this.hasHttpClient()) {
+      return of({ message: 'Mensagem enviada com sucesso.' });
+    }
+
+    return this.http!.post<{ message: string }>(`${this.backendUrl}/contact`, payload);
   }
 }

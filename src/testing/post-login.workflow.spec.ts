@@ -4,10 +4,10 @@ import { of } from 'rxjs';
 import { ApiService } from '../app/core/api.service';
 import { AuthService } from '../app/core/services/auth.service';
 import { UserLibraryService } from '../app/core/services/user-library.service';
-import { AccountComponent } from '../app/pages/account/account.component';
-import { DashboardComponent } from '../app/pages/dashboard/dashboard.component';
-import { DownloadsComponent } from '../app/pages/downloads/downloads.component';
-import { PacksComponent } from '../app/pages/packs/packs.component';
+import { MyAccountComponent } from '../app/pages/my-account/my-account.component';
+import { ClientAreaComponent } from '../app/pages/client-area/client-area.component';
+import { MyDownloadsComponent } from '../app/pages/my-downloads/my-downloads.component';
+import { LibraryComponent } from '../app/pages/library/library.component';
 
 describe('Post Login Workflow', () => {
   const authServiceMock = {
@@ -39,7 +39,7 @@ describe('Post Login Workflow', () => {
           image: 'assets/images/packs/emoji.png',
           badge: 'Liberado',
           locked: false,
-          link: '/packs',
+          link: '/library',
           downloadUrl: null
         }
       ],
@@ -53,7 +53,7 @@ describe('Post Login Workflow', () => {
           image: 'assets/images/packs/emoji.png',
           badge: 'Liberado',
           locked: false,
-          link: '/packs',
+          link: '/library',
           downloadUrl: null
         }
       ],
@@ -66,7 +66,7 @@ describe('Post Login Workflow', () => {
           image: 'assets/images/packs/emoji.png',
           badge: 'Liberado',
           locked: false,
-          link: '/packs',
+          link: '/library',
           downloadUrl: null
         }
       ]
@@ -146,9 +146,9 @@ describe('Post Login Workflow', () => {
   }
 
   it('renders dashboard data for authenticated users', async () => {
-    await configure(DashboardComponent);
+    await configure(ClientAreaComponent);
 
-    const fixture = TestBed.createComponent(DashboardComponent);
+    const fixture = TestBed.createComponent(ClientAreaComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
     await Promise.resolve();
@@ -160,9 +160,9 @@ describe('Post Login Workflow', () => {
   });
 
   it('filters downloads by the search term', async () => {
-    await configure(DownloadsComponent);
+    await configure(MyDownloadsComponent);
 
-    const fixture = TestBed.createComponent(DownloadsComponent);
+    const fixture = TestBed.createComponent(MyDownloadsComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
@@ -175,9 +175,9 @@ describe('Post Login Workflow', () => {
   });
 
   it('prefills account data with the authenticated user info', async () => {
-    await configure(AccountComponent);
+    await configure(MyAccountComponent);
 
-    const fixture = TestBed.createComponent(AccountComponent);
+    const fixture = TestBed.createComponent(MyAccountComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
@@ -189,9 +189,9 @@ describe('Post Login Workflow', () => {
   });
 
   it('filters packs using the search box logic', async () => {
-    await configure(PacksComponent);
+    await configure(LibraryComponent);
 
-    const fixture = TestBed.createComponent(PacksComponent);
+    const fixture = TestBed.createComponent(LibraryComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
