@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   gustavoMangaImage = 'assets/images/depoimentos/gustavomanga.png';
   matheusPassosImage = 'assets/images/depoimentos/matheuspassos.png';
   giovaneMicossiImage = 'assets/images/depoimentos/giovanemicossi.png';
-  packsupremoImage = 'assets/images/empresa/pack_supremo.png';
+  packsupremoImage = 'assets/images/empresa/pack_supremo.webp';
   popularPackCards: HighlightCard[] = [];
   isLoadingPopularPacks = true;
   popularPacksError = false;
