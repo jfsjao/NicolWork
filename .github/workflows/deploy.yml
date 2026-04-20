@@ -72,8 +72,13 @@ jobs:
           require_value "HOSTINGER_SSH_KEY" "$HOSTINGER_SSH_KEY"
           require_value "HOSTINGER_TARGET" "$HOSTINGER_TARGET"
           require_value "HOSTINGER_USER" "$HOSTINGER_USER"
-          require_url "PROD_API_URL" "$PROD_API_URL"
           require_url "PROD_FRONTEND_URL" "$PROD_FRONTEND_URL"
+
+          if [ -n "$PROD_API_URL" ]; then
+            require_url "PROD_API_URL" "$PROD_API_URL"
+          else
+            echo "::warning title=Optional backend URL missing::PROD_API_URL is not configured. The production build will temporarily reuse PROD_FRONTEND_URL as apiUrl until the backend is deployed."
+          fi
 
           if [[ ! "$FIREBASE_API_KEY" =~ ^AIza ]]; then
             echo "::error title=Invalid Firebase API key::FIREBASE_API_KEY does not look like a Firebase Web API key."
@@ -288,22 +293,40 @@ jobs:
           EOF
 
       - name: Create production environment config
+        env:
+          PROD_API_URL: ${{ secrets.PROD_API_URL }}
+          PROD_FRONTEND_URL: ${{ secrets.PROD_FRONTEND_URL }}
         run: |
+          API_URL="${PROD_API_URL:-}"
+
+          if [ -z "$API_URL" ]; then
+            API_URL="$PROD_FRONTEND_URL"
+          fi
+
           cat > src/environments/environment.prod.ts << EOF
           import { firebaseConfig } from './firebase.local';
 
           export const environment = {
             production: true,
-            apiUrl: '${{ secrets.PROD_API_URL }}',
-            frontendUrl: '${{ secrets.PROD_FRONTEND_URL }}',
+            apiUrl: '$API_URL',
+            frontendUrl: '$PROD_FRONTEND_URL',
             firebase: firebaseConfig
           };
           EOF
 
       - name: Verify production environment config
+        env:
+          PROD_API_URL: ${{ secrets.PROD_API_URL }}
+          PROD_FRONTEND_URL: ${{ secrets.PROD_FRONTEND_URL }}
         run: |
-          grep -q "${{ secrets.PROD_API_URL }}" src/environments/environment.prod.ts
-          grep -q "${{ secrets.PROD_FRONTEND_URL }}" src/environments/environment.prod.ts
+          API_URL="${PROD_API_URL:-}"
+
+          if [ -z "$API_URL" ]; then
+            API_URL="$PROD_FRONTEND_URL"
+          fi
+
+          grep -q "$API_URL" src/environments/environment.prod.ts
+          grep -q "$PROD_FRONTEND_URL" src/environments/environment.prod.ts
 
       - name: Setup Node
         uses: actions/setup-node@v4
