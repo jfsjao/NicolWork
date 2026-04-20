@@ -37,6 +37,16 @@
         </div>
 
         <div class="auth-card">
+          <button
+            *ngIf="isForgotMode || !isLoginMode"
+            type="button"
+            class="card-back-button"
+            (click)="onBackFromCard()"
+            aria-label="Voltar"
+          >
+            <i class="bi bi-arrow-left"></i>
+          </button>
+
           <h3>
             {{
               isForgotMode
@@ -125,6 +135,10 @@
               (ngSubmit)="onSubmitForgotPassword()"
               novalidate
             >
+              <p class="forgot-description">
+                Digite seu e-mail para receber o link de redefinição e voltar ao acesso da sua conta.
+              </p>
+
               <div class="form-group">
                 <label for="forgot-email">Email</label>
                 <input

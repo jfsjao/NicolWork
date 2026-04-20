@@ -79,6 +79,17 @@ export class AuthComponent implements OnInit {
     this.authService.clearError?.();
   }
 
+  onBackFromCard() {
+    if (this.isForgotMode) {
+      this.onBackToLogin();
+      return;
+    }
+
+    if (!this.isLoginMode) {
+      this.onSwitchMode();
+    }
+  }
+
   async onLogin() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
