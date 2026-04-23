@@ -94,6 +94,9 @@ export class NavbarComponent implements OnInit {
     if (!this.isBrowser) return;
 
     this.checkViewport();
+    if (this.isMobileView) {
+      this.isUserMenuOpen = false;
+    }
 
     if (!this.isMobileView && this.isMobileMenuOpen) {
       this.closeMobileMenu();
@@ -109,6 +112,7 @@ export class NavbarComponent implements OnInit {
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     this.isMenuOpen = this.isMobileMenuOpen;
+    this.isUserMenuOpen = false;
 
     if (this.isBrowser) {
       document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : '';
@@ -116,6 +120,8 @@ export class NavbarComponent implements OnInit {
   }
 
   closeMobileMenu() {
+    this.isUserMenuOpen = false;
+
     if (this.isMobileMenuOpen) {
       this.isMobileMenuOpen = false;
       this.isMenuOpen = false;

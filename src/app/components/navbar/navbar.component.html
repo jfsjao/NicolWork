@@ -1,11 +1,9 @@
 <nav class="navbar navbar-expand-lg fixed-top" [class.navbar-hidden]="isNavbarHidden">
   <div class="container-nico navbar-inner">
+    <a class="navbar-brand" routerLink="/home" (click)="closeMobileMenu()">
+      <app-brand-logo></app-brand-logo>
+    </a>
 
-  <a class="navbar-brand" routerLink= "/home" (click)="closeMobileMenu()">
-    <app-brand-logo></app-brand-logo>
-  </a>
-
-    <!-- Toggle mobile -->
     <button
       class="navbar-toggler"
       type="button"
@@ -18,11 +16,8 @@
       <span></span>
     </button>
 
-    <!-- Conteúdo -->
     <div class="navbar-collapse" [class.show]="isMenuOpen">
-
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
         <li class="nav-item">
           <a class="nav-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()"> Início </a>
         </li>
@@ -31,15 +26,24 @@
           <a class="nav-link" routerLink="/plans" routerLinkActive="active" (click)="closeMobileMenu()"> Planos </a>
         </li>
 
-        <!-- ÁREA DO CLIENTE (SÓ LOGADO) -->
         <ng-container *ngIf="isAuthenticated">
           <li class="nav-item">
             <a class="nav-link" routerLink="/client-area" routerLinkActive="active" (click)="closeMobileMenu()"> Área do Cliente </a>
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" routerLink="/library" routerLinkActive="active" (click)="closeMobileMenu()">  Biblioteca </a>
+            <a class="nav-link" routerLink="/library" routerLinkActive="active" (click)="closeMobileMenu()"> Biblioteca </a>
           </li>
 
+          <ng-container *ngIf="isMobileView">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/my-downloads" routerLinkActive="active" (click)="closeMobileMenu()"> Meus Downloads </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/my-account" routerLinkActive="active" (click)="closeMobileMenu()"> Minha Conta </a>
+            </li>
+          </ng-container>
         </ng-container>
 
         <li class="nav-item">
@@ -51,32 +55,51 @@
         </li>
       </ul>
 
-      <div class="auth-section d-flex align-items-center">
+      <div class="auth-section">
         <ng-container *ngIf="!isAuthenticated; else loggedMenu">
           <a routerLink="/auth" class="auth-link auth-btn" (click)="closeMobileMenu()"> Acessar </a>
         </ng-container>
 
         <ng-template #loggedMenu>
-          <div class="user-menu-wrapper">
-            <button type="button" class="user-menu-trigger" (click)="toggleUserMenu()">
-              <div class="user-avatar">
-                <i class="bi bi-person"></i>
+          <ng-container *ngIf="isMobileView; else desktopLoggedMenu">
+            <div class="mobile-user-panel">
+              <div class="mobile-user-summary">
+                <div class="user-avatar">
+                  <i class="bi bi-person"></i>
+                </div>
+
+                <div class="user-meta">
+                  <span class="user-greeting"> Olá, {{ displayUserName }} </span>
+                  <span class="user-subtitle">Conta autenticada</span>
+                </div>
               </div>
 
-              <div class="user-meta">
-                <span class="user-greeting"> Olá, {{ displayUserName }} </span>
-                <span class="user-subtitle">Minha conta</span>
-              </div>
-
-              <i class="bi bi-chevron-down user-arrow" [class.open]="isUserMenuOpen"></i>
-            </button>
-
-            <div class="user-dropdown" *ngIf="isUserMenuOpen">
-              <a routerLink="/my-downloads" class="dropdown-item" (click)="handleDropdownNavigation()"> Meus Downloads </a>
-              <a routerLink="/my-account" class="dropdown-item" (click)="handleDropdownNavigation()"> Minha Conta </a>
-              <button type="button" class="dropdown-item logout-item" (click)="onLogout()"> Sair </button>
+              <button type="button" class="auth-link logout-mobile-btn" (click)="onLogout()"> Sair </button>
             </div>
-          </div>
+          </ng-container>
+
+          <ng-template #desktopLoggedMenu>
+            <div class="user-menu-wrapper">
+              <button type="button" class="user-menu-trigger" (click)="toggleUserMenu()">
+                <div class="user-avatar">
+                  <i class="bi bi-person"></i>
+                </div>
+
+                <div class="user-meta">
+                  <span class="user-greeting"> Olá, {{ displayUserName }} </span>
+                  <span class="user-subtitle">Minha conta</span>
+                </div>
+
+                <i class="bi bi-chevron-down user-arrow" [class.open]="isUserMenuOpen"></i>
+              </button>
+
+              <div class="user-dropdown" *ngIf="isUserMenuOpen">
+                <a routerLink="/my-downloads" class="dropdown-item" (click)="handleDropdownNavigation()"> Meus Downloads </a>
+                <a routerLink="/my-account" class="dropdown-item" (click)="handleDropdownNavigation()"> Minha Conta </a>
+                <button type="button" class="dropdown-item logout-item" (click)="onLogout()"> Sair </button>
+              </div>
+            </div>
+          </ng-template>
         </ng-template>
       </div>
     </div>
