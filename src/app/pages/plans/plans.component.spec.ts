@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { PlansComponent } from './plans.component';
@@ -18,6 +19,7 @@ describe('PlansComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PlansComponent],
       providers: [
+        provideRouter([]),
         { provide: ApiService, useValue: apiServiceMock }
       ]
     })

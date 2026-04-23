@@ -24,6 +24,7 @@ describe('ClipboardService', () => {
 
     it('should resolve to false when copy fails', async () => {
       // Mock a clipboard error
+      spyOn(console, 'error');
       spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.reject('Clipboard error'));
       
       const result = await service.copyToClipboard('test text');
