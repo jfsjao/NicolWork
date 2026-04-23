@@ -43,6 +43,12 @@
           </button>
         </div>
 
+        @if (hasLoadError) {
+          <p class="panel-feedback">
+            Não foi possível sincronizar os dados do perfil com a API agora.
+          </p>
+        }
+
         <div class="form-grid">
           <label class="field">
             <span>Nome</span>

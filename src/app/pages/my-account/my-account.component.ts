@@ -76,22 +76,24 @@ export class MyAccountComponent implements OnInit {
 
   isLoading = false;
   isSaving = false;
+  hasLoadError = false;
 
   async ngOnInit(): Promise<void> {
+    this.preencherComUsuarioAutenticado();
     await this.carregarPerfil();
   }
 
   async carregarPerfil(): Promise<void> {
-    const snapshotUser = this.authService.currentUser();
-    const usuarioId = snapshotUser?.backendUserId;
+    await this.authService.waitForAuthInit();
+    const usuarioId = this.authService.currentUser()?.backendUserId;
 
     if (!usuarioId) {
-      this.preencherFallback();
+      this.hasLoadError = true;
       return;
     }
 
-    await this.authService.waitForAuthInit();
     this.isLoading = true;
+    this.hasLoadError = false;
 
     try {
       const response = await firstValueFrom(this.apiService.getMeuPerfil(usuarioId));
@@ -102,17 +104,20 @@ export class MyAccountComponent implements OnInit {
         role: response.usuario.area_atuacao ?? ''
       };
     } catch {
-      this.preencherFallback();
+      this.hasLoadError = true;
+      this.preencherComUsuarioAutenticado();
       this.toastr.error('Não foi possível carregar o perfil.', 'Erro');
     } finally {
       this.isLoading = false;
     }
   }
 
-  private preencherFallback(): void {
+  private preencherComUsuarioAutenticado(): void {
+    const currentUser = this.authService.currentUser();
+
     this.profileForm = {
-      name: this.authService.currentUser()?.displayName || 'Seu nome',
-      email: this.authService.currentUser()?.email || 'usuario@email.com',
+      name: currentUser?.displayName || '',
+      email: currentUser?.email || '',
       phone: '',
       role: ''
     };
@@ -144,6 +149,7 @@ export class MyAccountComponent implements OnInit {
         role: response.usuario.area_atuacao ?? this.profileForm.role
       };
 
+      this.hasLoadError = false;
       this.toastr.success('Perfil atualizado com sucesso.', 'Sucesso');
     } catch (error: any) {
       this.toastr.error(error?.error?.message || 'Não foi possível salvar o perfil.', 'Erro');

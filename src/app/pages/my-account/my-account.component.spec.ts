@@ -1,23 +1,99 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
 import { MyAccountComponent } from './my-account.component';
+import { ApiService } from '@core/api.service';
+import { AuthService } from '@core/services/auth.service';
+import { SafeToastrService } from '@core/services/safe-toastr.service';
 
 describe('MyAccountComponent', () => {
   let component: MyAccountComponent;
   let fixture: ComponentFixture<MyAccountComponent>;
 
+  const authServiceMock = {
+    currentUser: jasmine.createSpy('currentUser').and.returnValue({
+      backendUserId: 7,
+      displayName: 'Joao Felipe',
+      email: 'joao@example.com'
+    }),
+    waitForAuthInit: jasmine.createSpy('waitForAuthInit').and.resolveTo(),
+    resetPassword: jasmine.createSpy('resetPassword').and.resolveTo(true)
+  };
+
+  const apiServiceMock = {
+    getMeuPerfil: jasmine.createSpy('getMeuPerfil').and.returnValue(of({
+      usuario: {
+        id: 7,
+        nome: 'Joao Felipe',
+        email: 'joao@example.com',
+        telefone: '16999999999',
+        area_atuacao: 'Editor',
+        foto_url: null,
+        criado_em: '2026-03-01T00:00:00.000Z',
+        atualizado_em: '2026-04-01T00:00:00.000Z'
+      }
+    })),
+    atualizarMeuPerfil: jasmine.createSpy('atualizarMeuPerfil')
+  };
+
+  const safeToastrMock = {
+    success: jasmine.createSpy('success'),
+    error: jasmine.createSpy('error'),
+    warning: jasmine.createSpy('warning'),
+    info: jasmine.createSpy('info')
+  };
+
   beforeEach(async () => {
+    authServiceMock.currentUser.calls.reset();
+    authServiceMock.waitForAuthInit.calls.reset();
+    authServiceMock.resetPassword.calls.reset();
+    authServiceMock.currentUser.and.returnValue({
+      backendUserId: 7,
+      displayName: 'Joao Felipe',
+      email: 'joao@example.com'
+    });
+
+    apiServiceMock.getMeuPerfil.calls.reset();
+    apiServiceMock.atualizarMeuPerfil.calls.reset();
+
     await TestBed.configureTestingModule({
-      imports: [MyAccountComponent]
-    })
-    .compileComponents();
+      imports: [MyAccountComponent],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: ApiService, useValue: apiServiceMock },
+        { provide: SafeToastrService, useValue: safeToastrMock }
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MyAccountComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('loads profile data from the API for a synced user', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(apiServiceMock.getMeuPerfil).toHaveBeenCalledWith(7);
+    expect(component.hasLoadError).toBeFalse();
+    expect(component.profileForm.name).toBe('Joao Felipe');
+    expect(component.profileForm.role).toBe('Editor');
+  });
+
+  it('keeps the auth user data and surfaces an error when backend sync is missing', async () => {
+    authServiceMock.currentUser.and.returnValue({
+      backendUserId: null,
+      displayName: 'Joao Firebase',
+      email: 'firebase@example.com'
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(apiServiceMock.getMeuPerfil).not.toHaveBeenCalled();
+    expect(component.hasLoadError).toBeTrue();
+    expect(component.profileForm.name).toBe('Joao Firebase');
+    expect(component.profileForm.email).toBe('firebase@example.com');
   });
 });
