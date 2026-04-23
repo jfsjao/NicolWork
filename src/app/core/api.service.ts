@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { auth } from './firebase';
 
 export interface SyncAuthPayload {
   nome: string | null;
@@ -25,7 +26,7 @@ export interface PlanoAtualResponse {
 export interface SyncAuthResponse {
   message: string;
   primeiro_acesso: boolean;
-  usuario: { 
+  usuario: {
     id: string;
     nome: string | null;
     email: string;
@@ -187,129 +188,61 @@ export interface DownloadsResumoResponse {
 export class ApiService {
   private backendUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient | null) { }
+  constructor(private http: HttpClient) { }
 
-  private hasHttpClient(): boolean {
-    return !!this.http;
+  private async buildAuthHeaders(): Promise<HttpHeaders> {
+    const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
+
+    if (!token) {
+      throw new Error('Token de acesso indisponivel.');
+    }
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 
-  private getFallbackDownloadsResumo(): DownloadsResumoResponse {
-    return {
-      total_downloads: 1,
-      total_atualizacoes: 0,
-      downloads_recentes: [
-        {
-          id: 2,
-          slug: 'pack-ia',
-          nome: 'Pack IA',
-          descricao: 'Coleção com assets modernos para criadores e conteúdos virais.',
-          capa_url: null,
-          tamanho_gb: '8.9',
-          versao_atual: '2.8',
-          versao_baixada: '2.8',
-          baixado_em: '2026-04-01T18:11:00.000Z',
-          possui_atualizacao: false
-        }
-      ],
-      sugestoes: [
-        {
-          id: 1,
-          slug: 'emojis',
-          nome: 'Emojis',
-          descricao: 'Biblioteca leve para enriquecer cortes rápidos, shorts e reels.',
-          capa_url: null,
-          tamanho_gb: '1.1',
-          versao_atual: '1.6',
-          versao_baixada: '1.6',
-          baixado_em: '2026-04-01T18:11:00.000Z',
-          possui_atualizacao: false
-        }
-      ]
-    };
-  }
-
-  private getFallbackPerfil(): UsuarioPerfilResponse {
-    return {
-      usuario: {
-        id: 1,
-        nome: 'João Felipe',
-        email: 'joao@example.com',
-        telefone: '(16) 99999-9999',
-        area_atuacao: 'Editor / Creator',
-        foto_url: null,
-        criado_em: '2026-03-01T00:00:00.000Z',
-        atualizado_em: '2026-04-01T00:00:00.000Z'
-      }
-    };
+  private withAuthHeaders<T>(requestFactory: (headers: HttpHeaders) => Observable<T>): Observable<T> {
+    return from(this.buildAuthHeaders()).pipe(
+      switchMap((headers) => requestFactory(headers))
+    );
   }
 
   health(): Observable<{message: string; database: string; timestamp: string}> {
-    if (!this.hasHttpClient()) {
-      return of({
-        message: 'ok',
-        database: 'mock',
-        timestamp: new Date().toISOString()
-      });
-    }
-
-    return this.http!.get<{message: string; database: string; timestamp: string}>(
+    return this.http.get<{message: string; database: string; timestamp: string}>(
       `${this.backendUrl}/health`
     );
   }
 
   syncAuth(payload: SyncAuthPayload, token?: string): Observable<SyncAuthResponse> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
     const headers = token
       ? new HttpHeaders({ Authorization: `Bearer ${token}` })
       : undefined;
 
-    return this.http!.post<SyncAuthResponse>(`${this.backendUrl}/auth/sync`, payload, { headers });
+    return this.http.post<SyncAuthResponse>(`${this.backendUrl}/auth/sync`, payload, { headers });
   }
 
   registerEmail(payload: RegisterEmailPayload): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(`${this.backendUrl}/auth/register`, payload);
+    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/register`, payload);
   }
 
   loginEmail(payload: LoginEmailPayload): Observable<AuthTokenResponse> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<AuthTokenResponse>(`${this.backendUrl}/auth/login`, payload);
+    return this.http.post<AuthTokenResponse>(`${this.backendUrl}/auth/login`, payload);
   }
 
   verifyEmail(payload: VerifyEmailPayload): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(`${this.backendUrl}/auth/verify-email`, payload);
+    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/verify-email`, payload);
   }
 
   resendVerification(payload: ResendEmailPayload): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(
+    return this.http.post<{ message: string }>(
       `${this.backendUrl}/auth/resend-verification`,
       payload
     );
   }
 
   requestPasswordReset(payload: RequestResetPayload): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(
+    return this.http.post<{ message: string }>(
       `${this.backendUrl}/auth/request-password-reset`,
       payload
     );
@@ -319,11 +252,7 @@ export class ApiService {
     payload: FirebaseVerificationEmailPayload,
     token: string
   ): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(
+    return this.http.post<{ message: string }>(
       `${this.backendUrl}/auth/firebase/send-verification-email`,
       payload,
       {
@@ -335,19 +264,11 @@ export class ApiService {
   }
 
   resetPassword(payload: ResetPasswordPayload): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(`${this.backendUrl}/auth/reset-password`, payload);
+    return this.http.post<{ message: string }>(`${this.backendUrl}/auth/reset-password`, payload);
   }
 
   changePassword(payload: ChangePasswordPayload, token: string): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.post<{ message: string }>(
+    return this.http.post<{ message: string }>(
       `${this.backendUrl}/auth/change-password`,
       payload,
       {
@@ -359,111 +280,67 @@ export class ApiService {
   }
 
   getPacksDestaque(limite = 10): Observable<PacksDestaqueResponse> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
+    return this.http.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
   }
 
   getAllPacks(): Observable<PacksListResponse> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
-
-    return this.http!.get<PacksListResponse>(`${this.backendUrl}/packs`);
+    return this.http.get<PacksListResponse>(`${this.backendUrl}/packs`);
   }
 
   getMeusPacks(usuarioId: number): Observable<MeusPacksResponse> {
-    if (!this.hasHttpClient()) {
-      return throwError(() => new Error('HttpClient indisponível.'));
-    }
+    void usuarioId;
 
-    const token = localStorage.getItem('nicol_auth_token');
-    const headers = new HttpHeaders(
-      token
-        ? { Authorization: `Bearer ${token}` }
-        : { 'x-usuario-id': String(usuarioId) }
+    return this.withAuthHeaders((headers) =>
+      this.http.get<MeusPacksResponse>(`${this.backendUrl}/users/me/library`, { headers })
     );
-
-    return this.http!.get<MeusPacksResponse>(`${this.backendUrl}/users/me/library`, { headers });
   }
 
   getMeuPerfil(usuarioId: number): Observable<UsuarioPerfilResponse> {
-    if (!this.hasHttpClient()) {
-      return of(this.getFallbackPerfil());
-    }
+    void usuarioId;
 
-    return this.http!.get<UsuarioPerfilResponse>(`${this.backendUrl}/users/me/profile`, {
-      headers: new HttpHeaders({
-        'x-usuario-id': String(usuarioId)
-      })
-    });
+    return this.withAuthHeaders((headers) =>
+      this.http.get<UsuarioPerfilResponse>(`${this.backendUrl}/users/me/profile`, { headers })
+    );
   }
 
   atualizarMeuPerfil(
     usuarioId: number,
     payload: AtualizarPerfilPayload
   ): Observable<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }> {
-    if (!this.hasHttpClient()) {
-      return of({
-        message: 'Perfil atualizado com sucesso.',
-        usuario: {
-          ...this.getFallbackPerfil().usuario,
-          nome: payload.nome,
-          email: payload.email,
-          telefone: payload.telefone,
-          area_atuacao: payload.area_atuacao
-        }
-      });
-    }
+    void usuarioId;
 
-    return this.http!.put<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }>(
-      `${this.backendUrl}/users/me/profile`,
-      payload,
-      {
-        headers: new HttpHeaders({
-          'x-usuario-id': String(usuarioId)
-        })
-      }
+    return this.withAuthHeaders((headers) =>
+      this.http.put<{ message: string; usuario: UsuarioPerfilResponse['usuario'] }>(
+        `${this.backendUrl}/users/me/profile`,
+        payload,
+        { headers }
+      )
     );
   }
 
   getDownloadsResumo(usuarioId: number, busca = ''): Observable<DownloadsResumoResponse> {
-    if (!this.hasHttpClient()) {
-      return of(this.getFallbackDownloadsResumo());
-    }
-
     const params = busca ? `?limite=4&sugestoes=2&busca=${encodeURIComponent(busca)}` : '?limite=4&sugestoes=2';
 
-    return this.http!.get<DownloadsResumoResponse>(`${this.backendUrl}/downloads/me${params}`, {
-      headers: new HttpHeaders({
-        'x-usuario-id': String(usuarioId)
-      })
-    });
+    void usuarioId;
+
+    return this.withAuthHeaders((headers) =>
+      this.http.get<DownloadsResumoResponse>(`${this.backendUrl}/downloads/me${params}`, { headers })
+    );
   }
 
   registrarDownload(usuarioId: number, packId: number): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return of({ message: 'Download registrado.' });
-    }
+    void usuarioId;
 
-    return this.http!.post<{ message: string }>(
-      `${this.backendUrl}/downloads/registrar`,
-      { pack_id: packId },
-      {
-        headers: new HttpHeaders({
-          'x-usuario-id': String(usuarioId)
-        })
-      }
+    return this.withAuthHeaders((headers) =>
+      this.http.post<{ message: string }>(
+        `${this.backendUrl}/downloads/registrar`,
+        { pack_id: packId },
+        { headers }
+      )
     );
   }
 
   sendContact(payload: ContactPayload): Observable<{ message: string }> {
-    if (!this.hasHttpClient()) {
-      return of({ message: 'Mensagem enviada com sucesso.' });
-    }
-
-    return this.http!.post<{ message: string }>(`${this.backendUrl}/contact`, payload);
+    return this.http.post<{ message: string }>(`${this.backendUrl}/contact`, payload);
   }
 }

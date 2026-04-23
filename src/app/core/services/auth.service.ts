@@ -1,4 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -30,7 +31,6 @@ export interface UserData {
   displayName: string | null;
   photoURL: string | null;
   plano?: 'gratuito' | 'basic' | 'gold' | 'premium' | null;
-  authProvider?: 'firebase' | 'backend';
 }
 
 @Injectable({
@@ -40,6 +40,8 @@ export class AuthService {
   private router = inject(Router);
   private toastr = inject(ToastrService);
   private apiService = inject(ApiService);
+  private backendSyncPromise: Promise<boolean> | null = null;
+  private backendSyncErrorMessage: string | null = null;
 
   currentUser = signal<UserData | null>(null);
   isLoading = signal<boolean>(true);
@@ -57,12 +59,65 @@ export class AuthService {
   }
 
   constructor() {
-    const cachedNotice = sessionStorage.getItem('auth_notice');
+    const cachedNotice = this.readSessionItem('auth_notice');
     if (cachedNotice) {
       this.authNotice.set(cachedNotice);
     }
 
     this.initAuthListener();
+  }
+
+  private async ensureBackendUserSynced(user: User): Promise<boolean> {
+    const current = this.currentUser();
+
+    if (current?.uid === user.uid && current.backendUserId) {
+      return true;
+    }
+
+    if (this.backendSyncPromise) {
+      return this.backendSyncPromise;
+    }
+
+    const syncPromise = this.syncBackendUser(user).finally(() => {
+      if (this.backendSyncPromise === syncPromise) {
+        this.backendSyncPromise = null;
+      }
+    });
+
+    this.backendSyncPromise = syncPromise;
+    return syncPromise;
+  }
+
+  private notifyBackendSyncFailure(showToast = false, customMessage?: string): void {
+    const message =
+      customMessage ??
+      this.backendSyncErrorMessage ??
+      'Nao foi possivel validar seu acesso com o servidor.';
+    this.setError(message);
+    this.setNotice(`${message} Tente novamente em instantes.`);
+
+    if (showToast) {
+      this.toastr.error(message, 'Erro de Acesso');
+    }
+  }
+
+  private extractBackendSyncMessage(error: unknown): string | null {
+    if (error instanceof HttpErrorResponse) {
+      const backendMessage =
+        typeof error.error?.message === 'string'
+          ? error.error.message
+          : typeof error.message === 'string'
+            ? error.message
+            : null;
+
+      return backendMessage?.trim() || null;
+    }
+
+    if (error instanceof Error) {
+      return error.message?.trim() || null;
+    }
+
+    return null;
   }
 
   /**
@@ -87,11 +142,14 @@ export class AuthService {
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          plano: null,
-          authProvider: 'firebase'
+          plano: null
         });
 
-        await this.syncBackendUser(user);
+        const synced = await this.ensureBackendUserSynced(user);
+
+        if (!synced) {
+          this.notifyBackendSyncFailure();
+        }
       } else {
         this.clearBackendSession();
         this.currentUser.set(null);
@@ -102,9 +160,9 @@ export class AuthService {
     });
   }
 
-  private async syncBackendUser(user: User): Promise<void> {
+  private async syncBackendUser(user: User): Promise<boolean> {
     try {
-      const token = await user.getIdToken();
+      const token = await user.getIdToken(true);
       const response = await firstValueFrom(this.apiService.syncAuth({
         nome: user.displayName,
         email: user.email,
@@ -115,15 +173,20 @@ export class AuthService {
 
       const current = this.currentUser();
 
-      if (!current) return;
+      if (!current) return false;
 
       this.currentUser.set({
         ...current,
         backendUserId: Number(response.usuario.id),
         plano: response.plano_atual?.slug ?? null
       });
+      this.backendSyncErrorMessage = null;
+      this.clearError();
+      return true;
     } catch (error) {
-      console.error('Erro ao sincronizar usuário com o backend:', error);
+      this.backendSyncErrorMessage = this.extractBackendSyncMessage(error);
+      console.error('Erro ao sincronizar usuario com o backend:', error);
+      return false;
     }
   }
 
@@ -227,6 +290,13 @@ export class AuthService {
         return false;
       }
 
+      const synced = await this.ensureBackendUserSynced(userCredential.user);
+
+      if (!synced) {
+        this.notifyBackendSyncFailure(true);
+        return false;
+      }
+
       this.clearNotice();
       this.clearError();
       this.clearPendingVerificationEmail();
@@ -264,6 +334,22 @@ export class AuthService {
         return true;
       }
 
+      const firebaseUser = auth.currentUser;
+
+      if (!firebaseUser) {
+        this.notifyBackendSyncFailure(true);
+        return false;
+      }
+
+      const synced = await this.ensureBackendUserSynced(firebaseUser);
+
+      if (!synced) {
+        this.notifyBackendSyncFailure(true);
+        return false;
+      }
+
+      this.clearNotice();
+      this.clearError();
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo!');
       this.router.navigate(['/client-area']);
       return true;
@@ -349,7 +435,7 @@ export class AuthService {
       return await auth.currentUser.getIdToken();
     }
 
-    return localStorage.getItem('nicol_auth_token');
+    return null;
   }
 
   /**
@@ -359,11 +445,7 @@ export class AuthService {
     const current = this.currentUser();
     if (!current) return false;
 
-    if (current.authProvider === 'firebase') {
-      return auth.currentUser?.emailVerified === true;
-    }
-
-    return true;
+    return auth.currentUser?.emailVerified === true && !!current.backendUserId;
   }
 
   /**
@@ -440,12 +522,12 @@ export class AuthService {
 
   private setNotice(message: string): void {
     this.authNotice.set(message);
-    sessionStorage.setItem('auth_notice', message);
+    this.writeSessionItem('auth_notice', message);
   }
 
   clearNotice(): void {
     this.authNotice.set(null);
-    sessionStorage.removeItem('auth_notice');
+    this.removeSessionItem('auth_notice');
   }
 
   setPasswordResetCompletedNotice(): void {
@@ -473,15 +555,15 @@ export class AuthService {
   }
 
   private setPendingVerificationEmail(email: string): void {
-    sessionStorage.setItem(this.pendingVerificationKey, email);
+    this.writeSessionItem(this.pendingVerificationKey, email);
   }
 
   private getPendingVerificationEmail(): string | null {
-    return sessionStorage.getItem(this.pendingVerificationKey);
+    return this.readSessionItem(this.pendingVerificationKey);
   }
 
   private clearPendingVerificationEmail(): void {
-    sessionStorage.removeItem(this.pendingVerificationKey);
+    this.removeSessionItem(this.pendingVerificationKey);
   }
 
   private setError(message: string): void {
@@ -492,45 +574,24 @@ export class AuthService {
     this.authError.set(null);
   }
 
-  private setBackendSession(token: string, usuario: {
-    id: string;
-    nome: string | null;
-    email: string;
-    provedor_autenticacao: string;
-    id_usuario_provedor: string | null;
-    foto_url: string | null;
-    criado_em: string;
-    atualizado_em: string;
-  }): void {
-    const userData: UserData = {
-      backendUserId: Number(usuario.id),
-      uid: `backend-${usuario.id}`,
-      email: usuario.email,
-      displayName: usuario.nome,
-      photoURL: usuario.foto_url,
-      plano: null,
-      authProvider: 'backend'
-    };
-
-    localStorage.setItem('nicol_auth_token', token);
-    localStorage.setItem('nicol_auth_user', JSON.stringify(userData));
-    this.currentUser.set(userData);
-  }
-
-  private getBackendSession(): UserData | null {
-    const raw = localStorage.getItem('nicol_auth_user');
-    if (!raw) return null;
-
-    try {
-      return JSON.parse(raw) as UserData;
-    } catch {
-      return null;
-    }
-  }
-
   private clearBackendSession(): void {
-    localStorage.removeItem('nicol_auth_token');
-    localStorage.removeItem('nicol_auth_user');
+    this.backendSyncErrorMessage = null;
+  }
+
+  private readSessionItem(key: string): string | null {
+    return typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(key) : null;
+  }
+
+  private writeSessionItem(key: string, value: string): void {
+    if (typeof sessionStorage === 'undefined') return;
+
+    sessionStorage.setItem(key, value);
+  }
+
+  private removeSessionItem(key: string): void {
+    if (typeof sessionStorage === 'undefined') return;
+
+    sessionStorage.removeItem(key);
   }
 
   private createUserAccount(email: string, password: string) {
