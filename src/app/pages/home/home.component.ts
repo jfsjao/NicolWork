@@ -18,7 +18,7 @@ import { mapPacksWithImage } from '@core/pack-image-map';
 interface Slide {
   id: string;
   videoSrc: string;
-  alt: string;
+  ariaLabel: string;
   title: string;
   description: string;
   buttonText: string;
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'creator-growth',
       videoSrc: 'assets/images/carrosel/banner1.mp4',
-      alt: 'Imagem destaque 1',
+      ariaLabel: 'Banner em video sobre criacao de conteudo',
       title: 'Descubra conteúdos que aceleram sua criação',
       description: 'Entre nos banners e navegue direto para as áreas mais importantes da plataforma.',
       buttonText: 'Explorar agora',
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'viral-pack',
       videoSrc: 'assets/images/carrosel/banner2.mp4',
-      alt: 'Pack Edit',
+      ariaLabel: 'Banner em video sobre packs de edicao e design',
       title: 'Conteúdos completos para edição e design',
       description: 'Packs variados para ajudar na edição de vídeos, fotos e criativos com mais impacto.',
       buttonText: 'Ver packs',
@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'about-all-in',
       videoSrc: 'assets/images/carrosel/banner3.mp4',
-      alt: 'Sobre nós',
+      ariaLabel: 'Banner em video sobre a All In',
       title: 'Conheça a All In de perto',
       description: 'Veja como a empresa funciona e o que entregamos para creators, designers e editores.',
       buttonText: 'Sobre nós',
@@ -111,7 +111,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private carouselTimeout: number | null = null;
   private carouselVideoSyncFrame: number | null = null;
   private readonly CAROUSEL_DELAY = 11000;
-  private readonly CAROUSEL_END_BUFFER = 450;
 
   ngOnInit(): void {
     this.loadPopularPacks();
