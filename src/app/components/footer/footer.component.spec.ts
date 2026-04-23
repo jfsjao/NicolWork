@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FooterComponent } from './footer.component';
 import { ToastrService } from 'ngx-toastr';
 import { ClipboardService } from '../../core/services/clipboard/clipboard.service';
@@ -16,6 +17,7 @@ describe('FooterComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FooterComponent],
       providers: [
+        provideRouter([]),
         { provide: ToastrService, useValue: toastrSpy },
         { provide: ClipboardService, useValue: clipboardSpy }
       ]

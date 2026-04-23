@@ -17,13 +17,6 @@ export class FooterComponent implements OnDestroy {
   private toastr = inject(ToastrService);
   private notificationTimeout: any;
 
-  links = [
-    { path: '/home', title: 'Home' },
-    { path: '/about', title: 'Sobre' },
-    { path: '/services', title: 'Serviços' },
-    { path: '/contact', title: 'Contato' }
-  ];
-
   currentYear = new Date().getFullYear();
   showNotification = false;
   notificationMessage = '';
