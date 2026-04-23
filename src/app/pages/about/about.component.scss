@@ -32,6 +32,7 @@
   .about-hero {
     position: relative;
     padding: 7rem 1.5rem 3rem;
+    min-height: clamp(420px, 38vw, 520px);
     width: 100vw;
     left: 50%;
     margin-left: -50vw;
@@ -40,9 +41,8 @@
       linear-gradient(90deg, rgba(8, 8, 16, 0.76) 0%, rgba(8, 8, 16, 0.58) 42%, rgba(8, 8, 16, 0.82) 100%),
       url('/assets/images/pages/account-about.png');
     background-repeat: no-repeat, no-repeat;
-    background-size: cover, auto 100%;
-    background-position: center, right 2rem bottom 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background-size: cover, min(1500px, 100vw) auto;
+    background-position: center, 100% 42%;
   }
 
   .hero-content {
@@ -101,8 +101,9 @@
   .about-page {
     .about-hero {
       padding-top: 6rem;
-      background-size: cover, auto 82%;
-      background-position: center, right -1.5rem bottom 0;
+      min-height: clamp(340px, 88vw, 400px);
+      background-size: cover, auto 100%;
+      background-position: center, 72% center;
     }
   }
 }
