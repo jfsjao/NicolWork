@@ -1,38 +1,36 @@
-import { PackResponse } from './api.service';
-
 export type PackWithImage<T extends { slug?: string; nome?: string }> = T & {
   image: string;
 };
 
 const DEFAULT_PACK_IMAGE = 'assets/images/packs/elementos.webp';
 
+// Keep this map aligned with the current backend slugs.
 const PACK_IMAGES: Record<string, string> = {
-  'biblioteca-premium-avancada-de-elementos': 'assets/images/packs/elementos.webp',
-  'pack-de-emojis-exclusivos-pro': 'assets/images/packs/emojis.webp',
-  'colecao-premium-de-icones-profissionais': 'assets/images/packs/icones.webp',
-  'efeitos-e-trilhas-sonoras': 'assets/images/packs/Efeitos-e-Trilha-Sonoras.webp',
-  'kit-avancado-de-edicao-de-video-pro': 'assets/images/packs/capa_pack_edição.webp',
-  'pack-adobe-premiere-pro-completo': 'assets/images/packs/premiere.webp',
-  'pack-adobe-photoshop-completo': 'assets/images/packs/kit_photoshop.webp',
-  'pack-de-transicoes-cinematograficas': 'assets/images/packs/transições.webp',
-  'pack-coreldraw-avancado': 'assets/images/packs/Pacote-CorelDraw.webp',
-  'pack-adobe-illustrator-profissional': 'assets/images/packs/illustrator_Pack.webp',
-  'pack-adobe-lightroom-profissional': 'assets/images/packs/presets_lightroom.webp',
-  'pack-after-effects-cinematografico': 'assets/images/packs/kit_after_effects.webp',
-  'softwares-exclusivos-do-criador': 'assets/images/packs/programas.webp',
-  'banco-premium-de-videos-virais': 'assets/images/packs/PACK_VIRAL.webp',
-  'sistema-avancado-de-inteligencia-artificial': 'assets/images/packs/IA.webp',
-  'biblioteca-premium-de-backgrounds': 'assets/images/packs/kit_background.webp',
-  'colecao-completa-de-templates-canva': 'assets/images/packs/canva.webp',
-  'pack-avancado-de-personagens-editaveis': 'assets/images/packs/personagens.webp',
-  'pack-vfx-cinematografico-profissional': 'assets/images/packs/VFX.webp',
-  'ferramenta-profissional-de-download-de-reels': 'assets/images/packs/baixar_reels.webp',
-  'banco-exclusivo-de-videos-profissionais': 'assets/images/packs/banco_de_videos.webp',
-  'modelos-profissionais-de-gestao-em-excel': 'assets/images/packs/Modelos-Excel.webp',
-  'biblioteca-de-conteudos-plr-premium': 'assets/images/packs/Pack_PLRs.webp',
-  'suite-de-ferramentas-online-profissionais': 'assets/images/packs/ferramentas_online.webp',
-  'kit-completo-de-marketing-digital': 'assets/images/packs/kit-marketing.webp',
-  
+  'banco-videos-profissionais': 'assets/images/packs/banco_de_videos.webp',
+  'banco-videos-virais': 'assets/images/packs/PACK_VIRAL.webp',
+  'biblioteca-backgrounds': 'assets/images/packs/kit_background.webp',
+  'biblioteca-conteudos-plr': 'assets/images/packs/Pack_PLRs.webp',
+  'biblioteca-elementos': 'assets/images/packs/elementos.webp',
+  'download-reels': 'assets/images/packs/baixar_reels.webp',
+  'efeitos-trilhas-sonoras': 'assets/images/packs/Efeitos-e-Trilha-Sonoras.webp',
+  'icones-profissionais': 'assets/images/packs/icones.webp',
+  'kit-edicao-video': 'assets/images/packs/capa_pack_edição.webp',
+  'kit-marketing-digital': 'assets/images/packs/kit-marketing.webp',
+  'modelos-gestao-excel': 'assets/images/packs/Modelos-Excel.webp',
+  'pack-adobe-illustrator': 'assets/images/packs/illustrator_Pack.webp',
+  'pack-adobe-lightroom': 'assets/images/packs/presets_lightroom.webp',
+  'pack-adobe-photoshop': 'assets/images/packs/kit_photoshop.webp',
+  'pack-adobe-premiere': 'assets/images/packs/premiere.webp',
+  'pack-after-effects': 'assets/images/packs/kit_after_effects.webp',
+  'pack-coreldraw': 'assets/images/packs/Pacote-CorelDraw.webp',
+  'pack-efeitos-vfx': 'assets/images/packs/VFX.webp',
+  'pack-emojis': 'assets/images/packs/emojis.webp',
+  'pack-personagens-editaveis': 'assets/images/packs/personagens.webp',
+  'pack-transicoes-dinamicas': 'assets/images/packs/transições.webp',
+  'sistema-inteligencia-artificial': 'assets/images/packs/IA.webp',
+  'softwares-criador': 'assets/images/packs/programas.webp',
+  'suite-ferramentas-online': 'assets/images/packs/ferramentas_online.webp',
+  'templates-canva': 'assets/images/packs/canva.webp',
 };
 
 function normalizePackKey(value?: string | null): string {
