@@ -81,7 +81,10 @@ describe('ApiService', () => {
     });
 
     const responsePromise = firstValueFrom(service.getMeuPerfil(7));
-    const req = httpMock.expectOne('http://localhost:3333/users/me/profile');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const requests = httpMock.match('http://localhost:3333/users/me/profile');
+    expect(requests.length).toBe(1);
+    const req = requests[0];
 
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('Authorization')).toBe('Bearer firebase-access-token');
@@ -119,9 +122,12 @@ describe('ApiService', () => {
     });
 
     const responsePromise = firstValueFrom(service.getDownloadsResumo(7, 'pack ia'));
-    const req = httpMock.expectOne(
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const requests = httpMock.match(
       'http://localhost:3333/downloads/me?limite=4&sugestoes=2&busca=pack%20ia'
     );
+    expect(requests.length).toBe(1);
+    const req = requests[0];
 
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('Authorization')).toBe('Bearer firebase-access-token');

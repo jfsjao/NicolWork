@@ -14,7 +14,7 @@ export interface SyncAuthPayload {
 
 export interface PlanoAtualResponse {
   id: string;
-  slug: 'gratuito' | 'basic' | 'gold' | 'premium';
+  slug: 'gratuito' | 'basic' | 'pro' | 'premium';
   nome: string;
   descricao?: string | null;
   preco?: string;
@@ -116,7 +116,7 @@ export interface MeusPacksResponse {
   usuario_id: number;
   plano_atual: {
     id: number;
-    slug: 'gratuito' | 'basic' | 'gold' | 'premium';
+    slug: 'gratuito' | 'basic' | 'pro' | 'premium';
     nome: string;
     status: string;
     iniciado_em: string;

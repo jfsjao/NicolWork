@@ -34,11 +34,13 @@ export const routes: Routes = [
   },
   {
     path: 'verify-email',
-    redirectTo: 'auth/action'
+    loadComponent: () =>
+      import('../pages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
   },
   {
     path: 'reset-password',
-    redirectTo: 'auth/action'
+    loadComponent: () =>
+      import('../pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
   },
 
   //privadas
