@@ -36,6 +36,17 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+## Environment configuration
+
+For local development, this project expects `src/environments/firebase.local.ts` to exist.
+
+In CI/CD, `.github/workflows/deploy.yml` generates both:
+
+- `src/environments/firebase.local.ts`
+- `src/environments/environment.prod.ts`
+
+using GitHub Secrets before running the production build.
+
 ## Running unit tests
 
 To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
