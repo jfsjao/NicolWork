@@ -291,7 +291,7 @@ export class ApiService {
     void usuarioId;
 
     return this.withAuthHeaders((headers) =>
-      this.http.get<MeusPacksResponse>(`${this.backendUrl}/users/me/library`, { headers })
+      this.http.get<MeusPacksResponse>(`${this.backendUrl}/users/current/library`, { headers })
     );
   }
 
