@@ -129,6 +129,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadPopularPacks();
 
     if (this.isBrowser) {
+      this.isLogosMarqueeRunning = true;
       this.updateCarouselMediaMode();
     }
   }
@@ -227,9 +228,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.logosSection) return;
 
     this.logosObserver = new IntersectionObserver(([entry]) => {
-      this.isLogosMarqueeRunning = entry.intersectionRatio >= 0.2;
+      this.isLogosMarqueeRunning = entry.isIntersecting;
     }, {
-      threshold: [0, 0.2, 0.6]
+      threshold: [0, 0.01],
+      rootMargin: '120px 0px 120px 0px'
     });
 
     this.logosObserver.observe(this.logosSection.nativeElement);
