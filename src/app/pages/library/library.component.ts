@@ -15,6 +15,8 @@ import { UserLibraryPack, UserLibraryService } from '@core/services/user-library
 export class LibraryComponent implements OnInit {
   private authService = inject(AuthService);
   private userLibraryService = inject(UserLibraryService);
+  private searchTimeout?: number;
+  private requestSequence = 0;
 
   searchTerm = '';
   private readonly ROW_SCROLL_AMOUNT = 960;
@@ -30,52 +32,27 @@ export class LibraryComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.authService.waitForAuthInit();
-    const user = this.authService.currentUser();
+    this.loadLibrary();
+  }
 
-    if (!user?.backendUserId) {
-      this.myPacks = [];
-      this.featuredPacks = [];
-      this.noveltyPacks = [];
-      this.allPacks = [];
-      this.upgradePacks = [];
-      this.packsError = true;
-      this.isLoadingPacks = false;
-      return;
+  get hasActiveSearch(): boolean {
+    return this.searchTerm.trim().length > 0;
+  }
+
+  onSearchChange(value: string): void {
+    this.searchTerm = value;
+
+    if (this.searchTimeout) {
+      window.clearTimeout(this.searchTimeout);
     }
 
-    this.userLibraryService.loadUserLibrary(user.backendUserId).subscribe({
-      next: (library) => {
-        this.myPacks = library.ownedPacks;
-        this.featuredPacks = library.featuredPacks;
-        this.noveltyPacks = library.noveltyPacks;
-        this.allPacks = library.allPacks;
-        this.upgradePacks = library.plan.slug === 'premium' ? [] : library.upgradePacks;
-        this.packsError = false;
-        this.isLoadingPacks = false;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar biblioteca do usuario:', error);
-        this.myPacks = [];
-        this.featuredPacks = [];
-        this.noveltyPacks = [];
-        this.allPacks = [];
-        this.upgradePacks = [];
-        this.packsError = true;
-        this.isLoadingPacks = false;
-      }
-    });
+    this.searchTimeout = window.setTimeout(() => {
+      this.loadLibrary();
+    }, 300);
   }
 
   filterPacks(packs: UserLibraryPack[]): UserLibraryPack[] {
-    const term = this.searchTerm.trim().toLowerCase();
-
-    if (!term) return packs;
-
-    return packs.filter((pack) =>
-      pack.title.toLowerCase().includes(term) ||
-      pack.description.toLowerCase().includes(term) ||
-      pack.badge.toLowerCase().includes(term)
-    );
+    return packs;
   }
 
   scrollRow(rowId: string, direction: number): void {
@@ -95,5 +72,53 @@ export class LibraryComponent implements OnInit {
 
   closePackDetails(): void {
     this.selectedPack = null;
+  }
+
+  private loadLibrary(): void {
+    const user = this.authService.currentUser();
+    const requestId = ++this.requestSequence;
+
+    if (!user?.backendUserId) {
+      this.myPacks = [];
+      this.featuredPacks = [];
+      this.noveltyPacks = [];
+      this.allPacks = [];
+      this.upgradePacks = [];
+      this.packsError = true;
+      this.isLoadingPacks = false;
+      return;
+    }
+
+    this.isLoadingPacks = true;
+
+    this.userLibraryService.loadUserLibrary(user.backendUserId, this.searchTerm).subscribe({
+      next: (library) => {
+        if (requestId !== this.requestSequence) {
+          return;
+        }
+
+        this.myPacks = library.ownedPacks;
+        this.featuredPacks = library.featuredPacks;
+        this.noveltyPacks = library.noveltyPacks;
+        this.allPacks = library.allPacks;
+        this.upgradePacks = library.plan.slug === 'premium' ? [] : library.upgradePacks;
+        this.packsError = false;
+        this.isLoadingPacks = false;
+      },
+      error: (error) => {
+        if (requestId !== this.requestSequence) {
+          return;
+        }
+
+        console.error('Erro ao carregar biblioteca do usuario:', error);
+        this.myPacks = [];
+        this.featuredPacks = [];
+        this.noveltyPacks = [];
+        this.allPacks = [];
+        this.upgradePacks = [];
+        this.packsError = true;
+        this.isLoadingPacks = false;
+      }
+    });
   }
 }

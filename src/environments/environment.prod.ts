@@ -2,7 +2,7 @@ import { firebaseConfig } from './firebase.local';
 
 export const environment = {
   production: true,
-  apiUrl: 'https://YOUR_API_URL',
-  frontendUrl: 'https://YOUR_FRONTEND_URL',
+  apiUrl: 'http://localhost:3333',
+  frontendUrl: 'http://localhost:4200',
   firebase: firebaseConfig
 };

@@ -279,19 +279,28 @@ export class ApiService {
     );
   }
 
-  getPacksDestaque(limite = 10): Observable<PacksDestaqueResponse> {
-    return this.http.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?limite=${limite}`);
+  getPacksDestaque(limite = 10, busca = ''): Observable<PacksDestaqueResponse> {
+    const params = new URLSearchParams({ limite: String(limite) });
+
+    if (busca.trim()) {
+      params.set('busca', busca.trim());
+    }
+
+    return this.http.get<PacksDestaqueResponse>(`${this.backendUrl}/packs/destaques?${params.toString()}`);
   }
 
-  getAllPacks(): Observable<PacksListResponse> {
-    return this.http.get<PacksListResponse>(`${this.backendUrl}/packs`);
+  getAllPacks(busca = ''): Observable<PacksListResponse> {
+    const params = busca.trim() ? `?busca=${encodeURIComponent(busca.trim())}` : '';
+
+    return this.http.get<PacksListResponse>(`${this.backendUrl}/packs${params}`);
   }
 
-  getMeusPacks(usuarioId: number): Observable<MeusPacksResponse> {
+  getMeusPacks(usuarioId: number, busca = ''): Observable<MeusPacksResponse> {
     void usuarioId;
+    const params = busca.trim() ? `?busca=${encodeURIComponent(busca.trim())}` : '';
 
     return this.withAuthHeaders((headers) =>
-      this.http.get<MeusPacksResponse>(`${this.backendUrl}/users/current/library`, { headers })
+      this.http.get<MeusPacksResponse>(`${this.backendUrl}/users/current/library${params}`, { headers })
     );
   }
 

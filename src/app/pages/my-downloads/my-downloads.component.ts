@@ -36,6 +36,7 @@ interface QuickAction {
 export class MyDownloadsComponent implements OnInit, OnDestroy {
   private apiService = inject(ApiService);
   private authService = inject(AuthService);
+  private requestSequence = 0;
 
   searchTerm = '';
   isLoading = false;
@@ -75,6 +76,7 @@ export class MyDownloadsComponent implements OnInit, OnDestroy {
   async carregarResumo(): Promise<void> {
     await this.authService.waitForAuthInit();
     const usuarioId = this.authService.currentUser()?.backendUserId;
+    const requestId = ++this.requestSequence;
 
     if (!usuarioId) {
       this.resetDownloadsState();
@@ -89,6 +91,11 @@ export class MyDownloadsComponent implements OnInit, OnDestroy {
       const response = await firstValueFrom(
         this.apiService.getDownloadsResumo(usuarioId, this.searchTerm)
       );
+
+      if (requestId !== this.requestSequence) {
+        return;
+      }
+
       this.totalDownloads = response.total_downloads;
       this.totalUpdates = response.total_atualizacoes;
       this.recentDownloads = response.downloads_recentes.map((item) => this.mapDownloadItem(item));
@@ -96,6 +103,10 @@ export class MyDownloadsComponent implements OnInit, OnDestroy {
         this.mapDownloadItem(item, 'Sugestão')
       );
     } catch {
+      if (requestId !== this.requestSequence) {
+        return;
+      }
+
       this.resetDownloadsState();
       this.hasError = true;
     } finally {

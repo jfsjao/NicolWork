@@ -37,11 +37,11 @@ export interface UserLibraryData {
 export class UserLibraryService {
   private apiService = inject(ApiService);
 
-  loadUserLibrary(usuarioId: number): Observable<UserLibraryData> {
+  loadUserLibrary(usuarioId: number, busca = ''): Observable<UserLibraryData> {
     return forkJoin({
-      meusPacks: this.apiService.getMeusPacks(usuarioId),
-      destaquePacks: this.apiService.getPacksDestaque(10),
-      allPacks: this.apiService.getAllPacks()
+      meusPacks: this.apiService.getMeusPacks(usuarioId, busca),
+      destaquePacks: this.apiService.getPacksDestaque(10, busca),
+      allPacks: this.apiService.getAllPacks(busca)
     }).pipe(
       map(({ meusPacks, destaquePacks, allPacks }) => this.buildLibraryData(meusPacks, destaquePacks.packs, allPacks.packs))
     );
