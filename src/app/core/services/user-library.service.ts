@@ -31,6 +31,12 @@ export interface UserLibraryData {
   popularPacks: UserLibraryPack[];
 }
 
+const FREE_PLAN = {
+  slug: 'gratuito' as const,
+  nome: 'Gratuito',
+  status: 'ativo'
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -114,17 +120,25 @@ export class UserLibraryService {
 
     return {
       userId: meusPacks.usuario_id,
-      plan: {
-        slug: meusPacks.plano_atual.slug,
-        nome: meusPacks.plano_atual.nome,
-        status: meusPacks.plano_atual.status
-      },
+      plan: this.resolvePlan(meusPacks),
       ownedPacks,
       featuredPacks,
       noveltyPacks,
       allPacks: allPacksWithAccess,
       upgradePacks,
       popularPacks
+    };
+  }
+
+  private resolvePlan(meusPacks: MeusPacksResponse): UserLibraryData['plan'] {
+    if (!meusPacks.plano_atual) {
+      return FREE_PLAN;
+    }
+
+    return {
+      slug: meusPacks.plano_atual.slug,
+      nome: meusPacks.plano_atual.nome,
+      status: meusPacks.plano_atual.status
     };
   }
 }

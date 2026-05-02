@@ -150,7 +150,7 @@ export class AuthService {
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          plano: null
+          plano: 'gratuito'
         });
 
         const synced = await this.ensureBackendUserSynced(user);
@@ -186,7 +186,7 @@ export class AuthService {
       this.currentUser.set({
         ...current,
         backendUserId: Number(response.usuario.id),
-        plano: response.plano_atual?.slug ?? null
+        plano: response.plano_atual?.slug ?? 'gratuito'
       });
       this.backendSyncErrorMessage = null;
       this.clearError();

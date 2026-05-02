@@ -121,7 +121,7 @@ export interface MeusPacksResponse {
     status: string;
     iniciado_em: string;
     expira_em: string | null;
-  };
+  } | null;
   packs: PackResponse[];
 }
 
