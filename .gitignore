@@ -44,6 +44,8 @@ src/environments/firebase.local.ts
 *.njsproj
 *.sln
 *.sw?
+*.codex
+*.log
 
 # Sistemas
 .DS_Store

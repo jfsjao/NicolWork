@@ -56,6 +56,13 @@ export class PlansComponent {
   ];
   repeatedPartnerLogos: PlansHighlight[] = [...this.partnerLogos, ...this.partnerLogos];
 
+  freeFeatures = [
+    'Kit Streamer',
+    'Kit YouTube',
+    'Kit Influencer',
+    'Kit Designer'
+  ];
+
   premiumFeatures = [
     'Biblioteca de Elementos',
     'Pack de Emojis',

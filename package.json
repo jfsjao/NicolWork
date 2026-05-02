@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "dev": "ng serve --force-esbuild --poll=1000",
+    "dev": "ng serve --poll=1000",
     "build": "ng build --configuration=production --output-path=dist/public",
     "clean": "rd /s /q dist",
     "watch": "ng build --watch --configuration development",

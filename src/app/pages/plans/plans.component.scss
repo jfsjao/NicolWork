@@ -508,10 +508,14 @@
 
     .plans-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1.25rem;
 
-      @media (max-width: 950px) {
+      @media (max-width: 1180px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      @media (max-width: 680px) {
         grid-template-columns: 1fr;
       }
     }
@@ -529,6 +533,15 @@
 
       &:hover {
         transform: translateY(-4px);
+      }
+
+      &.free {
+        background: #f8fff0;
+        border-color: rgba(131, 205, 0, 0.34);
+        color: var(--text-dark);
+        box-shadow:
+          0 22px 45px rgba(11, 12, 16, 0.1),
+          inset 0 0 0 1px rgba(131, 205, 0, 0.12);
       }
 
       &.basic {
@@ -652,6 +665,7 @@
       font-size: 1rem;
       font-weight: 900;
       cursor: pointer;
+      text-decoration: none;
       transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
 
       &:hover {
@@ -659,6 +673,18 @@
         transform: translateY(-2px);
         box-shadow: 0 10px 26px rgba(79, 172, 254, 0.2);
       }
+    }
+
+    .free .plan-badge {
+      background: rgba(131, 205, 0, 0.12);
+      border-color: rgba(131, 205, 0, 0.28);
+      color: #4f7d00;
+    }
+
+    .free .cta-button {
+      background: #83cd00;
+      border-color: #83cd00;
+      color: #12210a;
     }
 
     .pro .plan-badge {

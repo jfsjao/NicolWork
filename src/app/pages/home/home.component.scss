@@ -610,6 +610,7 @@
   font-weight: 900;
   background: var(--color-ice);
   color: var(--text-dark);
+  text-decoration: none;
   transition: transform 0.15s ease;
 
   &:hover {
@@ -641,7 +642,7 @@
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.2rem;
   align-items: stretch;
 }
@@ -656,6 +657,14 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+}
+
+.pricing-free {
+  background: #f8fff0;
+  border-color: rgba(131, 205, 0, 0.34);
+  box-shadow:
+    0 22px 45px rgba(11, 12, 16, 0.1),
+    inset 0 0 0 1px rgba(131, 205, 0, 0.12);
 }
 
 .pricing-basic {
@@ -833,6 +842,18 @@
   color: var(--color-surface-2);
 }
 
+.pricing-free .plan-badge,
+.pricing-free .pay-badge {
+  background: rgba(131, 205, 0, 0.12);
+  border-color: rgba(131, 205, 0, 0.28);
+  color: #4f7d00;
+}
+
+.pricing-free .pricing-cta {
+  background: #83cd00;
+  color: #12210a;
+}
+
 .differentials-section {
   padding: 5rem 0;
   background: var(--color-ice);
@@ -954,6 +975,12 @@
     margin: 0.15rem 0 0;
     color: rgba(255, 255, 255, 0.65);
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 1180px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
