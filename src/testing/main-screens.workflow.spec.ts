@@ -118,7 +118,8 @@ describe('Main Screens Workflow', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.hero-carousel')).toBeTruthy();
     expect(element.querySelector('.pricing-section')).toBeTruthy();
-    expect(element.querySelectorAll('.pricing-card').length).toBe(3);
+    expect(element.querySelectorAll('.pricing-card').length).toBe(4);
+    expect(element.querySelector('.pricing-free')?.textContent).toContain('Kit Streamer');
   });
 
   it('renders the plans page with the comparison cards', async () => {
@@ -129,7 +130,8 @@ describe('Main Screens Workflow', () => {
 
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.plans-hero')).toBeTruthy();
-    expect(element.querySelectorAll('.plan-card').length).toBe(3);
+    expect(element.querySelectorAll('.plan-card').length).toBe(4);
+    expect(element.querySelector('.plan-card.free')?.textContent).toContain('Kit Streamer');
   });
 
   it('renders the about page metrics and CTA', async () => {
