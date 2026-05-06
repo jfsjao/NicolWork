@@ -611,6 +611,8 @@
   background: var(--color-ice);
   color: var(--text-dark);
   text-decoration: none;
+  border: 0;
+  cursor: pointer;
   transition: transform 0.15s ease;
 
   &:hover {
@@ -651,6 +653,7 @@
   text-align: left;
   border-radius: var(--radius);
   padding: 1.6rem 1.5rem;
+  min-height: 430px;
   color: var(--text-dark);
   border: 1px solid transparent;
   box-shadow: 0 22px 45px rgba(11, 12, 16, 0.12);
@@ -685,13 +688,16 @@
   box-shadow:
     0 30px 60px rgba(76, 54, 201, 0.34),
     0 12px 28px rgba(42, 33, 111, 0.28);
-  transform: translateY(-10px) scale(1.01);
+  transform: none;
 }
 
 .pricing-head h3 {
   margin: 0.6rem 0 0.8rem;
-  font-size: 1.05rem;
-  font-weight: 800;
+  min-height: 2.7rem;
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 900;
+  text-wrap: balance;
 }
 
 .pricing-basic .pricing-head h3,
@@ -736,7 +742,7 @@
 
 .price {
   display: grid;
-  gap: 8px;
+  gap: 0.65rem;
 }
 
 .old-price {
@@ -751,24 +757,31 @@
 }
 
 .price-main {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.42rem;
+  row-gap: 0.2rem;
+  align-items: end;
 }
 
 .currency {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 900;
+  padding-bottom: 0.28rem;
 }
 
 .value {
-  font-size: clamp(3rem, 4vw, 3.6rem);
+  min-width: 0;
+  font-size: clamp(2.55rem, 3.1vw, 3.25rem);
   font-weight: 950;
-  letter-spacing: -1px;
+  line-height: 0.95;
+  letter-spacing: 0;
 }
 
 .period {
+  grid-column: 1 / -1;
   color: rgba(11, 12, 16, 0.58);
+  font-size: 0.92rem;
   font-weight: 700;
 }
 
@@ -778,12 +791,21 @@
   color: var(--color-primary);
 }
 
+.free-plan-note {
+  margin: 0;
+  color: rgba(18, 33, 10, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  font-weight: 800;
+}
+
 .pricing-features {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   gap: 0.7rem;
+  flex: 1;
 
   li {
     display: flex;
@@ -795,6 +817,12 @@
 .pricing-pro,
 .pricing-pro .pay-badge {
   color: var(--text-light);
+}
+
+.pricing-cta {
+  width: 100%;
+  margin-top: auto;
+  text-align: center;
 }
 
 .pricing-pro .pay-badge {

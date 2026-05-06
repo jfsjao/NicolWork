@@ -182,6 +182,30 @@ export interface DownloadsResumoResponse {
   }>;
 }
 
+export type PaidPlanSlug = 'basic' | 'pro' | 'premium';
+
+export interface CreateCheckoutResponse {
+  paymentId: number;
+  preferenceId: string;
+  checkoutUrl: string;
+  sandboxCheckoutUrl: string | null;
+  externalReference: string;
+  chargedAmount: string;
+  checkoutKind: 'purchase' | 'upgrade';
+  plan: {
+    id: number;
+    slug: PaidPlanSlug;
+    nome: string;
+    preco: string;
+  };
+  currentPlan: {
+    id: number;
+    slug: 'gratuito' | PaidPlanSlug;
+    nome: string;
+    preco: string;
+  } | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -344,6 +368,16 @@ export class ApiService {
       this.http.post<{ message: string }>(
         `${this.backendUrl}/downloads/registrar`,
         { pack_id: packId },
+        { headers }
+      )
+    );
+  }
+
+  createCheckout(planSlug: PaidPlanSlug): Observable<CreateCheckoutResponse> {
+    return this.withAuthHeaders((headers) =>
+      this.http.post<CreateCheckoutResponse>(
+        `${this.backendUrl}/payments/checkout`,
+        { planSlug },
         { headers }
       )
     );

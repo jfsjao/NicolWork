@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 
 import { PlansComponent } from './plans.component';
 import { ApiService } from '@core/api.service';
+import { AuthService } from '@core/services/auth.service';
 
 describe('PlansComponent', () => {
   let component: PlansComponent;
@@ -14,13 +15,17 @@ describe('PlansComponent', () => {
       packs: []
     }))
   };
+  const authServiceMock = {
+    isAuthenticated: jasmine.createSpy('isAuthenticated').and.returnValue(false)
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PlansComponent],
       providers: [
         provideRouter([]),
-        { provide: ApiService, useValue: apiServiceMock }
+        { provide: ApiService, useValue: apiServiceMock },
+        { provide: AuthService, useValue: authServiceMock }
       ]
     })
     .compileComponents();

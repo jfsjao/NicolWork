@@ -158,7 +158,7 @@
         <p class="showcase-description">
           Tudo na nuvem para acessar e baixar quando quiser, de forma vitalícia.
         </p>
-        <a routerLink="/plans" class="showcase-cta">Acesse agora</a>
+        <a routerLink="/plans" fragment="planos" class="showcase-cta">Acesse agora</a>
       </div>
     </div>
   </section>
@@ -184,6 +184,7 @@
               </div>
 
               <span class="pay-badge">Acesso gratuito</span>
+              <p class="free-plan-note">Sem pagamento: faca login ou crie sua conta para liberar estes kits.</p>
             </div>
           </div>
 
@@ -194,7 +195,7 @@
             <li><i class="bi bi-check2"></i> Kit Designer</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/auth">Começar grátis</a>
+          <a class="pricing-cta" routerLink="/auth" [queryParams]="{ mode: 'register' }">Começar grátis</a>
         </article>
 
         <article class="pricing-card pricing-basic">
@@ -223,7 +224,7 @@
             <li><i class="bi bi-check2"></i> Suporte prioritário</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/plans">Saiba mais</a>
+          <a class="pricing-cta" routerLink="/plans" [queryParams]="{ buy: 'basic' }">Comprar Basic</a>
         </article>
 
         <article class="pricing-card pricing-pro">
@@ -252,7 +253,7 @@
             <li><i class="bi bi-check2"></i> Suporte prioritário</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/plans">Saiba mais</a>
+          <a class="pricing-cta" routerLink="/plans" [queryParams]="{ buy: 'pro' }">Comprar Pro</a>
         </article>
 
         <article class="pricing-card pricing-premium featured">
@@ -281,7 +282,7 @@
             <li><i class="bi bi-check2"></i> Suporte com exclusividade</li>
           </ul>
 
-          <a class="pricing-cta" routerLink="/plans">Saiba mais</a>
+          <a class="pricing-cta" routerLink="/plans" [queryParams]="{ buy: 'premium' }">Comprar Premium</a>
         </article>
       </div>
     </div>

@@ -33,6 +33,7 @@ interface UpgradePlan {
   name: string;
   description: string;
   features: string[];
+  planSlug: 'basic' | 'pro' | 'premium';
   link: string;
 }
 
@@ -246,7 +247,8 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
             'Biblioteca inicial liberada',
             'Upgrade rapido para comecar'
           ],
-          link: '/plans'
+          planSlug: 'basic',
+          link: '/checkout'
         },
         {
           id: 2,
@@ -258,7 +260,8 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
             'Mais variedade de conteudos',
             'Melhor estrutura para escalar com consistencia'
           ],
-          link: '/plans'
+          planSlug: 'pro',
+          link: '/checkout'
         }
       ];
     }
@@ -275,7 +278,8 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
             'Mais variedade de templates',
             'Atualizacoes recorrentes'
           ],
-          link: '/plans'
+          planSlug: 'pro',
+          link: '/checkout'
         },
         {
           id: 4,
@@ -287,7 +291,8 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
             'Conteudos premium exclusivos',
             'Biblioteca mais completa'
           ],
-          link: '/plans'
+          planSlug: 'premium',
+          link: '/checkout'
         }
       ];
     }
@@ -298,13 +303,14 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
         label: 'Upgrade recomendado',
         name: 'Plano Premium',
         description: 'Desbloqueie o nivel maximo da plataforma com acesso aos conteudos mais completos.',
-        features: [
-          'Acesso total aos packs',
-          'Materiais premium',
-          'Mais recursos e conteudos avancados'
-        ],
-        link: '/plans'
-      }
-    ];
+      features: [
+        'Acesso total aos packs',
+        'Materiais premium',
+        'Mais recursos e conteudos avancados'
+      ],
+      planSlug: 'premium',
+      link: '/checkout'
+    }
+  ];
   }
 }

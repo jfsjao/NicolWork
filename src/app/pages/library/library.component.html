@@ -46,7 +46,10 @@
                   <h3>{{ pack.title }}</h3>
                   <div class="card-actions">
                     @if (pack.locked) {
-                      <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                      <a
+                        [routerLink]="pack.link"
+                        [queryParams]="pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+                        class="card-btn secondary">Upgrade</a>
                     } @else if (pack.downloadUrl) {
                       <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
                     } @else {
@@ -136,7 +139,10 @@
                   <h3>{{ pack.title }}</h3>
                   <div class="card-actions">
                     @if (pack.locked) {
-                      <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                      <a
+                        [routerLink]="pack.link"
+                        [queryParams]="pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+                        class="card-btn secondary">Upgrade</a>
                     } @else if (pack.downloadUrl) {
                       <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
                     } @else {
@@ -182,7 +188,10 @@
                   <h3>{{ pack.title }}</h3>
                   <div class="card-actions">
                     @if (pack.locked) {
-                      <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                      <a
+                        [routerLink]="pack.link"
+                        [queryParams]="pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+                        class="card-btn secondary">Upgrade</a>
                     } @else if (pack.downloadUrl) {
                       <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
                     } @else {
@@ -228,7 +237,10 @@
                   <h3>{{ pack.title }}</h3>
                   <div class="card-actions">
                     @if (pack.locked) {
-                      <a [routerLink]="pack.link" class="card-btn secondary">Upgrade</a>
+                      <a
+                        [routerLink]="pack.link"
+                        [queryParams]="pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+                        class="card-btn secondary">Upgrade</a>
                     } @else if (pack.downloadUrl) {
                       <a [href]="pack.downloadUrl" target="_blank" class="card-btn secondary">Baixar</a>
                     } @else {
@@ -267,7 +279,12 @@
           <p>{{ pack.description }}</p>
 
           <div class="modal-actions">
-            <a [routerLink]="pack.link" class="card-btn" [class.secondary]="pack.locked" (click)="closePackDetails()">
+            <a
+              [routerLink]="pack.link"
+              [queryParams]="pack.locked && pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+              class="card-btn"
+              [class.secondary]="pack.locked"
+              (click)="closePackDetails()">
               {{ pack.locked ? 'Fazer upgrade' : 'Abrir pack' }}
             </a>
             @if (!pack.locked && pack.downloadUrl) {

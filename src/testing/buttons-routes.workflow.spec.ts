@@ -17,6 +17,7 @@ describe('Buttons And Routes Workflow', () => {
       expect(paths).toContain('about');
       expect(paths).toContain('contact');
       expect(paths).toContain('auth');
+      expect(paths).toContain('checkout');
       expect(paths).toContain('client-area');
       expect(paths).toContain('library');
       expect(paths).toContain('my-downloads');
@@ -24,7 +25,7 @@ describe('Buttons And Routes Workflow', () => {
     });
 
     it('protects the post-login routes with authGuard', () => {
-      const protectedPaths = ['client-area', 'library', 'my-downloads', 'my-account'];
+      const protectedPaths = ['checkout', 'client-area', 'library', 'my-downloads', 'my-account'];
 
       protectedPaths.forEach((path) => {
         const route = routes.find((item) => item.path === path);

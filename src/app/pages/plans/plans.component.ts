@@ -1,20 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule, RouterLink } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
 
 interface PlansHighlight {
   image: string;
   alt: string;
 }
 
+type PaidPlanSlug = 'basic' | 'pro' | 'premium';
+
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterLink],
+  imports: [CommonModule, RouterModule, RouterLink, ReactiveFormsModule],
   templateUrl: './plans.component.html',
   styleUrls: ['./plans.component.scss']
 })
-export class PlansComponent {
+export class PlansComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private fb = inject(FormBuilder);
+
+  authPromptPlan: PaidPlanSlug | null = null;
+  authPromptMode: 'login' | 'register' = 'login';
+  isAuthPromptLoading = false;
+
+  promptLoginForm: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]]
+  });
+
+  promptRegisterForm: FormGroup = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8), this.passwordStrengthValidator]],
+    confirmPassword: ['', Validators.required]
+  }, { validators: this.passwordMatchValidator });
+
   packCategories = [
     {
       number: '1',
@@ -123,4 +148,134 @@ export class PlansComponent {
     'Banco de Vídeos Virais'
   ];
 
+  ngOnInit(): void {
+    const buyPlan = this.route.snapshot.queryParamMap.get('buy');
+
+    if (buyPlan === 'basic' || buyPlan === 'pro' || buyPlan === 'premium') {
+      void this.onBuyPlan(buyPlan);
+    }
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  async onBuyPlan(plan: PaidPlanSlug): Promise<void> {
+    if (this.isAuthenticated()) {
+      await this.router.navigate(['/checkout'], { queryParams: { plan } });
+      return;
+    }
+
+    this.authPromptPlan = plan;
+    this.authPromptMode = 'login';
+    this.authService.setPendingCheckout(plan, `/checkout?plan=${plan}`);
+  }
+
+  closeAuthPrompt(): void {
+    this.authPromptPlan = null;
+    this.authPromptMode = 'login';
+    this.authService.clearError?.();
+    this.authService.clearNotice?.();
+  }
+
+  switchAuthPromptMode(mode: 'login' | 'register'): void {
+    this.authPromptMode = mode;
+    this.authService.clearError?.();
+    this.authService.clearNotice?.();
+  }
+
+  async submitPromptLogin(): Promise<void> {
+    if (this.promptLoginForm.invalid || !this.authPromptPlan) {
+      this.promptLoginForm.markAllAsTouched();
+      return;
+    }
+
+    this.authService.setPendingCheckout(this.authPromptPlan, `/checkout?plan=${this.authPromptPlan}`);
+    this.isAuthPromptLoading = true;
+
+    try {
+      const { email, password } = this.promptLoginForm.value;
+      await this.authService.login(email, password);
+    } finally {
+      this.isAuthPromptLoading = false;
+    }
+  }
+
+  async submitPromptRegister(): Promise<void> {
+    if (this.promptRegisterForm.invalid || !this.authPromptPlan) {
+      this.promptRegisterForm.markAllAsTouched();
+      return;
+    }
+
+    this.authService.setPendingCheckout(this.authPromptPlan, `/checkout?plan=${this.authPromptPlan}`);
+    this.isAuthPromptLoading = true;
+
+    try {
+      const { name, email, password } = this.promptRegisterForm.value;
+      const ok = await this.authService.register(email, password, name);
+
+      if (ok) {
+        this.authPromptMode = 'login';
+        this.promptLoginForm.patchValue({ email, password: '' });
+        this.promptRegisterForm.reset();
+      }
+    } finally {
+      this.isAuthPromptLoading = false;
+    }
+  }
+
+  async submitPromptGoogle(): Promise<void> {
+    if (!this.authPromptPlan) {
+      return;
+    }
+
+    this.authService.setPendingCheckout(this.authPromptPlan, `/checkout?plan=${this.authPromptPlan}`);
+    this.isAuthPromptLoading = true;
+
+    try {
+      await this.authService.loginWithGoogle();
+    } finally {
+      this.isAuthPromptLoading = false;
+    }
+  }
+
+  get promptPlanLabel(): string {
+    const labels: Record<PaidPlanSlug, string> = {
+      basic: 'Basic',
+      pro: 'Pro',
+      premium: 'Premium'
+    };
+
+    return this.authPromptPlan ? labels[this.authPromptPlan] : '';
+  }
+
+  get promptAuthNotice(): string | null {
+    return typeof this.authService.authNotice === 'function' ? this.authService.authNotice() : null;
+  }
+
+  get promptAuthError(): string | null {
+    return typeof this.authService.authError === 'function' ? this.authService.authError() : null;
+  }
+
+  passwordMatchValidator(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  passwordStrengthValidator(control: { value: string }) {
+    const value = control.value || '';
+    const hasUppercase = /[A-Z]/.test(value);
+    const hasNumber = /\d/.test(value);
+    const hasSymbol = /[^A-Za-z0-9]/.test(value);
+
+    return hasUppercase && hasNumber && hasSymbol ? null : {
+      passwordStrength: {
+        hasUppercase,
+        hasNumber,
+        hasSymbol
+      }
+    };
+  }
 }

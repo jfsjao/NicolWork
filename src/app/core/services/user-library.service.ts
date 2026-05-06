@@ -1,17 +1,20 @@
 import { Injectable, inject } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { ApiService, MeusPacksResponse, PackResponse } from '../api.service';
+import { ApiService, MeusPacksResponse, PackResponse, PaidPlanSlug } from '../api.service';
 import { mapPacksWithImage } from '../pack-image-map';
 
 export type UserPlanSlug = 'gratuito' | 'basic' | 'pro' | 'premium';
 
 export interface UserLibraryPack {
   id: number;
+  slug: string;
   title: string;
   description: string;
   image: string;
   badge: string;
   locked: boolean;
+  requiredPlan: UserPlanSlug;
+  checkoutPlan: PaidPlanSlug | null;
   link: string;
   downloadUrl: string | null;
 }
@@ -37,6 +40,37 @@ const FREE_PLAN = {
   status: 'ativo'
 };
 
+const FREE_PACK_SLUGS = new Set([
+  'kit-streamer',
+  'kit-youtube',
+  'kit-youtuber',
+  'kit-influencer',
+  'kit-designer'
+]);
+
+const BASIC_PACK_SLUGS = new Set([
+  'biblioteca-elementos',
+  'pack-emojis',
+  'icones-profissionais',
+  'efeitos-trilhas-sonoras',
+  'kit-edicao-video',
+  'pack-adobe-premiere',
+  'pack-adobe-photoshop',
+  'softwares-criador',
+  'pack-transicoes-dinamicas',
+  'banco-videos-virais'
+]);
+
+const PRO_PACK_SLUGS = new Set([
+  ...BASIC_PACK_SLUGS,
+  'pack-coreldraw',
+  'sistema-inteligencia-artificial',
+  'biblioteca-backgrounds',
+  'templates-canva',
+  'pack-personagens-editaveis',
+  'pack-efeitos-vfx'
+]);
+
 @Injectable({
   providedIn: 'root'
 })
@@ -60,40 +94,29 @@ export class UserLibraryService {
   ): UserLibraryData {
     const ownedPacks = mapPacksWithImage(meusPacks.packs).map((pack) => ({
       id: pack.id,
+      slug: pack.slug,
       title: pack.nome,
       description: pack.descricao,
       image: pack.image,
       badge: 'Liberado',
       locked: false,
+      requiredPlan: this.resolveRequiredPlan(pack.slug),
+      checkoutPlan: null,
       link: '/library',
       downloadUrl: pack.arquivo_url
     }));
 
     const ownedPackIds = new Set(ownedPacks.map((pack) => pack.id));
 
-    const featuredPacks = mapPacksWithImage(destaquePacks).map((pack, index) => ({
-      id: pack.id,
-      title: pack.nome,
-      description: pack.descricao,
-      image: pack.image,
-      badge: `Top ${index + 1}`,
-      locked: !ownedPackIds.has(pack.id),
-      link: ownedPackIds.has(pack.id) ? '/my-downloads' : '/plans',
-      downloadUrl: ownedPackIds.has(pack.id) ? pack.arquivo_url : null
-    }));
+    const featuredPacks = mapPacksWithImage(destaquePacks).map((pack, index) =>
+      this.buildPackCard(pack, ownedPackIds.has(pack.id), `Top ${index + 1}`)
+    );
 
     const featuredPackIds = new Set(featuredPacks.map((pack) => pack.id));
 
-    const allPacksWithAccess = mapPacksWithImage(allPacks).map((pack) => ({
-      id: pack.id,
-      title: pack.nome,
-      description: pack.descricao,
-      image: pack.image,
-      badge: ownedPackIds.has(pack.id) ? 'Liberado' : 'Upgrade',
-      locked: !ownedPackIds.has(pack.id),
-      link: ownedPackIds.has(pack.id) ? '/my-downloads' : '/plans',
-      downloadUrl: ownedPackIds.has(pack.id) ? pack.arquivo_url : null
-    }));
+    const allPacksWithAccess = mapPacksWithImage(allPacks).map((pack) =>
+      this.buildPackCard(pack, ownedPackIds.has(pack.id), ownedPackIds.has(pack.id) ? 'Liberado' : 'Upgrade')
+    );
 
     const noveltyPacks = allPacksWithAccess
       .filter((pack) => !featuredPackIds.has(pack.id))
@@ -109,12 +132,15 @@ export class UserLibraryService {
       .filter((pack) => !ownedPackIds.has(pack.id))
       .map((pack) => ({
         id: pack.id,
+        slug: pack.slug,
         title: pack.title,
         description: pack.description,
         image: pack.image,
         badge: 'Upgrade',
         locked: true,
-        link: '/plans',
+        requiredPlan: pack.requiredPlan,
+        checkoutPlan: pack.checkoutPlan,
+        link: pack.link,
         downloadUrl: null
       }));
 
@@ -140,5 +166,44 @@ export class UserLibraryService {
       nome: meusPacks.plano_atual.nome,
       status: meusPacks.plano_atual.status
     };
+  }
+
+  private buildPackCard(
+    pack: PackResponse & { image: string },
+    owned: boolean,
+    badge: string
+  ): UserLibraryPack {
+    const requiredPlan = this.resolveRequiredPlan(pack.slug);
+    const checkoutPlan = requiredPlan === 'gratuito' ? null : requiredPlan;
+
+    return {
+      id: pack.id,
+      slug: pack.slug,
+      title: pack.nome,
+      description: pack.descricao,
+      image: pack.image,
+      badge,
+      locked: !owned,
+      requiredPlan,
+      checkoutPlan,
+      link: owned ? '/my-downloads' : checkoutPlan ? '/checkout' : '/library',
+      downloadUrl: owned ? pack.arquivo_url : null
+    };
+  }
+
+  private resolveRequiredPlan(slug: string): UserPlanSlug {
+    if (FREE_PACK_SLUGS.has(slug)) {
+      return 'gratuito';
+    }
+
+    if (BASIC_PACK_SLUGS.has(slug)) {
+      return 'basic';
+    }
+
+    if (PRO_PACK_SLUGS.has(slug)) {
+      return 'pro';
+    }
+
+    return 'premium';
   }
 }

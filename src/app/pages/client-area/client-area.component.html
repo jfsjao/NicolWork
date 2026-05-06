@@ -139,7 +139,10 @@
               <div class="popular-footer">
                 <span class="popular-status">Em alta na plataforma</span>
                 <div class="popular-actions">
-                  <a [routerLink]="pack.locked ? '/plans' : '/library'" class="popular-btn primary">
+                  <a
+                    [routerLink]="pack.locked ? pack.link : '/library'"
+                    [queryParams]="pack.locked && pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+                    class="popular-btn primary">
                     {{ pack.locked ? 'Upgrade' : 'Abrir pack' }}
                   </a>
                   <button type="button" class="popular-btn secondary" (click)="openPopularPackDetails(pack)">
@@ -175,7 +178,11 @@
           <p>{{ pack.description }}</p>
 
           <div class="popular-modal-actions">
-            <a [routerLink]="pack.locked ? '/plans' : '/library'" class="popular-btn primary" (click)="closePopularPackDetails()">
+            <a
+              [routerLink]="pack.locked ? pack.link : '/library'"
+              [queryParams]="pack.locked && pack.checkoutPlan ? { plan: pack.checkoutPlan } : null"
+              class="popular-btn primary"
+              (click)="closePopularPackDetails()">
               {{ pack.locked ? 'Upgrade' : 'Abrir pack' }}
             </a>
             <button type="button" class="popular-btn secondary" (click)="closePopularPackDetails()">
@@ -207,7 +214,7 @@
               }
             </ul>
 
-            <a [routerLink]="plan.link" class="upgrade-btn">Fazer upgrade</a>
+            <a [routerLink]="plan.link" [queryParams]="{ plan: plan.planSlug }" class="upgrade-btn">Fazer upgrade</a>
           </article>
         }
       </div>
