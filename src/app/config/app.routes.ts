@@ -33,6 +33,12 @@ export const routes: Routes = [
       import('../pages/auth-action/auth-action.component').then(m => m.AuthActionComponent)
   },
   {
+    path: 'checkout',
+    loadComponent: () =>
+      import('../pages/checkout/checkout.component').then(m => m.CheckoutComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'verify-email',
     loadComponent: () =>
       import('../pages/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
