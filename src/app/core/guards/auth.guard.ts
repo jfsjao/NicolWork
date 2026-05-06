@@ -1,9 +1,12 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
-export const authGuard: CanActivateFn = async () => {
+export const authGuard: CanActivateFn = async (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const toastr = inject(ToastrService);
@@ -15,5 +18,11 @@ export const authGuard: CanActivateFn = async () => {
   }
 
   toastr.warning('Você precisa fazer login', 'Acesso Negado');
-  return router.createUrlTree(['/auth']);
+  return router.createUrlTree(['/auth'], {
+    queryParams: {
+      mode: 'register',
+      plan: route.queryParamMap?.get('plan') ?? undefined,
+      redirect: state.url ?? undefined
+    }
+  });
 };

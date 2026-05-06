@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
@@ -13,6 +14,8 @@ import { AuthService } from '@core/services/auth.service';
 export class AuthComponent implements OnInit {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   isLoginMode = true;
   isForgotMode = false;
@@ -50,8 +53,26 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.authService.clearError?.();
+    await this.authService.waitForAuthInit();
+
+    if (this.authService.isAuthenticated()) {
+      await this.router.navigate(['/client-area']);
+      return;
+    }
+
+    const mode = this.route.snapshot.queryParamMap.get('mode');
+    const plan = this.route.snapshot.queryParamMap.get('plan');
+    const redirect = this.route.snapshot.queryParamMap.get('redirect');
+
+    if (mode === 'register') {
+      this.isLoginMode = false;
+    }
+
+    if (plan === 'basic' || plan === 'pro' || plan === 'premium') {
+      this.authService.setPendingCheckout(plan, redirect ?? undefined);
+    }
   }
 
   onSwitchMode() {

@@ -39,10 +39,21 @@ describe('authGuard', () => {
   it('redirects unauthenticated users to auth page', async () => {
     authServiceSpy.isAuthenticated.and.returnValue(false);
 
-    const result = await TestBed.runInInjectionContext(() => authGuard({} as never, {} as never));
+    const result = await TestBed.runInInjectionContext(() =>
+      authGuard(
+        { queryParamMap: { get: () => 'pro' } } as never,
+        { url: '/checkout?plan=pro' } as never
+      )
+    );
 
     expect(toastrSpy.warning).toHaveBeenCalled();
-    expect(routerSpy.createUrlTree).toHaveBeenCalledWith(['/auth']);
+    expect(routerSpy.createUrlTree).toHaveBeenCalledWith(['/auth'], {
+      queryParams: {
+        mode: 'register',
+        plan: 'pro',
+        redirect: '/checkout?plan=pro'
+      }
+    });
     expect(result).toEqual({ redirectedTo: '/auth' } as never);
   });
 });

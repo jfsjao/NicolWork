@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthComponent } from '../app/pages/auth/auth.component';
 import { AuthService } from '../app/core/services/auth.service';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 
 describe('Auth Flow Workflow', () => {
   let fixture: ComponentFixture<AuthComponent>;
@@ -9,13 +10,33 @@ describe('Auth Flow Workflow', () => {
   const authServiceMock = {
     login: jasmine.createSpy('login').and.resolveTo(true),
     register: jasmine.createSpy('register').and.resolveTo(true),
-    loginWithGoogle: jasmine.createSpy('loginWithGoogle').and.resolveTo(true)
+    loginWithGoogle: jasmine.createSpy('loginWithGoogle').and.resolveTo(true),
+    setPendingCheckout: jasmine.createSpy('setPendingCheckout'),
+    waitForAuthInit: jasmine.createSpy('waitForAuthInit').and.resolveTo(),
+    isAuthenticated: jasmine.createSpy('isAuthenticated').and.returnValue(false),
+    clearError: jasmine.createSpy('clearError'),
+    clearNotice: jasmine.createSpy('clearNotice'),
+    authNotice: jasmine.createSpy('authNotice').and.returnValue(null),
+    authError: jasmine.createSpy('authError').and.returnValue(null)
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AuthComponent],
-      providers: [{ provide: AuthService, useValue: authServiceMock }]
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: authServiceMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: {
+                get: () => null
+              }
+            }
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuthComponent);
@@ -27,6 +48,9 @@ describe('Auth Flow Workflow', () => {
     authServiceMock.login.calls.reset();
     authServiceMock.register.calls.reset();
     authServiceMock.loginWithGoogle.calls.reset();
+    authServiceMock.setPendingCheckout.calls.reset();
+    authServiceMock.clearError.calls.reset();
+    authServiceMock.clearNotice.calls.reset();
   });
 
   it('starts in login mode and can switch to register mode', () => {

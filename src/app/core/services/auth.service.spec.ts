@@ -19,7 +19,7 @@ describe('AuthService', () => {
       value: null
     });
 
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
     toastrSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
     apiServiceSpy = jasmine.createSpyObj('ApiService', ['syncAuth']);
     spyOn(console, 'info');

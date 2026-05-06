@@ -45,6 +45,8 @@ export class AuthService {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private backendSyncPromise: Promise<boolean> | null = null;
   private backendSyncErrorMessage: string | null = null;
+  private pendingCheckoutPlanKey = 'pending_checkout_plan';
+  private pendingAuthRedirectKey = 'pending_auth_redirect';
 
   currentUser = signal<UserData | null>(null);
   isLoading = signal<boolean>(true);
@@ -100,17 +102,21 @@ export class AuthService {
     const message =
       customMessage ??
       this.backendSyncErrorMessage ??
-      'Nao foi possivel validar seu acesso com o servidor.';
+      `API offline, tente novamente.`;
     this.setError(message);
-    this.setNotice(`${message} Tente novamente em instantes.`);
+    this.clearNotice();
 
     if (showToast) {
-      this.toastr.error(message, 'Erro de Acesso');
+      this.toastr.error(message, 'Backend indisponivel');
     }
   }
 
   private extractBackendSyncMessage(error: unknown): string | null {
     if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) {
+        return `API offline, tente novamente.`;
+      }
+
       const backendMessage =
         typeof error.error?.message === 'string'
           ? error.error.message
@@ -193,7 +199,7 @@ export class AuthService {
       return true;
     } catch (error) {
       this.backendSyncErrorMessage = this.extractBackendSyncMessage(error);
-      console.error('Erro ao sincronizar usuario com o backend:', error);
+      console.error('Erro ao sincronizar o usuário:', error);
       return false;
     }
   }
@@ -309,7 +315,7 @@ export class AuthService {
       this.clearError();
       this.clearPendingVerificationEmail();
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo de volta!');
-      this.router.navigate(['/client-area']);
+      await this.navigateAfterAuth();
       return true;
     } catch (error: any) {
       const pendingEmail = this.getPendingVerificationEmail();
@@ -359,7 +365,7 @@ export class AuthService {
       this.clearNotice();
       this.clearError();
       this.toastr.success('Login realizado com sucesso!', 'Bem-vindo!');
-      this.router.navigate(['/client-area']);
+      await this.navigateAfterAuth();
       return true;
     } catch (error: any) {
       this.clearError();
@@ -425,7 +431,7 @@ export class AuthService {
       });
 
       this.setNotice('Verifique o email para redefinir a senha.');
-      this.toastr.success('Email de recuperacao enviado!', 'Verifique sua caixa de entrada');
+      this.toastr.success('Email de recuperação o enviado!', 'Verifique sua caixa de entrada');
       return true;
     } catch (error: any) {
       this.clearError();
@@ -580,6 +586,31 @@ export class AuthService {
 
   clearError(): void {
     this.authError.set(null);
+  }
+
+  setPendingCheckout(planSlug: 'basic' | 'pro' | 'premium', redirectUrl?: string): void {
+    this.writeSessionItem(this.pendingCheckoutPlanKey, planSlug);
+    this.writeSessionItem(this.pendingAuthRedirectKey, redirectUrl || `/checkout?plan=${planSlug}`);
+  }
+
+  private async navigateAfterAuth(): Promise<void> {
+    const redirectUrl = this.readSessionItem(this.pendingAuthRedirectKey);
+    const planSlug = this.readSessionItem(this.pendingCheckoutPlanKey);
+
+    this.removeSessionItem(this.pendingAuthRedirectKey);
+    this.removeSessionItem(this.pendingCheckoutPlanKey);
+
+    if (redirectUrl) {
+      await this.router.navigateByUrl(redirectUrl);
+      return;
+    }
+
+    if (planSlug === 'basic' || planSlug === 'pro' || planSlug === 'premium') {
+      await this.router.navigate(['/checkout'], { queryParams: { plan: planSlug } });
+      return;
+    }
+
+    await this.router.navigate(['/client-area']);
   }
 
   private clearBackendSession(): void {
