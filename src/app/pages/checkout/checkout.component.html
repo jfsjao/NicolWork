@@ -1,0 +1,106 @@
+<div class="checkout-page">
+  <section class="checkout-hero">
+    <div class="section-content">
+      <a routerLink="/plans" class="back-link">
+        <i class="bi bi-arrow-left"></i>
+        Voltar aos planos
+      </a>
+
+      @if (selectedPlan; as plan) {
+        <div class="checkout-grid">
+          <article class="checkout-summary">
+            <span class="checkout-badge">{{ plan.eyebrow }}</span>
+            <h1>Finalizar {{ isUpgrade ? 'upgrade' : 'compra' }} {{ plan.name }}</h1>
+            <p>{{ plan.description }}</p>
+
+            <ul>
+              @for (feature of plan.features; track feature) {
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>{{ feature }}</span>
+                </li>
+              }
+            </ul>
+          </article>
+
+          <aside class="payment-panel">
+            <div class="panel-head">
+              <span>Resumo</span>
+              <strong>{{ plan.name }}</strong>
+            </div>
+
+            <div class="price-row">
+              <span>Plano escolhido</span>
+              <strong>{{ formatCurrency(plan.price) }}</strong>
+            </div>
+
+            <div class="price-row">
+              <span>Seu plano atual</span>
+              <strong>{{ currentPlanName }}</strong>
+            </div>
+
+            @if (isUpgrade) {
+              <div class="price-row discount">
+                <span>Credito do plano atual</span>
+                <strong>-{{ formatCurrency(currentPlanPrice) }}</strong>
+              </div>
+            }
+
+            <div class="total-row">
+              <span>{{ isUpgrade ? 'Valor do upgrade' : 'Total' }}</span>
+              <strong>{{ formatCurrency(chargedAmount) }}</strong>
+            </div>
+
+            @if (!canCheckout) {
+              <div class="checkout-warning">
+                Seu plano atual ja cobre este acesso. Escolha um plano superior.
+              </div>
+            }
+
+            @if (errorMessage) {
+              <div class="checkout-error">{{ errorMessage }}</div>
+            }
+
+            @if (upsellOptions.length > 0) {
+              <div class="opportunity-box">
+                <span>Antes de pagar</span>
+                <strong>Tem plano que libera mais packs por pouca diferenca.</strong>
+                <div class="opportunity-actions">
+                  @for (option of upsellOptions; track option.slug) {
+                    <a
+                      routerLink="/checkout"
+                      [queryParams]="{ plan: option.slug }"
+                      class="opportunity-link">
+                      Ver {{ option.name }}
+                      <small>+{{ formatCurrency(option.extraAmount) }} no preco cheio</small>
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+
+            <button
+              type="button"
+              class="pay-button"
+              [disabled]="isLoading || !canCheckout"
+              (click)="startCheckout()"
+            >
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isLoading ? 'Abrindo Mercado Pago...' : 'Pagar com Mercado Pago' }}
+            </button>
+
+            <p class="secure-note">
+              Pagamento processado pelo Mercado Pago. A liberacao acontece apos confirmacao.
+            </p>
+          </aside>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <h1>Plano nao encontrado</h1>
+          <p>Escolha um plano pago para continuar.</p>
+          <a routerLink="/plans" class="pay-button">Ver planos</a>
+        </div>
+      }
+    </div>
+  </section>
+</div>
