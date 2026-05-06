@@ -62,7 +62,7 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
       image: 'assets/images/carrosel_cliente/novidades.webp',
       alt: 'Novidades da plataforma',
       tag: 'Novidades',
-      title: 'Fique por dentro das ultimas atualizacoes da plataforma',
+      title: 'Fique por dentro das últimas atualizações da plataforma',
       description: 'Acompanhe novos materiais, destaques da semana e melhorias liberadas para os clientes.',
       buttonText: 'Ver novidades',
       buttonLink: '/library'
@@ -71,8 +71,8 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
       image: 'assets/images/carrosel_cliente/pack.webp',
       alt: 'Packs liberados na conta',
       tag: 'Seus packs',
-      title: 'Acesse rapido os packs liberados no seu plano',
-      description: 'Entre nos seus materiais favoritos e encontre com facilidade o que ja esta disponivel para a sua conta.',
+      title: 'Acesse rápido os packs liberados no seu plano',
+      description: 'Entre nos seus materiais favoritos e encontre com facilidade o que já está disponível para a sua conta.',
       buttonText: 'Abrir biblioteca',
       buttonLink: '/library'
     },
@@ -80,9 +80,9 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
       image: 'assets/images/carrosel_cliente/slides_packs.webp',
       alt: 'Packs em destaque',
       tag: 'Destaques',
-      title: 'Descubra os conteudos que mais chamam atencao na plataforma',
-      description: 'Veja os packs em evidencia e explore os materiais que ajudam a elevar o nivel das suas entregas.',
-      buttonText: 'Explorar conteudos',
+      title: 'Descubra os conteúdos que mais chamam atenção na plataforma',
+      description: 'Veja os packs em evidência e explore os materiais que ajudam a elevar o nível das suas entregas.',
+      buttonText: 'Explorar conteúdos',
       buttonLink: '/library'
     }
   ];
@@ -208,23 +208,23 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
     return [
       {
         id: 1,
-        tag: 'Novo conteudo',
+        tag: 'Novo conteúdo',
         title: 'Novos templates adicionados ao acervo',
-        description: 'Atualizamos a biblioteca com novos materiais para videos curtos e criativos mais dinamicos.',
+        description: 'Atualizamos a biblioteca com novos materiais para vídeos curtos e criativos mais dinâmicos.',
         date: '15/03/2026'
       },
       {
         id: 2,
         tag: 'Melhoria',
-        title: 'Organizacao dos packs foi atualizada',
-        description: 'Agora os conteudos estao mais bem separados por tema e categoria para facilitar seu uso.',
+        title: 'Organização dos packs foi atualizada',
+        description: 'Agora os conteúdos estão mais bem separados por tema e categoria para facilitar seu uso.',
         date: '13/03/2026'
       },
       {
         id: 3,
         tag: 'Destaque',
         title: 'Packs em alta seguem liderando o interesse da plataforma',
-        description: 'Os conteudos mais acessados continuam sendo referencia para criadores que querem acelerar resultados.',
+        description: 'Os conteúdos mais acessados continuam sendo referência para criadores que querem acelerar resultados.',
         date: '11/03/2026'
       }
     ];
@@ -245,20 +245,20 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
           features: [
             'Acesso aos packs essenciais',
             'Biblioteca inicial liberada',
-            'Upgrade rapido para comecar'
+            'Upgrade rápido para começar'
           ],
           planSlug: 'basic',
           link: '/checkout'
         },
         {
           id: 2,
-          label: 'Suba de nivel',
+          label: 'Suba de nível',
           name: 'Plano Pro',
           description: 'Tenha acesso a uma curadoria mais robusta de packs e uma biblioteca mais profissional.',
           features: [
             'Mais packs liberados',
-            'Mais variedade de conteudos',
-            'Melhor estrutura para escalar com consistencia'
+            'Mais variedade de conteúdos',
+            'Melhor estrutura para escalar com consistência'
           ],
           planSlug: 'pro',
           link: '/checkout'
@@ -270,22 +270,22 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
       return [
         {
           id: 3,
-          label: 'Proximo nivel',
+          label: 'Próximo nível',
           name: 'Plano Pro',
-          description: 'Liberte mais packs, materiais extras e uma biblioteca mais profissional para acelerar seu conteudo.',
+          description: 'Libere mais packs, materiais extras e uma biblioteca mais profissional para acelerar seu conteúdo.',
           features: [
             'Mais packs liberados',
             'Mais variedade de templates',
-            'Atualizacoes recorrentes'
+            'Atualizações recorrentes'
           ],
           planSlug: 'pro',
           link: '/checkout'
         },
         {
           id: 4,
-          label: 'Acesso maximo',
+          label: 'Acesso máximo',
           name: 'Plano Premium',
-          description: 'A opcao mais completa para quem quer acesso total aos conteudos e materiais mais avancados.',
+          description: 'A opção mais completa para quem quer acesso total aos conteúdos e materiais mais avançados.',
           features: [
             'Tudo do Pro',
             'Conteudos premium exclusivos',
@@ -302,11 +302,11 @@ export class ClientAreaComponent implements OnInit, OnDestroy {
         id: 5,
         label: 'Upgrade recomendado',
         name: 'Plano Premium',
-        description: 'Desbloqueie o nivel maximo da plataforma com acesso aos conteudos mais completos.',
+        description: 'Desbloqueie o nível máximo da plataforma com acesso aos conteúdos mais completos.',
       features: [
         'Acesso total aos packs',
         'Materiais premium',
-        'Mais recursos e conteudos avancados'
+        'Mais recursos e conteúdos avançados'
       ],
       planSlug: 'premium',
       link: '/checkout'

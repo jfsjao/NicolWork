@@ -1,3 +1,5 @@
+import { normalizePackText } from './pack-text-normalizer';
+
 export type PackWithImage<T extends { slug?: string; nome?: string }> = T & {
   image: string;
 };
@@ -76,6 +78,8 @@ export function resolvePackImage(pack: { slug?: string | null; nome?: string | n
 export function mapPackWithImage<T extends { slug?: string; nome?: string }>(pack: T): PackWithImage<T> {
   return {
     ...pack,
+    ...('nome' in pack ? { nome: normalizePackText(pack.nome) } : {}),
+    ...('descricao' in pack ? { descricao: normalizePackText((pack as T & { descricao?: string | null }).descricao) } : {}),
     image: resolvePackImage(pack)
   };
 }

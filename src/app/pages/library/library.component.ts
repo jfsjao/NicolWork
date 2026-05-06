@@ -110,7 +110,7 @@ export class LibraryComponent implements OnInit {
           return;
         }
 
-        console.error('Erro ao carregar biblioteca do usuario:', error);
+        console.error('Erro ao carregar biblioteca do usuário:', error);
         this.myPacks = [];
         this.featuredPacks = [];
         this.noveltyPacks = [];

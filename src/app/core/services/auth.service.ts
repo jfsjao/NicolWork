@@ -107,7 +107,7 @@ export class AuthService {
     this.clearNotice();
 
     if (showToast) {
-      this.toastr.error(message, 'Backend indisponivel');
+      this.toastr.error(message, 'Backend indisponível');
     }
   }
 
@@ -545,11 +545,11 @@ export class AuthService {
   }
 
   setPasswordResetCompletedNotice(): void {
-    this.setNotice('Senha redefinida com sucesso. Agora voce ja pode entrar.');
+    this.setNotice('Senha redefinida com sucesso. Agora você já pode entrar.');
   }
 
   setEmailVerifiedNotice(): void {
-    this.setNotice('Email verificado com sucesso. Agora voce ja pode entrar.');
+    this.setNotice('Email verificado com sucesso. Agora você já pode entrar.');
   }
 
   async validateResetPasswordCode(code: string): Promise<void> {

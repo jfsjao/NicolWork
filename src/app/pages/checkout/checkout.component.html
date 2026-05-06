@@ -53,7 +53,7 @@
 
             @if (!canCheckout) {
               <div class="checkout-warning">
-                Seu plano atual ja cobre este acesso. Escolha um plano superior.
+                Seu plano atual já cobre este acesso. Escolha um plano superior.
               </div>
             }
 
@@ -64,7 +64,7 @@
             @if (upsellOptions.length > 0) {
               <div class="opportunity-box">
                 <span>Antes de pagar</span>
-                <strong>Tem plano que libera mais packs por pouca diferenca.</strong>
+                <strong>Tem plano que libera mais packs por pouca diferença.</strong>
                 <div class="opportunity-actions">
                   @for (option of upsellOptions; track option.slug) {
                     <a
@@ -72,7 +72,7 @@
                       [queryParams]="{ plan: option.slug }"
                       class="opportunity-link">
                       Ver {{ option.name }}
-                      <small>+{{ formatCurrency(option.extraAmount) }} no preco cheio</small>
+                      <small>+{{ formatCurrency(option.extraAmount) }} no preço cheio</small>
                     </a>
                   }
                 </div>
@@ -90,13 +90,13 @@
             </button>
 
             <p class="secure-note">
-              Pagamento processado pelo Mercado Pago. A liberacao acontece apos confirmacao.
+              Pagamento processado pelo Mercado Pago. A liberação acontece após confirmação.
             </p>
           </aside>
         </div>
       } @else {
         <div class="empty-state">
-          <h1>Plano nao encontrado</h1>
+          <h1>Plano não encontrado</h1>
           <p>Escolha um plano pago para continuar.</p>
           <a routerLink="/plans" class="pay-button">Ver planos</a>
         </div>

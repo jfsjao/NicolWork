@@ -61,7 +61,7 @@ export class CheckoutComponent {
       price: 29.9,
       eyebrow: 'Entrada paga',
       description: 'Primeira camada paga para desbloquear os packs essenciais.',
-      features: ['Packs essenciais', 'Atualizacoes mensais', 'Acesso vitalicio']
+      features: ['Packs essenciais', 'Atualizações mensais', 'Acesso vitalício']
     },
     pro: {
       slug: 'pro',
@@ -69,14 +69,14 @@ export class CheckoutComponent {
       price: 65.9,
       eyebrow: 'Mais escolhido',
       description: 'Mais packs, presets e materiais para produzir com mais ritmo.',
-      features: ['Tudo do Basic', 'Biblioteca maior', 'Suporte prioritario']
+      features: ['Tudo do Basic', 'Biblioteca maior', 'Suporte prioritário']
     },
     premium: {
       slug: 'premium',
       name: 'Premium',
       price: 97.9,
       eyebrow: 'Completo',
-      description: 'Acesso completo para usar todos os packs e extras disponiveis.',
+      description: 'Acesso completo para usar todos os packs e extras disponíveis.',
       features: ['Tudo do Pro', 'Todos os packs', 'Conteudos premium']
     }
   };
@@ -160,7 +160,7 @@ export class CheckoutComponent {
     }
 
     if (!this.canCheckout) {
-      this.errorMessage = 'Seu plano atual ja e igual ou superior ao plano selecionado.';
+      this.errorMessage = 'Seu plano atual já é igual ou superior ao plano selecionado.';
       return;
     }
 
@@ -180,7 +180,7 @@ export class CheckoutComponent {
       }
     } catch (error: any) {
       const message =
-        error?.error?.message || 'Nao foi possivel iniciar o pagamento. Tente novamente.';
+        error?.error?.message || 'Não foi possível iniciar o pagamento. Tente novamente.';
       this.errorMessage = message;
       this.toastr.error(message, 'Pagamento');
     } finally {

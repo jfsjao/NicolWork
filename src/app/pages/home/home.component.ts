@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'creator-growth',
       videoSrc: 'assets/images/carrosel/banner1.mp4',
-      ariaLabel: 'Banner em video sobre criacao de conteudo',
+      ariaLabel: 'Banner em vídeo sobre criação de conteúdo',
       title: 'Descubra conteúdos que aceleram sua criação',
       description: 'Entre nos banners e navegue direto para as áreas mais importantes da plataforma.',
       buttonText: 'Explorar agora',
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'viral-pack',
       videoSrc: 'assets/images/carrosel/banner2.mp4',
-      ariaLabel: 'Banner em video sobre packs de edicao e design',
+      ariaLabel: 'Banner em vídeo sobre packs de edição e design',
       title: 'Conteúdos completos para edição e design',
       description: 'Packs variados para ajudar na edição de vídeos, fotos e criativos com mais impacto.',
       buttonText: 'Ver packs',
@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'about-all-in',
       videoSrc: 'assets/images/carrosel/banner3.mp4',
-      ariaLabel: 'Banner em video sobre a All In',
+      ariaLabel: 'Banner em vídeo sobre a All In',
       title: 'Conheça a All In de perto',
       description: 'Veja como a empresa funciona e o que entregamos para creators, designers e editores.',
       buttonText: 'Sobre nós',
